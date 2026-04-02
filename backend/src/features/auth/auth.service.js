@@ -56,3 +56,40 @@ module.exports = {
   validateSignupData,
   signupWithPassword,
 };
+
+
+
+const { findUserForLogin } = require("./auth.repository");
+const { comparePassword } = require("./auth.utils");
+
+async function loginWithPassword(data) {
+  const { email, password } = data;
+
+  // basic validation
+  if (!email || !password) {
+    throw new Error("Email and password are required");
+  }
+
+  // fetch user + hashed password
+  const record = await findUserForLogin(email);
+
+  // user not found
+  if (!record) {
+    throw new Error("Invalid email or password");
+  }
+
+  // compare passwords
+  const isMatch = await comparePassword(password, record.password);
+
+  if (!isMatch) {
+    throw new Error("Invalid email or password");
+  }
+
+  // success → return user only (no password)
+  return record.user;
+}
+
+module.exports = {
+  signupWithPassword, // keep your existing export
+  loginWithPassword,  // add this
+};
