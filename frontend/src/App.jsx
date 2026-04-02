@@ -1,11 +1,13 @@
+import { Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import MovieSection from './components/MovieSection'
 import Footer from './components/Footer'
+import AuthPage from './pages/AuthPage'
 import { trending, inTheatres, comingSoon } from './data/movies'
 import './App.css'
 
-function App() {
+function HomePage() {
   return (
     <>
       <Navbar />
@@ -28,6 +30,15 @@ function App() {
       />
       <Footer />
     </>
+  )
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/auth" element={<AuthPage />} />
+    </Routes>
   )
 }
 

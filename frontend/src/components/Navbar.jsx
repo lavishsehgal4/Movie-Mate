@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './Navbar.css'
 
 const cities = ['Mumbai', 'Delhi', 'Bangalore', 'Chennai', 'Hyderabad', 'Pune', 'Kolkata']
@@ -6,6 +7,7 @@ const cities = ['Mumbai', 'Delhi', 'Bangalore', 'Chennai', 'Hyderabad', 'Pune', 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [city, setCity] = useState('Mumbai')
+  const navigate = useNavigate()
 
   return (
     <>
@@ -35,7 +37,7 @@ export default function Navbar() {
         </div>
 
         {/* Sign In */}
-        <button className="nav-signin">Sign In</button>
+        <button className="nav-signin" onClick={() => navigate('/auth')}>Sign In</button>
 
         {/* Hamburger */}
         <button className="hamburger" onClick={() => setMenuOpen(true)} aria-label="Open menu">
@@ -61,7 +63,7 @@ export default function Navbar() {
           <a href="#">Sports</a>
           <a href="#">My Bookings</a>
         </nav>
-        <button className="side-signin">Sign In / Register</button>
+        <button className="side-signin" onClick={() => { setMenuOpen(false); navigate('/auth') }}>Sign In / Register</button>
       </div>
     </>
   )
