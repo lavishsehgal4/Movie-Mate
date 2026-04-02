@@ -50,6 +50,31 @@ async function createUserWithAuth(data) {
   }
 }
 
+async function findUserForLogin(email) {
+  return await prisma.auth.findFirst({
+    where: {
+      provider: "local",
+      user: {
+        email: email, // used only for filtering, not returned
+      },
+    },
+    select: {
+      password: true, // needed for comparison
+
+      user: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          dateOfBirth: true,
+          imageUrl: true,
+        },
+      },
+    },
+  });
+}
+
 module.exports = {
   createUserWithAuth,
+  findUserForLogin
 };
