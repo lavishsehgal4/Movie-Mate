@@ -1,15 +1,15 @@
-const { signupWithPassword } = require("./auth.repository");
-const { validateSignupData } = require("./auth.service");
+const { signupWithPassword } = require("./auth.service");
 
 async function httpSignUpUser(req, res) {
   try {
-    const data = req.body;
-    validateSignupData(data);
-    const response = await signupWithPassword(data);
+    // call service → it handles validation + hashing + DB
+    const response = await signupWithPassword(req.body);
 
-    res.status(201).json(response);
+    res.status(201).json({
+      success: true,
+      data: response,
+    });
   } catch (error) {
-    // handle known errors
     res.status(400).json({
       success: false,
       message: error.message || "Signup failed",

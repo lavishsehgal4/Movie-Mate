@@ -1,6 +1,6 @@
 const { prisma } = require("../../config/prisma");
 
-async function signupWithPassword(data) {
+async function createUserWithAuth(data) {
   try {
     const {
       firstName,
@@ -9,18 +9,19 @@ async function signupWithPassword(data) {
       phoneNumber,
       dateOfBirth,
       imageUrl,
-      password,
+      password, // hashed
     } = data;
 
-    return await prisma.users.create({
+    const user = await prisma.users.create({
       data: {
         firstName,
         lastName,
         email,
         phoneNumber,
-        dateOfBirth: new Date(dateOfBirth),
+        dateOfBirth,
         imageUrl,
 
+        // create auth (not returned)
         auths: {
           create: {
             provider: "local",
@@ -28,21 +29,27 @@ async function signupWithPassword(data) {
           },
         },
       },
-      include: {
-        auths: true,
+
+      // 🔒 return ONLY what you want
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        dateOfBirth:true,
+        imageUrl:true,
       },
     });
+
+    return user;
   } catch (err) {
-    // handle known DB errors
     if (err.code === "P2002") {
       throw new Error("Email already exists");
     }
 
-    // fallback
-    throw new Error("Failed to create user");
+    throw new Error(err.message || "Failed to create user");
   }
 }
 
 module.exports = {
-  signupWithPassword,
+  createUserWithAuth,
 };
