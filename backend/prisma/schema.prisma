@@ -6,3 +6,39 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model users {
+  id          Int      @id @default(autoincrement())
+  firstName   String
+  lastName    String?   // optional
+  email       String    @unique
+  phoneNumber String    @unique
+  dateOfBirth DateTime
+  imageUrl    String?   // optional
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // relation
+  auths       Auth[]
+}
+
+model Auth {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  provider     String   // local, google, github...
+  providerKey  String?  // conditional
+  password     String?  // conditional
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // relation with cascade delete
+  user users @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // unique constraint
+  @@unique([userId, provider])
+
+  // map to lowercase table name
+  @@map("auth")
+}

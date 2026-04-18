@@ -4,6 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "install-backend": "npm install --prefix backend",
+    "install-frontend": "npm install --prefix frontend",
+    "install": "concurrently \"npm run install-backend\" \"npm run install-frontend\"",
+    "server": "npm run watch --prefix backend",
+    "client": "npm run dev --prefix frontend",
+    "watch": "concurrently \"npm run server\" \"npm run client\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/lavishsehgal4/Movie-Mate/issues"
   },
-  "homepage": "https://github.com/lavishsehgal4/Movie-Mate#readme"
+  "homepage": "https://github.com/lavishsehgal4/Movie-Mate#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
 }
