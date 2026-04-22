@@ -1,71 +1,60 @@
-.movie-section {
-  padding: 48px 40px;
-  background: var(--bg-section);
+.msection {
   width: 100%;
+  padding: 8px 0 24px;
 }
 
-.movie-section:nth-child(even) {
-  background: var(--bg);
+.msection-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
 }
 
-.section-header {
+.msection-header {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 28px;
+  margin-bottom: 16px;
 }
 
-.section-title {
-  font-size: 26px;
+.msection-title {
+  font-size: 20px;
   font-weight: 700;
-  color: #fff;
-  margin-bottom: 4px;
+  color: #1a1a1a;
 }
 
-.section-sub {
-  font-size: 14px;
-  color: var(--text-muted);
-}
-
-.see-all {
-  font-size: 14px;
-  color: var(--red);
-  font-weight: 600;
-  transition: opacity 0.2s;
-  white-space: nowrap;
-}
-
-.see-all:hover {
-  opacity: 0.8;
-}
-
-.movies-row {
+.msection-arrows {
   display: flex;
-  gap: 20px;
+  gap: 8px;
+}
+
+.msection-arrows button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid #e5e7eb;
+  background: #fff;
+  font-size: 20px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s, color 0.2s;
+  line-height: 1;
+}
+
+.msection-arrows button:hover {
+  border-color: #e63935;
+  color: #e63935;
+}
+
+.msection-row {
+  display: flex;
+  gap: 16px;
   overflow-x: auto;
   padding-bottom: 8px;
   scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
+  scrollbar-color: #e5e7eb transparent;
 }
 
-.movies-row::-webkit-scrollbar {
-  height: 4px;
-}
-
-.movies-row::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.movies-row::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 4px;
-}
-
-@media (max-width: 768px) {
-  .movie-section {
-    padding: 32px 16px;
-  }
-  .section-title {
-    font-size: 20px;
-  }
-}
+.msection-row::-webkit-scrollbar { height: 4px; }
+.msection-row::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }

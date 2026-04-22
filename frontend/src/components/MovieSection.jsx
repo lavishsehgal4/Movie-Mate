@@ -1,20 +1,22 @@
 import MovieCard from './MovieCard'
 import './MovieSection.css'
 
-export default function MovieSection({ title, subtitle, movies, variant }) {
+export default function MovieSection({ title, movies, variant }) {
   return (
-    <section className="movie-section">
-      <div className="section-header">
-        <div>
-          <h2 className="section-title">{title}</h2>
-          {subtitle && <p className="section-sub">{subtitle}</p>}
+    <section className="msection">
+      <div className="msection-inner">
+        <div className="msection-header">
+          <h2 className="msection-title">{title}</h2>
+          <div className="msection-arrows">
+            <button aria-label="Previous">&#8249;</button>
+            <button aria-label="Next">&#8250;</button>
+          </div>
         </div>
-        <a href="#" className="see-all">See All →</a>
-      </div>
-      <div className="movies-row">
-        {movies.map(movie => (
-          <MovieCard key={movie.id} movie={movie} variant={variant} />
-        ))}
+        <div className="msection-row">
+          {movies.map(movie => (
+            <MovieCard key={movie.id} movie={movie} variant={variant} />
+          ))}
+        </div>
       </div>
     </section>
   )

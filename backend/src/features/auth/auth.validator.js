@@ -1,40 +1,64 @@
-function validateSignupData(data) {
-  const {
-    firstName,
-    email,
-    phoneNumber,
-    dateOfBirth,
-    password,
-  } = data;
+// ------------------ helpers ------------------
 
-  // 🔹 required fields
-  if (!firstName || !email || !phoneNumber || !dateOfBirth || !password) {
-    throw new Error("All required fields must be provided");
+function normalizeString(value) {
+  if (typeof value !== "string") return "";
+  return value.trim();
+}
+
+// ------------------ field validators ------------------
+
+function validateEmail(email) {
+  if (typeof email !== "string") {
+    return { isValid: false, error: "Email must be a string" };
   }
 
-  // 🔹 email format
+  const normalized = email.trim().toLowerCase();
   const emailRegex = /^\S+@\S+\.\S+$/;
-  if (!emailRegex.test(email)) {
-    throw new Error("Invalid email format");
+
+  if (!emailRegex.test(normalized)) {
+    return { isValid: false, error: "Invalid email format" };
   }
 
-  // 🔹 phone number (10 digits)
-  if (!/^\d{10}$/.test(phoneNumber)) {
-    throw new Error("Phone number must be 10 digits");
+  return { isValid: true, value: normalized };
+}
+
+function validatePhoneNo(phoneNumber) {
+  if (typeof phoneNumber !== "string") {
+    return { isValid: false, error: "Phone number must be a string" };
   }
 
-  // 🔹 password length
+  const normalized = phoneNumber.trim();
+
+  if (!/^\d{10}$/.test(normalized)) {
+    return { isValid: false, error: "Phone number must be 10 digits" };
+  }
+
+  return { isValid: true, value: normalized };
+}
+
+function validatePassword(password) {
+  if (typeof password !== "string") {
+    return { isValid: false, error: "Password must be a string" };
+  }
+
   if (password.length < 6) {
-    throw new Error("Password must be at least 6 characters");
+    return { isValid: false, error: "Password must be at least 6 characters" };
   }
 
-  // 🔹 valid date
+  return { isValid: true, value: password };
+}
+
+function validateDob(dateOfBirth) {
+  if (typeof dateOfBirth !== "string") {
+    return { isValid: false, error: "Date of birth must be a string" };
+  }
+
   const dob = new Date(dateOfBirth);
+
   if (isNaN(dob.getTime())) {
-    throw new Error("Invalid date of birth");
+    return { isValid: false, error: "Invalid date of birth" };
   }
 
-  // 🔹 age >= 18 check
   const today = new Date();
 
   let age = today.getFullYear() - dob.getFullYear();
@@ -48,48 +72,93 @@ function validateSignupData(data) {
   }
 
   if (age < 18) {
-    throw new Error("User must be at least 18 years old");
+    return { isValid: false, error: "User must be at least 18 years old" };
   }
 
-  return true;
+  return { isValid: true, value: dob };
+}
+
+// ------------------ main validators ------------------
+
+function validateSignupData(data) {
+  const {
+    firstName,
+    email,
+    phoneNumber,
+    dateOfBirth,
+    password,
+  } = data;
+
+  // temp storage (NO mutation yet)
+  const temp = {};
+
+  // firstName
+  const normalizedFirstName = normalizeString(firstName);
+  if (!normalizedFirstName) {
+    return { isValid: false, error: "First name is required" };
+  }
+  temp.firstName = normalizedFirstName;
+
+  // email
+  const emailResult = validateEmail(email);
+  if (!emailResult.isValid) return emailResult;
+  temp.email = emailResult.value;
+
+  // phone
+  const phoneResult = validatePhoneNo(phoneNumber);
+  if (!phoneResult.isValid) return phoneResult;
+  temp.phoneNumber = phoneResult.value;
+
+  // password
+  const passwordResult = validatePassword(password);
+  if (!passwordResult.isValid) return passwordResult;
+  temp.password = passwordResult.value;
+
+  // dob
+  const dobResult = validateDob(dateOfBirth);
+  if (!dobResult.isValid) return dobResult;
+  temp.dateOfBirth = dobResult.value;
+
+  // ✅ apply mutation only after ALL validations pass
+  Object.assign(data, temp);
+
+  return { isValid: true };
 }
 
 function validateLoginData(data) {
   const { identifier, password } = data;
 
-  // 🔹 required fields
-  if (!identifier || !password) {
-    throw new Error("Identifier and password are required");
+  const temp = {};
+
+  const normalizedIdentifier = normalizeString(identifier);
+  if (!normalizedIdentifier) {
+    return { isValid: false, error: "Identifier is required" };
   }
 
-  // 🔹 basic sanity check for identifier
-  if (typeof identifier !== "string") {
-    throw new Error("Invalid identifier");
+  const isEmailValid = validateEmail(normalizedIdentifier).isValid;
+  const isPhoneValid = validatePhoneNo(normalizedIdentifier).isValid;
+
+  if (!isEmailValid && !isPhoneValid) {
+    return {
+      isValid: false,
+      error: "Identifier must be a valid email or phone number",
+    };
   }
 
-  // trim input
-  const trimmedIdentifier = identifier.trim();
+  temp.identifier = normalizedIdentifier;
 
-  if (trimmedIdentifier.length === 0) {
-    throw new Error("Identifier cannot be empty");
-  }
+  const passwordResult = validatePassword(password);
+  if (!passwordResult.isValid) return passwordResult;
 
-  // 🔹 optional: simple format check (not strict)
-  const isEmail = /^\S+@\S+\.\S+$/.test(trimmedIdentifier);
-  const isPhone = /^\d{10}$/.test(trimmedIdentifier);
+  temp.password = passwordResult.value;
 
-  if (!isEmail && !isPhone) {
-    throw new Error("Identifier must be a valid email or phone number");
-  }
+  // ✅ apply mutation at end
+  Object.assign(data, temp);
 
-  // 🔹 password check
-  if (typeof password !== "string" || password.length < 6) {
-    throw new Error("Invalid password");
-  }
-
-  return true;
+  return { isValid: true };
 }
+
 module.exports = {
   validateSignupData,
-  validateLoginData
+  validateLoginData,
 };

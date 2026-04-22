@@ -1,29 +1,29 @@
 import './MovieCard.css'
 
-export default function MovieCard({ movie, variant = 'default' }) {
+export default function MovieCard({ movie, variant = 'now' }) {
   return (
-    <div className="movie-card">
-      <div className="movie-poster">
+    <div className="mcard">
+      <div className="mcard-poster">
         <img src={movie.img} alt={movie.title} loading="lazy" />
-        <div className="movie-overlay">
-          <button className="book-btn">Book Now</button>
-        </div>
-        {variant === 'coming' && (
-          <div className="release-badge">{movie.releaseDate}</div>
+        {variant === 'now' && (
+          <div className="mcard-rating">
+            <span className="star">★</span> {movie.rating}
+          </div>
+        )}
+        {variant === 'upcoming' && (
+          <div className="mcard-release">{movie.releaseLabel}</div>
         )}
       </div>
-      <div className="movie-info">
-        <h3 className="movie-title">{movie.title}</h3>
-        <div className="movie-meta">
-          <span className="genre-tag">{movie.genre}</span>
-          <span className="lang-tag">{movie.lang}</span>
-        </div>
-        {variant !== 'coming' && (
-          <div className="movie-rating">
-            <span className="star">★</span>
-            <span className="rating-val">{movie.rating}</span>
-            <span className="votes">({movie.votes} votes)</span>
-          </div>
+      <div className="mcard-body">
+        <h3 className="mcard-title">{movie.title}</h3>
+        <p className="mcard-genre">{movie.genre}</p>
+        {variant === 'now' && (
+          <button className={`mcard-btn ${movie.id === 1 ? 'primary' : ''}`}>
+            Quick Book
+          </button>
+        )}
+        {variant === 'upcoming' && (
+          <button className="mcard-btn trailer">Watch Trailer</button>
         )}
       </div>
     </div>

@@ -55,29 +55,73 @@ async function addUserUsingPassword(data) {
 }
 
 async function findUserForLogin(identifier) {
-  const result = await prisma.$queryRaw`
-    SELECT 
-      u.id,
-      u."imageUrl",
-      u."firstName",
-      u."lastName",
-      a."password"
-    FROM "users" u
-    INNER JOIN "auth" a
-      ON u.id = a."userId"
-    WHERE 
-      a.provider = 'local'
-      AND (
-        u.email = ${identifier}
-        OR u."phoneNumber" = ${identifier}
-      )
-    LIMIT 1;
-  `;
+  const record = await prisma.auth.findFirst({
+    where: {
+      provider: "local",
+      OR: [
+        { user: { email: identifier } },
+        { user: { phoneNumber: identifier } },
+      ],
+    },
+    select: {
+      password: true,
+      user: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          imageUrl: true,
+        },
+      },
+    },
+  });
 
-  // result is array
-  return result[0] || null;
+  if (!record) return null;
+
+  return {
+    id: record.user.id,
+    firstName: record.user.firstName,
+    lastName: record.user.lastName,
+    imageUrl: record.user.imageUrl,
+    password: record.password,
+  };
 }
+
+
+
+async function findGoogleUser(googleId) {
+  return await prisma.auth.findFirst({
+    where: {
+      provider: "google",
+      providerKey: googleId,
+    },
+    include: {
+      user: true,
+    },
+  });
+}
+
+async function createGoogleUser(googleUser) {
+  return await prisma.users.create({
+    data: {
+      firstName: googleUser.given_name,
+      lastName: googleUser.family_name,
+      email: googleUser.email,
+      imageUrl: googleUser.picture,
+
+      auths: {
+        create: {
+          provider: "google",
+          providerKey: googleUser.id,
+        },
+      },
+    },
+  });
+}
+
 module.exports = {
   addUserUsingPassword,
-  findUserForLogin
+  findUserForLogin,
+  findGoogleUser,
+  createGoogleUser
 };

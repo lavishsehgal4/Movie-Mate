@@ -12,8 +12,8 @@ model users {
   firstName   String
   lastName    String?   // optional
   email       String    @unique
-  phoneNumber String    @unique
-  dateOfBirth DateTime
+  phoneNumber String?    @unique
+  dateOfBirth DateTime?
   imageUrl    String?   // optional
 
   createdAt   DateTime  @default(now())

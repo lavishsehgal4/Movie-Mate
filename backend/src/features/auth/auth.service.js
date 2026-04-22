@@ -1,24 +1,22 @@
 const { validateSignupData,validateLoginData } = require("./auth.validator");
 const { hashPassword ,comparePassword} = require("./auth.utils");
 const { addUserUsingPassword,findUserForLogin } = require("./auth.repository");
+const { findGoogleUser, createGoogleUser } = require("./auth.repository");
 const { generateToken } = require("./auth.utils");
 
 async function signUpUser(data) {
   // 🔹 1. validate input
-  validateSignupData(data);
-
-  // 🔹 2. prepare data (convert date)
-  const formattedData = {
-    ...data,
-    dateOfBirth: new Date(data.dateOfBirth),
-  };
+  const validation=validateSignupData(data);
+  if(!validation.isValid){
+    throw new Error(validation.error);
+  }
 
   // 🔹 3. hash password
   const hashedPassword = await hashPassword(data.password);
 
   // 🔹 4. send to repository
   const user = await addUserUsingPassword({
-    ...formattedData,
+    ...data,
     password: hashedPassword,
   });
   
@@ -34,7 +32,10 @@ async function signUpUser(data) {
 
 async function loginUser(data) {
   // 🔹 1. validate input
-  validateLoginData(data);
+  const validation=validateLoginData(data);
+  if(!validation.isValid){
+    throw new Error(validation.error);
+  }
 
   const { identifier, password } = data;
 
@@ -68,7 +69,38 @@ async function loginUser(data) {
   };
 }
 
+async function googleLogin(googleUser) {
+  // 🔹 1. check if user already exists (by google id)
+  let record = await findGoogleUser(googleUser.id);
+
+  let user;
+
+  // 🔹 2. if not exist → create user
+  if (!record) {
+    user = await createGoogleUser(googleUser);
+  } else {
+    user = record.user;
+  }
+
+  // 🔹 3. generate JWT
+  const token = generateToken({
+    userId: user.id,
+  });
+
+  // 🔹 4. return safe data
+  return {
+    user: {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      imageUrl: user.imageUrl,
+    },
+    token,
+  };
+}
+
 module.exports = {
   signUpUser,
-  loginUser
+  loginUser,
+  googleLogin
 };

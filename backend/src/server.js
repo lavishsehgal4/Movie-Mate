@@ -1,3 +1,4 @@
+require("dotenv").config(); // must be FIRST
 const http = require("http");
 const { connectPrisma } = require("./config/prisma");
 const app = require("./app");
