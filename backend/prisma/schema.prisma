@@ -42,3 +42,34 @@ model Auth {
   // map to lowercase table name
   @@map("auth")
 }
+
+model Movie {
+  id                Int      @id @default(autoincrement())
+
+  tmdb_id           Int      @unique
+  title             String
+  original_title    String?
+  overview          String?
+
+  poster_path       String
+  backdrop_path     String?
+
+  release_date      DateTime
+  runtime           Int?
+
+  popularity        Float
+  adult             Boolean
+
+  certification     String?
+
+  vote_average      Float
+  vote_count        Int
+
+  original_language String
+
+  genres            Json?
+  cast              Json?
+
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+}
