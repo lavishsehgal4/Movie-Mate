@@ -1,0 +1,422 @@
+{
+  "dates": {
+    "maximum": "2026-04-29",
+    "minimum": "2026-03-18"
+  },
+  "page": 1,
+  "results": [
+    {
+      "adult": false,
+      "backdrop_path": "/8Tfys3mDZVp4tNoH2ktm06a0Tau.jpg",
+      "genre_ids": [
+        878,
+        12
+      ],
+      "id": 687163,
+      "title": "Project Hail Mary",
+      "original_language": "en",
+      "original_title": "Project Hail Mary",
+      "overview": "Science teacher Ryland Grace wakes up on a spaceship light years from home with no recollection of who he is or how he got there. As his memory returns, he begins to uncover his mission: solve the riddle of the mysterious substance causing the sun to die out. He must call on his scientific knowledge and unorthodox ideas to save everything on Earth from extinction… but an unexpected friendship means he may not have to do it alone.",
+      "popularity": 213.1689,
+      "poster_path": "/yihdXomYb5kTeSivtFndMy5iDmf.jpg",
+      "release_date": "2026-03-26",
+      "softcore": false,
+      "video": false,
+      "vote_average": 8.219,
+      "vote_count": 1656
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/xBT0oNq6rsTFv4SxG5uGRIEOrq6.jpg",
+      "genre_ids": [
+        10402,
+        18
+      ],
+      "id": 936075,
+      "title": "Michael",
+      "original_language": "en",
+      "original_title": "Michael",
+      "overview": "Discover the story of Michael Jackson, one of the most influential artists the world has ever known, and his life beyond the music, tracing his journey from the discovery of his extraordinary talent as the lead of the Jackson Five, to the visionary artist whose creative ambition fueled a relentless pursuit to become the biggest entertainer in the world, highlighting both his life off-stage and some of the most iconic performances from his early solo career.",
+      "popularity": 79.8068,
+      "poster_path": "/3Qud19bBUrrJAzy0Ilm8gRJlJXP.jpg",
+      "release_date": "2026-04-23",
+      "softcore": false,
+      "video": false,
+      "vote_average": 7.186,
+      "vote_count": 51
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/owQeDouUZ6wI6f1aTOYEFd511zn.jpg",
+      "genre_ids": [
+        28,
+        80,
+        53
+      ],
+      "id": 1582770,
+      "title": "Dhurandhar: The Revenge",
+      "original_language": "hi",
+      "original_title": "धुरंधर: द रिवेंज",
+      "overview": "As rival gangs, corrupt officials and a ruthless Major Iqbal close in, Hamza's mission for his country spirals into a bloody personal war where the line between patriot and monster disappears in the streets of Lyari.",
+      "popularity": 31.4561,
+      "poster_path": "/ov8vrRLZGoXHpYjSY9Vpv1tHJX7.jpg",
+      "release_date": "2026-03-19",
+      "softcore": false,
+      "video": false,
+      "vote_average": 7.7,
+      "vote_count": 60
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/q05WV8DwEiyLbCgSVtg55RbUzou.jpg",
+      "genre_ids": [
+        28,
+        27,
+        35
+      ],
+      "id": 1292695,
+      "title": "They Will Kill You",
+      "original_language": "en",
+      "original_title": "They Will Kill You",
+      "overview": "A woman answers a help wanted ad to be a housekeeper in a mysterious New York City high-rise, unaware that she is entering a community that has seen a number of disappearances over the years and may be under the grip of a Satanic cult.",
+      "popularity": 18.2901,
+      "poster_path": "/nSXCFSvI2p5WLgMrOHACbVnEJSR.jpg",
+      "release_date": "2026-03-27",
+      "softcore": false,
+      "video": false,
+      "vote_average": 6.5,
+      "vote_count": 138
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/99W7BptqslScAyupDqg9NADLhh1.jpg",
+      "genre_ids": [
+        28,
+        80,
+        53
+      ],
+      "id": 1242332,
+      "title": "Normal",
+      "original_language": "en",
+      "original_title": "Normal",
+      "overview": "Interim sheriff Ulysses, called to the snowbound town of Normal, MN, uncovers an international criminal conspiracy at the heart of the seemingly quaint whistle-stop when he comes to the aid of a bank-robbing couple caught up in a deadly mess.",
+      "popularity": 20.0389,
+      "poster_path": "/nVIOGKbUdRxud0EXYJDMGCGcYbo.jpg",
+      "release_date": "2026-04-17",
+      "softcore": false,
+      "video": false,
+      "vote_average": 7.225,
+      "vote_count": 20
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/eaknBFnMg8fPlwlegBaPtQfhyF8.jpg",
+      "genre_ids": [
+        35,
+        10749,
+        18
+      ],
+      "id": 1542352,
+      "title": "Youth",
+      "original_language": "ta",
+      "original_title": "யூத்",
+      "overview": "Youth follows Praveen, a 15-year-old boy who enters adolescence determined to find true love before school ends. As he goes through multiple relationships and heartbreaks, he slowly begins to understand what love truly means. Along the way, the experiences shape his growth, maturity, and outlook on life.",
+      "popularity": 14.6792,
+      "poster_path": "/rNzk0jlGRPnvZ26On5xhTmLaQhO.jpg",
+      "release_date": "2026-03-19",
+      "softcore": false,
+      "video": false,
+      "vote_average": 6,
+      "vote_count": 1
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/A2tzVTVtnTvpji96IZmleN78KKv.jpg",
+      "genre_ids": [
+        27,
+        35
+      ],
+      "id": 1239134,
+      "title": "Bhooth Bangla",
+      "original_language": "hi",
+      "original_title": "Bhooth Bangla",
+      "overview": "A man inherits a palace in rural Mangalpur and plans his sister's wedding there, but strange supernatural events and panicked locals force him to investigate the property's mysterious past.",
+      "popularity": 11.4707,
+      "poster_path": "/79RBp8afL4u4z3nVGR78z6eIvBB.jpg",
+      "release_date": "2026-04-16",
+      "softcore": false,
+      "video": false,
+      "vote_average": 6.4,
+      "vote_count": 6
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/uNA0OVk09Hbwflye3eBoOiGIKGc.jpg",
+      "genre_ids": [
+        35,
+        18,
+        28
+      ],
+      "id": 1336770,
+      "title": "Vaazha II",
+      "original_language": "ml",
+      "original_title": "വാഴ II",
+      "overview": "Four friends – Hashir, Alan, Ajin and Vinayak – are considered losers and troublemakers by parents, family and the school management. They face immense social pressure as they reach adulthood, embarking them on an emotional journey of self discovery and acceptance, where they finally learn to take up their responsibilities and find success",
+      "popularity": 11.6563,
+      "poster_path": "/1yLZ7kExd0UGGbaZW4LxmYD4OIf.jpg",
+      "release_date": "2026-04-02",
+      "softcore": false,
+      "video": false,
+      "vote_average": 6,
+      "vote_count": 1
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/woos7rldBAKG99HmcbNZNpMjwNk.jpg",
+      "genre_ids": [
+        10749,
+        878,
+        35
+      ],
+      "id": 1209511,
+      "title": "Love Insurance Kompany",
+      "original_language": "ta",
+      "original_title": "லவ் இன்சூரன்ஸ் கம்பெனி",
+      "overview": "In 2040, an app premised on ensuring romance for all is used widely by the population. When the voice behind the app's AI realizes its misconception to true love, he embarks on a quest to prove that love does not come from a screen.",
+      "popularity": 10.1419,
+      "poster_path": "/dHEuGKZBkEx4RcaVV8rYahORNPA.jpg",
+      "release_date": "2026-04-10",
+      "softcore": false,
+      "video": false,
+      "vote_average": 5.5,
+      "vote_count": 3
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/xiygh1obva8ieo7cxXmpLbA2e7K.jpg",
+      "genre_ids": [
+        28,
+        10749,
+        53
+      ],
+      "id": 1220522,
+      "title": "Dacoit",
+      "original_language": "te",
+      "original_title": "డెకాయిట్",
+      "overview": "Betrayed by his better half, a man is convicted for a crime he didn't commit. Once free, he hunts her down in pursuit of vengeance, as their stories intertwine with a series of robberies.",
+      "popularity": 7.0202,
+      "poster_path": "/lbrnJY7E0a9xxgj2cotNp6YI4dz.jpg",
+      "release_date": "2026-04-10",
+      "softcore": false,
+      "video": false,
+      "vote_average": 6.5,
+      "vote_count": 2
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/xVUY7fJum48tTUqiqeamousRBUX.jpg",
+      "genre_ids": [
+        28,
+        35,
+        18
+      ],
+      "id": 868668,
+      "title": "Ustaad Bhagat Singh",
+      "original_language": "te",
+      "original_title": "ఉస్తాద్ భగత్ సింగ్",
+      "overview": "A tribal boy is shaped by the values of his teacher, who gives him the name 'Bhagat Singh'. He grows up deeply rooted in strong morals, which guide his actions throughout his life.He stands firm against injustice and takes on powerful evil forces, even when facing overwhelming odds.",
+      "popularity": 6.6729,
+      "poster_path": "/8n4ypYQWztEXlR8JxD0fctdKwfC.jpg",
+      "release_date": "2026-03-19",
+      "softcore": false,
+      "video": false,
+      "vote_average": 6.5,
+      "vote_count": 5
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/tF8RQduvq8k2yGsJbfowswmSN51.jpg",
+      "genre_ids": [
+        28,
+        18
+      ],
+      "id": 959894,
+      "title": "Pallichattambi",
+      "original_language": "ml",
+      "original_title": "പള്ളിച്ചട്ടമ്പി",
+      "overview": "Small-town schemer Chattambi survives by staying ahead of his neighbors through risky plans. When his plans backfire, he has to depend on extricating himself from the mess he created.",
+      "popularity": 7.1522,
+      "poster_path": "/znOpOhDmKlspIoeR3MvFeuhG19q.jpg",
+      "release_date": "2026-04-15",
+      "softcore": false,
+      "video": false,
+      "vote_average": 6,
+      "vote_count": 1
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/tXierBtxb2u3XwwTeU1NnEjnkb9.jpg",
+      "genre_ids": [
+        10751,
+        53,
+        9648
+      ],
+      "id": 1658163,
+      "title": "Suyodhana",
+      "original_language": "te",
+      "original_title": "సూయోధన",
+      "overview": "A young Foley artist has grown up hearing a mysterious voice called Suyodhana and often visualises a figure resembling Duryodhana. Raised by his mother and supported by his childhood friend and partner, his life takes a turn when he is accused of his father’s murder, leading to an investigation that uncovers deeper layers of his past.",
+      "popularity": 4.8258,
+      "poster_path": "/s56x3fGTN6J1jbBMBDnLY7t4iyU.jpg",
+      "release_date": "2026-03-27",
+      "softcore": false,
+      "video": false,
+      "vote_average": 0,
+      "vote_count": 0
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/g7y8EDiXvlZYrIKDLlhtbcAPnxS.jpg",
+      "genre_ids": [
+        35,
+        53
+      ],
+      "id": 1576369,
+      "title": "Bharathanatyam 2 Mohiniyattam",
+      "original_language": "ml",
+      "original_title": "ഭരതനാട്യം 2 മോഹിനിയാട്ടം",
+      "overview": "The family's journey to Sreekandapuram to settle the late Bharathan Nair's second wife and son takes a dark turn when an issue from his past resurfaces, leading to an unexpected crime. Forced into a desperate cover-up to protect their future, the family must navigate a treacherous path of secrecy and mounting pressure, determined to overcome any obstacle by any means necessary.",
+      "popularity": 2.2812,
+      "poster_path": "/lsg0IxNQCUxKqs63YjturEuY0qQ.jpg",
+      "release_date": "2026-04-10",
+      "softcore": false,
+      "video": false,
+      "vote_average": 7,
+      "vote_count": 1
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/pHYVsFUjKnYpHmhvTILd3XqXwRM.jpg",
+      "genre_ids": [
+        28,
+        53
+      ],
+      "id": 1126723,
+      "title": "Mr. X",
+      "original_language": "ta",
+      "original_title": "Mr. X",
+      "overview": "",
+      "popularity": 2.0424,
+      "poster_path": "/rUYbwn4I8k0sa2sIJG9JGYM1UCv.jpg",
+      "release_date": "2026-04-17",
+      "softcore": false,
+      "video": false,
+      "vote_average": 0,
+      "vote_count": 0
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/jnrv9y9CQEtcyoftIHN4WNLrxtb.jpg",
+      "genre_ids": [
+        35,
+        14
+      ],
+      "id": 1260210,
+      "title": "Aadu 3",
+      "original_language": "ml",
+      "original_title": "ആട് 3",
+      "overview": "Shaji Pappan and Co. opens a Pandora's box of reincarnations and multiple timelines  leading to comic chaos of epic proportions.",
+      "popularity": 1.3704,
+      "poster_path": "/3yqreNY1f4iOXX0vBAqY64ZvxiV.jpg",
+      "release_date": "2026-03-19",
+      "softcore": false,
+      "video": false,
+      "vote_average": 6.5,
+      "vote_count": 2
+    },
+    {
+      "adult": false,
+      "backdrop_path": null,
+      "genre_ids": [
+        10749,
+        35,
+        18
+      ],
+      "id": 1481041,
+      "title": "Ginny Wedss Sunny 2",
+      "original_language": "hi",
+      "original_title": "गिन्नी वेड्स सन्नी 2",
+      "overview": "A mismatched pair, with a storyline involving a wrestler and a vibrant girl, combining romance, comedy, and drama.",
+      "popularity": 1.3323,
+      "poster_path": "/8lovlbsow4B5KbznLYDNky8usgc.jpg",
+      "release_date": "2026-04-24",
+      "softcore": false,
+      "video": false,
+      "vote_average": 0,
+      "vote_count": 0
+    },
+    {
+      "adult": false,
+      "backdrop_path": null,
+      "genre_ids": [
+        10751,
+        35,
+        18
+      ],
+      "id": 1561144,
+      "title": "Madhuvidhu",
+      "original_language": "ml",
+      "original_title": "മധുവിധു",
+      "overview": "",
+      "popularity": 1.6714,
+      "poster_path": "/jVSnpXklfxi3FchGqweRMvrC8Gd.jpg",
+      "release_date": "2026-04-23",
+      "softcore": false,
+      "video": false,
+      "vote_average": 0,
+      "vote_count": 0
+    },
+    {
+      "adult": false,
+      "backdrop_path": "/vAiJxJDd6qqq0mYJnhtElS3uSwV.jpg",
+      "genre_ids": [
+        10749,
+        18
+      ],
+      "id": 1547712,
+      "title": "Band Melam",
+      "original_language": "te",
+      "original_title": "బ్యాండ్ మేళం",
+      "overview": "Giri and Raaji grew up together in a small village; their love and bonding also grew, but changing fortunes and misunderstandings drove them and their families apart. While Raaji moves ahead with her studies, Giri searches for his path through music with his village band. Life takes them in completely different directions until circumstances bring them face to face again. What really unfolds between them forms the rest of the story.",
+      "popularity": 1.2179,
+      "poster_path": "/4hdgEE7GLj0JLP0q0GXwslG3s7C.jpg",
+      "release_date": "2026-03-26",
+      "softcore": false,
+      "video": false,
+      "vote_average": 4.667,
+      "vote_count": 3
+    },
+    {
+      "adult": false,
+      "backdrop_path": null,
+      "genre_ids": [
+        80,
+        18
+      ],
+      "id": 1507233,
+      "title": "Manithan Deivamagalam",
+      "original_language": "ta",
+      "original_title": "மனிதன் தெய்வமாகலாம்",
+      "overview": "",
+      "popularity": 1.2576,
+      "poster_path": "/umlG9mq5Zw8LACRpD2FQDB7WLSa.jpg",
+      "release_date": "2026-04-10",
+      "softcore": false,
+      "video": false,
+      "vote_average": 0,
+      "vote_count": 0
+    }
+  ],
+  "total_pages": 4,
+  "total_results": 73
+}
