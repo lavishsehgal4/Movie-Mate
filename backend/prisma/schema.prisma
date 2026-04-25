@@ -73,3 +73,79 @@ model Movie {
   created_at        DateTime @default(now())
   updated_at        DateTime @updatedAt
 }
+
+model Theatre {
+  id             Int      @id @default(autoincrement())
+
+  theatre_name   String
+  chain_name     String
+  chain_logo     String
+
+  state          String
+  city           String
+  address        String
+
+  longitude      Decimal? @db.Decimal(9,6)
+  latitude       Decimal? @db.Decimal(9,6)
+
+  contact_no     String
+  email          String
+
+  total_screens  Int?
+
+  is_active      Boolean
+
+  rating         Decimal? @db.Decimal(3,1)
+
+  google_map_url String?
+
+  opening_time   DateTime
+  closing_time   DateTime
+
+  pincode        Int?
+  landmark       String?
+
+  is_verified    Boolean  @default(false)
+
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+  deleted_at     DateTime?
+
+  // Relations
+  theatreFacilities TheatreFacility[]
+
+  @@index([city])
+  @@index([chain_name, city])
+  @@index([longitude, latitude])
+  @@index([state])
+}
+
+model Facility {
+  id            Int      @id @default(autoincrement())
+
+  facility_name String   @unique
+  facility_logo String?
+
+  theatreFacilities TheatreFacility[]
+}
+
+model TheatreFacility {
+  theatre_id  Int
+  facility_id Int
+
+  theatre  Theatre @relation(fields: [theatre_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  facility Facility @relation(fields: [facility_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  // ✅ Composite Primary Key
+  @@id([theatre_id, facility_id])
+
+  // ⚠️ IMPORTANT:
+  // Composite index works LEFT → RIGHT
+  // Means:
+  // ✔ WHERE theatre_id = ?         (fast)
+  // ✔ WHERE theatre_id = ? AND facility_id = ? (fast)
+  // ❌ WHERE facility_id = ?       (NOT optimized)
+
+  // ✅ So we add separate index for facility_id
+  @@index([facility_id])
+}
