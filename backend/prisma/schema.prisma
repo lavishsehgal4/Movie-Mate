@@ -72,6 +72,8 @@ model Movie {
 
   created_at        DateTime @default(now())
   updated_at        DateTime @updatedAt
+
+  shows Show[]
 }
 
 model Theatre {
@@ -113,6 +115,8 @@ model Theatre {
 
   // Relations
   theatreFacilities TheatreFacility[]
+  screens Screen[]
+  shows   Show[]
 
   @@index([city])
   @@index([chain_name, city])
@@ -148,4 +152,65 @@ model TheatreFacility {
 
   // ✅ So we add separate index for facility_id
   @@index([facility_id])
+}
+
+// =========================
+// SCREENS
+// =========================
+model Screen {
+  id          Int     @id @default(autoincrement())
+  theatre_id  Int
+  screen_name String
+
+  theatre Theatre @relation(fields: [theatre_id], references: [id], onDelete: Cascade)
+
+  shows Show[]
+
+  @@index([theatre_id])
+}
+
+// =========================
+// SHOW STATUS ENUM
+// =========================
+enum ShowStatus {
+  scheduled
+  cancelled
+}
+
+// =========================
+// SHOWS
+// =========================
+model Show {
+  id         Int      @id @default(autoincrement())
+
+  movie_id   Int
+  screen_id  Int
+  theatre_id Int
+
+  start_time DateTime
+  end_time   DateTime
+
+  language   String
+  format     String
+
+  show_status ShowStatus @default(scheduled)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations
+  movie   Movie   @relation(fields: [movie_id], references: [id], onDelete: Restrict)
+  screen  Screen  @relation(fields: [screen_id], references: [id], onDelete: Cascade)
+  theatre Theatre @relation(fields: [theatre_id], references: [id], onDelete: Cascade)
+
+  // Indexes
+  @@index([movie_id])
+  @@index([screen_id])
+  @@index([theatre_id])
+  @@index([start_time, movie_id])
+  @@index([start_time])
+
+  // ⚠️ NOTE:
+  // Prisma does NOT support exclusion constraints (no overlap)
+  // You must enforce overlapping logic in backend/service layer
 }
