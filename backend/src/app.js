@@ -5,6 +5,7 @@ const morgan = require("morgan");
 //Routers
 const authRouter=require('./features/auth/auth.router');
 const movieRouter=require("./features/movies/movies.router");
+const theatreRouter=require("./features/theatres/theatre.router");
 const app = express();
 
 app.use(cors({
@@ -20,4 +21,5 @@ app.get('/test',(req,res)=>{
 
 app.use('/api/v1/auth',authRouter);
 app.use('/api/v1/movies',movieRouter);
+app.use('/api/v1/theatre',theatreRouter);
 module.exports = app;

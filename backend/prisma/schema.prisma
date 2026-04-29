@@ -7,12 +7,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum TheatreRole {
+  OWNER
+  MANAGER
+  STAFF
+}
+
 model users {
   id          Int      @id @default(autoincrement())
   firstName   String
   lastName    String?   // optional
   email       String    @unique
   phoneNumber String?    @unique
+
+  role        UserRole @default(USER)  
+
   dateOfBirth DateTime?
   imageUrl    String?   // optional
 
@@ -21,6 +35,7 @@ model users {
 
   // relation
   auths       Auth[]
+  theatreUsers TheatreUser[]  
 }
 
 model Auth {
@@ -41,6 +56,18 @@ model Auth {
 
   // map to lowercase table name
   @@map("auth")
+}
+
+model TheatreUser {
+  user_id    Int
+  theatre_id Int
+  role       TheatreRole
+
+  user     users   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  theatre  Theatre @relation(fields: [theatre_id], references: [id], onDelete: Cascade)
+
+  @@id([user_id, theatre_id])
+  @@index([user_id])
 }
 
 model Movie {
@@ -117,7 +144,8 @@ model Theatre {
   theatreFacilities TheatreFacility[]
   screens Screen[]
   shows   Show[]
-
+  theatreUsers   TheatreUser[]
+  
   @@index([city])
   @@index([chain_name, city])
   @@index([longitude, latitude])
