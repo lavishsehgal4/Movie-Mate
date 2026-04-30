@@ -1,22 +1,24 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
+import { useNavigation } from '../context/NavigationContext'
 import AuthModal from './AuthModal'
 import './Navbar.css'
 
 export default function Navbar() {
   const { user, logout } = useAuth()
+  const { setPage } = useNavigation()
   const [menuOpen, setMenuOpen] = useState(false)
   const [authOpen, setAuthOpen] = useState(false)
 
   return (
     <>
       <nav className="navbar">
-        <a href="#" className="nav-logo">
+        <button className="nav-logo" onClick={() => setPage('home')}>
           Movie<span>Mate</span>
-        </a>
+        </button>
 
         <div className="nav-right">
-          <a href="#" className="nav-link">My Bookings</a>
+          <button className="nav-link" onClick={() => {}}>My Bookings</button>
 
           <div className="nav-city">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -27,10 +29,12 @@ export default function Navbar() {
 
           {user ? (
             <div className="nav-user">
-              {user.imageUrl
-                ? <img src={user.imageUrl} alt={user.firstName} className="nav-avatar" />
-                : <div className="nav-avatar-placeholder">{user.firstName?.[0]}</div>
-              }
+              <button className="nav-avatar-btn" onClick={() => setPage('profile')} aria-label="Open profile">
+                {user.imageUrl
+                  ? <img src={user.imageUrl} alt={user.firstName} className="nav-avatar" />
+                  : <div className="nav-avatar-placeholder">{user.firstName?.[0]}</div>
+                }
+              </button>
               <span className="nav-username">{user.firstName}</span>
               <button className="nav-logout" onClick={logout}>Logout</button>
             </div>
@@ -50,22 +54,74 @@ export default function Navbar() {
       {menuOpen && <div className="overlay" onClick={() => setMenuOpen(false)} />}
       <div className={`side-menu ${menuOpen ? 'open' : ''}`}>
         <button className="close-btn" onClick={() => setMenuOpen(false)}>✕</button>
-        <a href="#" className="side-logo">Movie<span>Mate</span></a>
+        <button className="side-logo" onClick={() => { setPage('home'); setMenuOpen(false) }}>Movie<span>Mate</span></button>
+
         <nav className="side-nav">
-          <a href="#">Home</a>
-          <a href="#">Movies</a>
-          <a href="#">My Bookings</a>
-          <a href="#">Select City</a>
+          {/* account section — show login/signup if not logged in */}
+          {!user && (
+            <button
+              className="side-nav-item side-nav-auth"
+              onClick={() => { setMenuOpen(false); setAuthOpen(true) }}
+            >
+              <span className="side-icon">👤</span>
+              <span>Login / Sign Up</span>
+            </button>
+          )}
+
+          {user && (
+            <div className="side-user-info">
+              {user.imageUrl
+                ? <img src={user.imageUrl} alt={user.firstName} className="side-avatar" />
+                : <div className="side-avatar-placeholder">{user.firstName?.[0]}</div>
+              }
+              <span className="side-username">{user.firstName} {user.lastName}</span>
+            </div>
+          )}
+
+          <div className="side-divider" />
+
+          <button className="side-nav-item" onClick={() => { setPage('home'); setMenuOpen(false) }}>
+            <span className="side-icon">🏠</span>
+            <span>Home</span>
+          </button>
+          <button className="side-nav-item" onClick={() => setMenuOpen(false)}>
+            <span className="side-icon">🎬</span>
+            <span>Movies</span>
+          </button>
+          <button className="side-nav-item" onClick={() => setMenuOpen(false)}>
+            <span className="side-icon">🎟️</span>
+            <span>Your Bookings</span>
+          </button>
+          <button className="side-nav-item" onClick={() => setMenuOpen(false)}>
+            <span className="side-icon">🔔</span>
+            <span>Notifications</span>
+            <span className="side-badge">3</span>
+          </button>
+
+          <div className="side-divider" />
+
+          <button className="side-nav-item" onClick={() => setMenuOpen(false)}>
+            <span className="side-icon">⚙️</span>
+            <span>Account & Settings</span>
+          </button>
+          <button className="side-nav-item" onClick={() => setMenuOpen(false)}>
+            <span className="side-icon">❓</span>
+            <span>Help & Support</span>
+          </button>
+
+          {user && (
+            <>
+              <div className="side-divider" />
+              <button
+                className="side-nav-item side-nav-logout"
+                onClick={() => { logout(); setMenuOpen(false) }}
+              >
+                <span className="side-icon">🚪</span>
+                <span>Logout</span>
+              </button>
+            </>
+          )}
         </nav>
-        {user ? (
-          <button className="side-login" onClick={() => { logout(); setMenuOpen(false) }}>
-            Logout
-          </button>
-        ) : (
-          <button className="side-login" onClick={() => { setMenuOpen(false); setAuthOpen(true) }}>
-            Login / Sign Up
-          </button>
-        )}
       </div>
 
       {/* auth modal */}

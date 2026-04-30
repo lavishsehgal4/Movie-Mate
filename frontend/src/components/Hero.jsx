@@ -13,17 +13,13 @@ export default function Hero() {
 
   return (
     <section className="hero">
-      {/* blurred bg image — contained inside hero via overflow:hidden */}
       <div
         className="hero-bg-img"
         style={{ backgroundImage: `url(${slide.bg})` }}
       />
-
-      {/* overlays */}
       <div className="hero-dark" />
       <div className="hero-gradient" />
 
-      {/* navbar inside hero, no gap */}
       <Navbar />
 
       {/* text content — left aligned */}

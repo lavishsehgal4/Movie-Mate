@@ -21,9 +21,28 @@
   font-weight: 800;
   color: #fff;
   letter-spacing: -0.5px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
 }
 
 .nav-logo span { color: #E8895B; }
+
+.side-logo {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+}
+
+.side-logo span { color: #E8895B; }
 
 .nav-right {
   display: flex;
@@ -36,6 +55,11 @@
   color: #A0A7B5;
   font-weight: 500;
   transition: color 0.2s;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
 }
 
 .nav-link:hover { color: #fff; }
@@ -73,6 +97,21 @@
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.nav-avatar-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.nav-avatar-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 0 3px rgba(232,137,91,0.4);
+  border-radius: 50%;
 }
 
 .nav-avatar {
@@ -186,35 +225,119 @@
 .side-nav {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   flex: 1;
+  overflow-y: auto;
 }
 
-.side-nav a {
-  padding: 12px 14px;
-  border-radius: 10px;
+/* user info block when logged in */
+.side-user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  margin-bottom: 4px;
+}
+
+.side-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #E8895B;
+  flex-shrink: 0;
+}
+
+.side-avatar-placeholder {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #E8895B;
+  color: #fff;
   font-size: 15px;
-  color: #A0A7B5;
-  transition: background 0.2s, color 0.2s;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.side-nav a:hover {
-  background: rgba(232, 137, 91, 0.1);
+.side-username {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* divider */
+.side-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+  margin: 6px 0;
+}
+
+/* nav items */
+.side-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #A0A7B5;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+  font-family: inherit;
+  position: relative;
+}
+
+.side-nav-item:hover {
+  background: rgba(232, 137, 91, 0.08);
+  color: #fff;
+}
+
+.side-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* notification badge */
+.side-badge {
+  margin-left: auto;
+  background: #E8895B;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  line-height: 1.4;
+}
+
+/* login/signup item — slightly highlighted */
+.side-nav-auth {
+  color: #E8895B;
+  font-weight: 600;
+}
+
+.side-nav-auth:hover {
+  background: rgba(232, 137, 91, 0.12);
   color: #E8895B;
 }
 
-.side-login {
-  background: #E8895B;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 13px;
-  font-size: 14px;
-  font-weight: 600;
-  transition: background 0.2s;
+/* logout — red tint */
+.side-nav-logout {
+  color: #ff6b7a;
 }
 
-.side-login:hover { background: #d4784a; }
+.side-nav-logout:hover {
+  background: rgba(220, 53, 69, 0.1);
+  color: #ff6b7a;
+}
 
 @media (max-width: 768px) {
   .navbar {
