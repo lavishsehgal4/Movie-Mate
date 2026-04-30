@@ -57,4 +57,29 @@ async function createTheatreWithOwner(data, userId) {
   }
 }
 
-module.exports = { createTheatreWithOwner };
+async function getUserTheatres(userId) {
+  try {
+    const theatres = await prisma.theatreUser.findMany({
+      where: {
+        user_id: userId,
+      },
+      include: {
+        theatre: {
+          select: {
+            id: true,
+            theatre_name: true,
+            city: true,
+            state: true,
+          },
+        },
+      },
+    });
+
+    return theatres;
+  } catch (error) {
+    console.error("Error fetching user theatres:", error);
+    throw new Error("Failed to fetch theatres");
+  }
+}
+
+module.exports = { createTheatreWithOwner, getUserTheatres};

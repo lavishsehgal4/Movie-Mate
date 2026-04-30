@@ -1,5 +1,5 @@
 const { validateCreateTheatre } = require("./theatre.validator");
-const { createTheatreWithOwner } = require("./theatre.repository");
+const { createTheatreWithOwner,getUserTheatres } = require("./theatre.repository");
 
 async function createTheatre(data, userId) {
   // 🔹 1. validate input
@@ -22,6 +22,26 @@ async function createTheatre(data, userId) {
   };
 }
 
+async function getMyTheatres(userId) {
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+
+  const records = await getUserTheatres(userId);
+
+  // 🔹 transform response (clean for frontend)
+  const theatres = records.map((record) => ({
+    theatreId: record.theatre.id,
+    theatre_name: record.theatre.theatre_name,
+    city: record.theatre.city,
+    state: record.theatre.state,
+    role: record.role,
+  }));
+
+  return theatres;
+}
+
 module.exports = {
   createTheatre,
+  getMyTheatres
 };

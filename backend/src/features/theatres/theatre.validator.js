@@ -1,3 +1,41 @@
+// ------------------ helpers ------------------
+
+function normalizeString(value) {
+  if (typeof value !== "string") return "";
+  return value.trim();
+}
+
+// ------------------ field validators ------------------
+
+function validateEmail(email) {
+  if (typeof email !== "string") {
+    return { isValid: false, error: "Email must be a string" };
+  }
+
+  const normalized = email.trim().toLowerCase();
+  const emailRegex = /^\S+@\S+\.\S+$/;
+
+  if (!emailRegex.test(normalized)) {
+    return { isValid: false, error: "Invalid email format" };
+  }
+
+  return { isValid: true, value: normalized };
+}
+
+function validatePhoneNo(phoneNumber) {
+  if (typeof phoneNumber !== "string") {
+    return { isValid: false, error: "Phone number must be a string" };
+  }
+
+  const normalized = phoneNumber.trim();
+
+  if (!/^\d{10}$/.test(normalized)) {
+    return { isValid: false, error: "Phone number must be 10 digits" };
+  }
+
+  return { isValid: true, value: normalized };
+}
+
 function normalizeNumber(value) {
   if (value === undefined || value === null) return null;
   const num = Number(value);

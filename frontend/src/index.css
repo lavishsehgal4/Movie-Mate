@@ -3,9 +3,9 @@
 html, body {
   width: 100%;
   min-height: 100vh;
-  background: #f4f4f4;
+  background: #0B0F1A;
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  color: #1a1a1a;
+  color: #fff;
   overflow-x: hidden;
 }
 
@@ -17,5 +17,9 @@ html, body {
 }
 
 a { text-decoration: none; color: inherit; }
-button { cursor: pointer; font-family: inherit; }
+button { cursor: pointer; font-family: inherit; border: none; }
 img { display: block; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0B0F1A; }
+::-webkit-scrollbar-thumb { background: #2a3050; border-radius: 3px; }
