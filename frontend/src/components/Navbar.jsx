@@ -10,6 +10,13 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [authOpen, setAuthOpen] = useState(false)
 
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/v1/auth/logout', { method: 'POST', credentials: 'include' })
+    } catch (_) {}
+    logout()
+  }
+
   return (
     <>
       <nav className="navbar">
@@ -36,7 +43,7 @@ export default function Navbar() {
                 }
               </button>
               <span className="nav-username">{user.firstName}</span>
-              <button className="nav-logout" onClick={logout}>Logout</button>
+              <button className="nav-logout" onClick={handleLogout}>Logout</button>
             </div>
           ) : (
             <button className="nav-login" onClick={() => setAuthOpen(true)}>
@@ -114,7 +121,7 @@ export default function Navbar() {
               <div className="side-divider" />
               <button
                 className="side-nav-item side-nav-logout"
-                onClick={() => { logout(); setMenuOpen(false) }}
+                onClick={() => { handleLogout(); setMenuOpen(false) }}
               >
                 <span className="side-icon">🚪</span>
                 <span>Logout</span>

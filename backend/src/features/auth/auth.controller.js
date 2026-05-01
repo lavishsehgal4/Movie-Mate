@@ -52,6 +52,27 @@ async function httpLoginUser(req, res) {
   }
 }
 
+async function httpLogoutUser(req, res) {
+  try {
+    // 🔥 clear cookie (must match login options)
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: false, // 👉 true in production
+      sameSite: "strict",
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Logged out successfully",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: "Logout failed",
+    });
+  }
+}
+
 function redirectToGoogle(req, res) {
   const baseURL = process.env.baseURL;
 
@@ -89,7 +110,7 @@ async function googleCallback(req, res) {
 
     const { access_token } = tokenResponse.data;
 
-    // 🔹 2. Fetch Google user
+    // 🔹 2. Fetch user
     const userResponse = await axios.get(
       "https://www.googleapis.com/oauth2/v2/userinfo",
       {
@@ -101,28 +122,23 @@ async function googleCallback(req, res) {
 
     const googleUser = userResponse.data;
 
-    // 🔹 3. Call service (DB + JWT)
+    // 🔹 3. Login / signup
     const { user, token } = await googleLogin(googleUser);
 
     // 🔹 4. Set cookie
     res.cookie("token", token, {
       httpOnly: true,
       secure: false, // 👉 true in production
-      sameSite: "strict",
+      sameSite: "lax", // 🔥 important for OAuth
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-    // 🔹 5. Send response
-    res.status(200).json({
-      success: true,
-      data: user,
-    });
+    // 🔥 5. Redirect to frontend (from env)
+    res.redirect(process.env.FRONTEND_URL);
 
   } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message || "Google login failed",
-    });
+    // optional: redirect with error flag
+    res.redirect(`${process.env.FRONTEND_URL}/login?error=true`);
   }
 }
 
@@ -154,6 +170,7 @@ async function httpGetCurrentUser(req, res) {
 module.exports = {
   httpSignUpUser,
   httpLoginUser,
+  httpLogoutUser,
   redirectToGoogle,
   googleCallback,
   httpGetCurrentUser

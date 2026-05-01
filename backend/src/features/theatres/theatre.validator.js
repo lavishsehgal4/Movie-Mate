@@ -160,6 +160,39 @@ function validateCreateTheatre(data) {
   return { isValid: true };
 }
 
+function validateAddFacilitiesToTheatre(data) {
+  const temp = {};
+
+  // theatre_id
+  const theatreId = normalizeNumber(data.theatre_id);
+  if (!theatreId) {
+    return { isValid: false, error: "Valid theatre_id is required" };
+  }
+  temp.theatre_id = theatreId;
+
+  // facility_ids
+  if (!Array.isArray(data.facility_ids) || data.facility_ids.length === 0) {
+    return { isValid: false, error: "facility_ids must be a non-empty array" };
+  }
+
+  const cleanedIds = [];
+
+  for (const id of data.facility_ids) {
+    const num = normalizeNumber(id);
+    if (!num) {
+      return { isValid: false, error: "facility_ids must contain valid numbers" };
+    }
+    cleanedIds.push(num);
+  }
+
+  temp.facility_ids = cleanedIds;
+
+  // ✅ apply mutation at end
+  Object.assign(data, temp);
+
+  return { isValid: true };
+}
 module.exports={
     validateCreateTheatre,
+    validateAddFacilitiesToTheatre
 }

@@ -82,4 +82,34 @@ async function getUserTheatres(userId) {
   }
 }
 
-module.exports = { createTheatreWithOwner, getUserTheatres};
+async function addFacilitiesToTheatre(theatreId, facilityIds) {
+  try {
+    const data = facilityIds.map((facilityId) => ({
+      theatre_id: theatreId,
+      facility_id: facilityId,
+    }));
+
+    return await prisma.theatreFacility.createMany({
+      data,
+      skipDuplicates: true, // rely on DB to ignore duplicates
+    });
+  } catch (err) {
+    console.error("Error attaching facilities:", err);
+    throw new Error("Failed to attach facilities to theatre");
+  }
+}
+
+async function hasTheatreAccess(userId) {
+  try {
+    const record = await prisma.theatreUser.findFirst({
+      where: { user_id: userId },
+      select: { user_id: true }, // minimal data
+    });
+
+    return !!record;
+  } catch (err) {
+    throw new Error("Failed to check theatre access");
+  }
+}
+
+module.exports = { createTheatreWithOwner, getUserTheatres,addFacilitiesToTheatre,hasTheatreAccess};

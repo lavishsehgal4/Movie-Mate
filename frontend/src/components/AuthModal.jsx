@@ -68,7 +68,7 @@ export default function AuthModal({ onClose }) {
   }
 
   const handleGoogle = () => {
-    window.location.href = `${API}/google`
+    window.location.href = 'http://localhost:5000/api/v1/auth/google'
   }
 
   return (

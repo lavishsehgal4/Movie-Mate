@@ -9,6 +9,30 @@ export function AuthProvider({ children }) {
       return stored ? JSON.parse(stored) : null
     } catch { return null }
   })
+  const [authLoading, setAuthLoading] = useState(true)
+
+  // On mount: try to restore session from cookie (handles Google OAuth redirect)
+  useEffect(() => {
+    async function restoreSession() {
+      try {
+        const res = await fetch('http://localhost:5000/api/v1/auth/me', {
+          method: 'GET',
+          credentials: 'include',
+        })
+        if (!res.ok) throw new Error('not authenticated')
+        const data = await res.json()
+        if (data.success && data.data) {
+          setUser(data.data)
+          localStorage.setItem('mm_user', JSON.stringify(data.data))
+        }
+      } catch {
+        // not logged in — leave user as null
+      } finally {
+        setAuthLoading(false)
+      }
+    }
+    restoreSession()
+  }, [])
 
   const login = (userData) => {
     setUser(userData)
@@ -21,7 +45,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, authLoading }}>
       {children}
     </AuthContext.Provider>
   )

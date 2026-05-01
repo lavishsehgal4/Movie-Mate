@@ -11,8 +11,8 @@ const facilityRouter=require("./features/theatreFacilities/facilities.router");
 const app = express();
 
 app.use(cors({
-  origin: "*",        // For development (change to specific origin later)
-  
+  origin: "http://localhost:5173", // 🔥 exact frontend URL
+  credentials: true
 }));
 app.use(express.json());
 app.use(cookieParser());

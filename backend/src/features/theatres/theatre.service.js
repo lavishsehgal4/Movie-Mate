@@ -1,5 +1,6 @@
-const { validateCreateTheatre } = require("./theatre.validator");
-const { createTheatreWithOwner,getUserTheatres } = require("./theatre.repository");
+const { validateCreateTheatre,validateAddFacilitiesToTheatre  } = require("./theatre.validator");
+const { createTheatreWithOwner,getUserTheatres,addFacilitiesToTheatre  } = require("./theatre.repository");
+const{hasTheatreAccess}=require("./theatre.repository");
 
 async function createTheatre(data, userId) {
   // 🔹 1. validate input
@@ -41,7 +42,42 @@ async function getMyTheatres(userId) {
   return theatres;
 }
 
+async function attachFacilitiesToTheatre(data) {
+  // 🔹 1. validate input
+  const validation = validateAddFacilitiesToTheatre(data);
+  if (!validation.isValid) {
+    throw new Error(validation.error);
+  }
+
+  const { theatre_id } = data;
+
+  // 🔹 2. deduplicate
+  const facilityIds = [...new Set(data.facility_ids)];
+
+  // 🔹 3. repo call
+  const result = await addFacilitiesToTheatre(theatre_id, facilityIds);
+
+  // 🔹 4. clean response
+  return {
+    theatre_id,
+    attached_count: result.count,
+  };
+}
+
+async function checkUserTheatreAccess(userId) {
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+
+  const hasAccess = await hasTheatreAccess(userId);
+
+  return {
+    hasTheatreAccess: hasAccess,
+  };
+}
 module.exports = {
   createTheatre,
-  getMyTheatres
+  getMyTheatres,
+  attachFacilitiesToTheatre,
+  checkUserTheatreAccess
 };

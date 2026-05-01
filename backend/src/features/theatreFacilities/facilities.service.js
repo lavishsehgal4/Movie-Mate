@@ -1,4 +1,4 @@
-const { createManyFacilities } = require("./facilities.repository");
+const { createManyFacilities,getAllFacilities } = require("./facilities.repository");
 const { validateCreateFacility } = require("./facilities.validator");
 
 async function addManyFacilities(data) {
@@ -28,6 +28,13 @@ async function addManyFacilities(data) {
   };
 }
 
+async function fetchAllFacilities() {
+  const facilities = await getAllFacilities();
+
+  return facilities;
+}
+
 module.exports={
-    addManyFacilities
+    addManyFacilities,
+    fetchAllFacilities,
 }
