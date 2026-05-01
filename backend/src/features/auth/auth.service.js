@@ -2,6 +2,7 @@ const { validateSignupData,validateLoginData } = require("./auth.validator");
 const { hashPassword ,comparePassword} = require("./auth.utils");
 const { addUserUsingPassword,findUserForLogin } = require("./auth.repository");
 const { findGoogleUser, createGoogleUser } = require("./auth.repository");
+const { getUserById } = require("./auth.repository");
 const { generateToken } = require("./auth.utils");
 
 async function signUpUser(data) {
@@ -99,8 +100,23 @@ async function googleLogin(googleUser) {
   };
 }
 
+async function getCurrentUser(userId) {
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+
+  const user = await getUserById(userId);
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return user;
+}
+
 module.exports = {
   signUpUser,
   loginUser,
-  googleLogin
+  googleLogin,
+  getCurrentUser
 };

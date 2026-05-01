@@ -119,9 +119,34 @@ async function createGoogleUser(googleUser) {
   });
 }
 
+async function getUserById(userId) {
+  try {
+    const user = await prisma.users.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        firstName: true,
+        lastName: true,
+        email: true,
+        phoneNumber: true,
+        role: true,
+        imageUrl: true,
+        dateOfBirth: true,
+        createdAt: true,
+      },
+    });
+
+    return user;
+  } catch (err) {
+    throw new Error("Failed to fetch user");
+  }
+}
+
 module.exports = {
   addUserUsingPassword,
   findUserForLogin,
   findGoogleUser,
-  createGoogleUser
+  createGoogleUser,
+  getUserById
 };

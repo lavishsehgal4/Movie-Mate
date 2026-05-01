@@ -1,4 +1,4 @@
-const { signUpUser,loginUser,googleLogin  } = require("./auth.service");
+const { signUpUser,loginUser,googleLogin,getCurrentUser  } = require("./auth.service");
 
 const querystring = require("querystring");
 const axios = require("axios");
@@ -126,9 +126,35 @@ async function googleCallback(req, res) {
   }
 }
 
+async function httpGetCurrentUser(req, res) {
+  try {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
+    const user = await getCurrentUser(userId);
+
+    return res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message || "Failed to fetch user",
+    });
+  }
+}
+
 module.exports = {
   httpSignUpUser,
   httpLoginUser,
   redirectToGoogle,
   googleCallback,
+  httpGetCurrentUser
 };
