@@ -1,4 +1,4 @@
-const { signUpUser,loginUser,googleLogin,getCurrentUser  } = require("./auth.service");
+const { signUpUser,loginUser,googleLogin,getCurrentUser,updateProfile } = require("./auth.service");
 
 const querystring = require("querystring");
 const axios = require("axios");
@@ -167,11 +167,37 @@ async function httpGetCurrentUser(req, res) {
   }
 }
 
+async function httpUpdateProfile(req, res) {
+  try {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
+    const user = await updateProfile(userId, req.body);
+
+    return res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message || "Failed to update profile",
+    });
+  }
+}
+
 module.exports = {
   httpSignUpUser,
   httpLoginUser,
   httpLogoutUser,
   redirectToGoogle,
   googleCallback,
-  httpGetCurrentUser
+  httpGetCurrentUser,
+  httpUpdateProfile,
 };

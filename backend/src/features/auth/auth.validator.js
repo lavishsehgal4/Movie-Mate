@@ -158,7 +158,61 @@ function validateLoginData(data) {
   return { isValid: true };
 }
 
+
+function validateUpdateUserProfile(data) {
+  const temp = {};
+
+  // 🔹 firstName (optional)
+  if (data.firstName !== undefined) {
+    const value = normalizeString(data.firstName);
+    if (!value) {
+      return { isValid: false, error: "First name cannot be empty" };
+    }
+    temp.firstName = value;
+  }
+
+  // 🔹 lastName (optional)
+  if (data.lastName !== undefined) {
+    const value = normalizeString(data.lastName);
+    if (!value) {
+      return { isValid: false, error: "Last name cannot be empty" };
+    }
+    temp.lastName = value;
+  }
+
+  // 🔹 dateOfBirth (optional)
+  if (data.dateOfBirth !== undefined) {
+    const dobResult = validateDob(data.dateOfBirth);
+    if (!dobResult.isValid) return dobResult;
+    temp.dateOfBirth = dobResult.value;
+  }
+
+  // 🔹 imageUrl (optional)
+  if (data.imageUrl !== undefined) {
+    const value = normalizeString(data.imageUrl);
+    temp.imageUrl = value || null;
+  }
+
+  // 🔴 BLOCK fields (important)
+  if (data.email !== undefined) {
+    return { isValid: false, error: "Email cannot be updated here" };
+  }
+
+  if (data.phoneNumber !== undefined) {
+    return { isValid: false, error: "Phone number cannot be updated here" };
+  }
+
+  if (data.password !== undefined) {
+    return { isValid: false, error: "Password cannot be updated here" };
+  }
+
+  // 🔹 apply mutation only at end
+  Object.assign(data, temp);
+
+  return { isValid: true };
+}
 module.exports = {
   validateSignupData,
   validateLoginData,
+  validateUpdateUserProfile
 };

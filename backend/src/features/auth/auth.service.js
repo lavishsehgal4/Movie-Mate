@@ -3,6 +3,8 @@ const { hashPassword ,comparePassword} = require("./auth.utils");
 const { addUserUsingPassword,findUserForLogin } = require("./auth.repository");
 const { findGoogleUser, createGoogleUser } = require("./auth.repository");
 const { getUserById } = require("./auth.repository");
+const { validateUpdateUserProfile } = require("./auth.validator");
+const { updateUserProfile } = require("./auth.repository");
 const { generateToken } = require("./auth.utils");
 
 async function signUpUser(data) {
@@ -114,9 +116,31 @@ async function getCurrentUser(userId) {
   return user;
 }
 
+async function updateProfile(userId, data) {
+  // 🔹 1. validate input
+  const validation = validateUpdateUserProfile(data);
+  if (!validation.isValid) {
+    throw new Error(validation.error);
+  }
+
+  // 🔹 2. remove undefined fields (important)
+  const cleanData = {};
+  for (const key in data) {
+    if (data[key] !== undefined) {
+      cleanData[key] = data[key];
+    }
+  }
+
+  // 🔹 3. call repo
+  const user = await updateUserProfile(userId, cleanData);
+
+  return user;
+}
+
 module.exports = {
   signUpUser,
   loginUser,
   googleLogin,
-  getCurrentUser
+  getCurrentUser,
+  updateProfile
 };

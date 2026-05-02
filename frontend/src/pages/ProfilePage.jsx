@@ -59,50 +59,41 @@ function formatMemberSince(iso) {
 }
 
 export default function ProfilePage() {
-  const { user, logout } = useAuth()
+  const { user, setUser, logout } = useAuth()
   const { setPage } = useNavigation()
   const [activeTab, setActiveTab] = useState('profile')
 
-  // fetched profile data
   const [profile, setProfile] = useState(null)
   const [loadingProfile, setLoadingProfile] = useState(true)
   const [profileError, setProfileError] = useState('')
 
-  // edit mode
   const [editing, setEditing] = useState(false)
   const [editForm, setEditForm] = useState({ firstName: '', lastName: '', dateOfBirth: '' })
+  const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState('')
+  const [saveSuccess, setSaveSuccess] = useState(false)
 
   const handleLogout = async () => {
-    try {
-      await fetch('/api/v1/auth/logout', { method: 'POST', credentials: 'include' })
-    } catch (_) { /* ignore network errors, still clear local state */ }
-    logout()
+    await logout()
     setPage('home')
   }
 
-  // fetch /api/v1/auth/me on mount — use Vite proxy so cookie is sent same-origin
+  // fetch profile on mount
   useEffect(() => {
-    let cancelled = false   // prevent double-fetch in StrictMode
-
+    let cancelled = false
     async function fetchProfile() {
       setLoadingProfile(true)
       setProfileError('')
       try {
-        const res = await fetch('/api/v1/auth/me', {
+        const res = await fetch('http://localhost:5000/api/v1/auth/me', {
           method: 'GET',
-          credentials: 'include',   // sends cookie via Vite proxy (same-origin)
+          credentials: 'include',
         })
-
         if (cancelled) return
-
-        const contentType = res.headers.get('content-type') || ''
-        if (!contentType.includes('application/json')) {
-          throw new Error(`Unable to load profile (${res.status})`)
-        }
-
+        const ct = res.headers.get('content-type') || ''
+        if (!ct.includes('application/json')) throw new Error(`Unable to load profile (${res.status})`)
         const data = await res.json()
         if (!data.success) throw new Error(data.message || 'Failed to load profile')
-
         setProfile(data.data)
         setEditForm({
           firstName:   data.data.firstName   || '',
@@ -117,21 +108,57 @@ export default function ProfilePage() {
         if (!cancelled) setLoadingProfile(false)
       }
     }
-
     fetchProfile()
-    return () => { cancelled = true }   // cleanup cancels stale call
+    return () => { cancelled = true }
   }, [])
 
   const handleEditToggle = () => {
     if (editing) {
-      // reset form on cancel
       setEditForm({
         firstName:   profile?.firstName   || '',
         lastName:    profile?.lastName    || '',
         dateOfBirth: profile?.dateOfBirth ? profile.dateOfBirth.slice(0, 10) : '',
       })
+      setSaveError('')
+      setSaveSuccess(false)
     }
     setEditing(e => !e)
+  }
+
+  const handleSave = async () => {
+    setSaving(true)
+    setSaveError('')
+    setSaveSuccess(false)
+    try {
+      const res = await fetch('http://localhost:5000/api/v1/auth/profile', {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName:   editForm.firstName,
+          lastName:    editForm.lastName,
+          dateOfBirth: editForm.dateOfBirth,
+        }),
+      })
+      const ct = res.headers.get('content-type') || ''
+      if (!ct.includes('application/json')) throw new Error(`Server error (${res.status})`)
+      const data = await res.json()
+      if (!data.success) throw new Error(data.message || 'Update failed')
+
+      // update local profile state
+      setProfile(prev => ({ ...prev, ...data.data }))
+      // update global auth state + sessionStorage
+      const updated = { ...user, ...data.data }
+      setUser(updated)
+      try { sessionStorage.setItem('mm_user', JSON.stringify(updated)) } catch {}
+
+      setSaveSuccess(true)
+      setEditing(false)
+    } catch (err) {
+      setSaveError(err.message || 'Failed to save changes')
+    } finally {
+      setSaving(false)
+    }
   }
 
   const displayName = profile?.firstName || user?.firstName || ''
@@ -317,8 +344,12 @@ export default function ProfilePage() {
                   </div>
                   <div className="pp-form-actions">
                     <button className="pp-cancel-btn" onClick={handleEditToggle}>Cancel</button>
-                    <button className="pp-save-btn">Save Changes</button>
+                    <button className="pp-save-btn" onClick={handleSave} disabled={saving}>
+                      {saving ? 'Saving...' : 'Save Changes'}
+                    </button>
                   </div>
+                  {saveError   && <p className="pp-save-error">⚠️ {saveError}</p>}
+                  {saveSuccess && <p className="pp-save-success">✓ Profile updated successfully</p>}
                 </div>
               ) : (
                 /* ── VIEW MODE: display as text ── */

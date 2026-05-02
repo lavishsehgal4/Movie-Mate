@@ -143,10 +143,33 @@ async function getUserById(userId) {
   }
 }
 
+async function updateUserProfile(userId, data) {
+  try {
+    const user = await prisma.users.update({
+      where: { id: userId },
+      data, // 🔥 dynamic fields (only what is passed)
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        dateOfBirth: true,
+        imageUrl: true,
+      },
+    });
+
+    return user;
+  } catch (err) {
+    throw new Error("Failed to update user profile");
+  }
+}
+
+
 module.exports = {
   addUserUsingPassword,
   findUserForLogin,
   findGoogleUser,
   createGoogleUser,
-  getUserById
+  getUserById,
+  updateUserProfile,
+  
 };
