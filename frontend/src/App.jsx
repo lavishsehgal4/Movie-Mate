@@ -5,6 +5,7 @@ import MoviesSection from './components/MoviesSection'
 import Footer from './components/Footer'
 import ProfilePage from './pages/ProfilePage'
 import PartnerPage from './pages/PartnerPage'
+import MyTheatrePage from './pages/MyTheatrePage'
 import './App.css'
 
 export default function App() {
@@ -19,8 +20,9 @@ export default function App() {
     )
   }
 
-  if (page === 'profile') return <ProfilePage />
-  if (page === 'partner') return <PartnerPage />
+  if (page === 'profile')    return <ProfilePage />
+  if (page === 'partner')    return <PartnerPage />
+  if (page === 'my-theatre') return <MyTheatrePage />
 
   return (
     <>

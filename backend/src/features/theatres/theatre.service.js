@@ -30,12 +30,18 @@ async function getMyTheatres(userId) {
 
   const records = await getUserTheatres(userId);
 
-  // 🔹 transform response (clean for frontend)
+  // 🔹 transform response (clean + flat for frontend)
   const theatres = records.map((record) => ({
     theatreId: record.theatre.id,
     theatre_name: record.theatre.theatre_name,
+    chain_name: record.theatre.chain_name,
+    logo: record.theatre.chain_logo,
     city: record.theatre.city,
     state: record.theatre.state,
+    total_screens: record.theatre.total_screens,
+    rating:record.theatre.rating,
+    created_at: record.theatre.created_at,
+    is_verified: record.theatre.is_verified,
     role: record.role,
   }));
 

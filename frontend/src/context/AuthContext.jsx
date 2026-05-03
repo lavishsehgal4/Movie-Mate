@@ -106,8 +106,18 @@ export function AuthProvider({ children }) {
     clearSession()
   }
 
+  // Refresh theatre access — call from anywhere after theatre creation
+  const refreshTheatreAccess = async () => {
+    const access = await fetchHasAccess()
+    if (access !== null) {
+      setTheatreAccess(access)
+      writeTheatre(access)
+    }
+    return access
+  }
+
   return (
-    <AuthContext.Provider value={{ user, setUser, theatreAccess, login, logout, authLoading }}>
+    <AuthContext.Provider value={{ user, setUser, theatreAccess, setTheatreAccess, refreshTheatreAccess, login, logout, authLoading }}>
       {children}
     </AuthContext.Provider>
   )

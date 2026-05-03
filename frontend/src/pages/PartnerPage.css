@@ -461,3 +461,55 @@
   .review-grid { grid-template-columns: 1fr; }
   .partner-topbar { padding: 12px 16px; }
 }
+
+/* chain logo preview on step 1 */
+.chain-logo-preview {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #1e1e1e;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.chain-logo-preview img {
+  height: 48px;
+  width: auto;
+  max-width: 120px;
+  object-fit: contain;
+  border-radius: 6px;
+  background: #fff;
+  padding: 4px;
+}
+
+.chain-logo-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* review logo */
+.review-logo-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.review-logo-img {
+  height: 40px;
+  width: auto;
+  max-width: 100px;
+  object-fit: contain;
+  border-radius: 6px;
+  background: #fff;
+  padding: 3px;
+}
+
+.review-logo-url {
+  font-size: 10px;
+  color: #4a5168;
+  word-break: break-all;
+  line-height: 1.4;
+}

@@ -59,7 +59,7 @@ function formatMemberSince(iso) {
 }
 
 export default function ProfilePage() {
-  const { user, setUser, logout } = useAuth()
+  const { user, setUser, theatreAccess, logout } = useAuth()
   const { setPage } = useNavigation()
   const [activeTab, setActiveTab] = useState('profile')
 
@@ -216,9 +216,17 @@ export default function ProfilePage() {
 
           {/* bottom links */}
           <div className="pp-sb-bottom">
-            <button className="pp-sb-item pp-sb-partner" onClick={() => setPage('partner')}>
-              <span className="pp-sb-icon">✨</span><span>Become a Partner</span>
-            </button>
+            {theatreAccess?.hasTheatreAccess
+              ? (
+                <button className="pp-sb-item pp-sb-partner" onClick={() => setPage('my-theatre')}>
+                  <span className="pp-sb-icon">🏟️</span><span>Manage Your Theatres</span>
+                </button>
+              ) : (
+                <button className="pp-sb-item pp-sb-partner" onClick={() => setPage('partner')}>
+                  <span className="pp-sb-icon">✨</span><span>Become a Partner</span>
+                </button>
+              )
+            }
             <button className="pp-sb-item">
               <span className="pp-sb-icon">❓</span><span>Help & Support</span>
             </button>

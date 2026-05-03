@@ -5,16 +5,15 @@ import AuthModal from './AuthModal'
 import './Navbar.css'
 
 export default function Navbar() {
-  const { user, logout } = useAuth()
+  const { user, theatreAccess, logout } = useAuth()
   const { setPage } = useNavigation()
   const [menuOpen, setMenuOpen] = useState(false)
   const [authOpen, setAuthOpen] = useState(false)
 
+  const hasTheatre = theatreAccess?.hasTheatreAccess === true
+
   const handleLogout = async () => {
-    try {
-      await fetch('/api/v1/auth/logout', { method: 'POST', credentials: 'include' })
-    } catch (_) {}
-    logout()
+    await logout()
   }
 
   return (
@@ -25,7 +24,7 @@ export default function Navbar() {
         </button>
 
         <div className="nav-right">
-          <button className="nav-link" onClick={() => {}}>My Bookings</button>
+          <button className="nav-link">My Bookings</button>
 
           <div className="nav-city">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -33,6 +32,12 @@ export default function Navbar() {
             </svg>
             <span>Select City</span>
           </div>
+
+          {user && hasTheatre && (
+            <button className="nav-my-theatre" onClick={() => setPage('my-theatre')}>
+              🎬 My Theatre
+            </button>
+          )}
 
           {user ? (
             <div className="nav-user">
@@ -43,7 +48,6 @@ export default function Navbar() {
                 }
               </button>
               <span className="nav-username">{user.firstName}</span>
-              <button className="nav-logout" onClick={handleLogout}>Logout</button>
             </div>
           ) : (
             <button className="nav-login" onClick={() => setAuthOpen(true)}>
@@ -64,12 +68,8 @@ export default function Navbar() {
         <button className="side-logo" onClick={() => { setPage('home'); setMenuOpen(false) }}>Movie<span>Mate</span></button>
 
         <nav className="side-nav">
-          {/* account section — show login/signup if not logged in */}
           {!user && (
-            <button
-              className="side-nav-item side-nav-auth"
-              onClick={() => { setMenuOpen(false); setAuthOpen(true) }}
-            >
+            <button className="side-nav-item side-nav-auth" onClick={() => { setMenuOpen(false); setAuthOpen(true) }}>
               <span className="side-icon">👤</span>
               <span>Login / Sign Up</span>
             </button>
@@ -88,50 +88,46 @@ export default function Navbar() {
           <div className="side-divider" />
 
           <button className="side-nav-item" onClick={() => { setPage('home'); setMenuOpen(false) }}>
-            <span className="side-icon">🏠</span>
-            <span>Home</span>
+            <span className="side-icon">🏠</span><span>Home</span>
           </button>
           <button className="side-nav-item" onClick={() => setMenuOpen(false)}>
-            <span className="side-icon">🎬</span>
-            <span>Movies</span>
+            <span className="side-icon">🎬</span><span>Movies</span>
           </button>
           <button className="side-nav-item" onClick={() => setMenuOpen(false)}>
-            <span className="side-icon">🎟️</span>
-            <span>Your Bookings</span>
+            <span className="side-icon">🎟️</span><span>Your Bookings</span>
           </button>
+
+          {user && hasTheatre && (
+            <button className="side-nav-item side-nav-theatre" onClick={() => { setPage('my-theatre'); setMenuOpen(false) }}>
+              <span className="side-icon">🏟️</span><span>My Theatre</span>
+            </button>
+          )}
+
           <button className="side-nav-item" onClick={() => setMenuOpen(false)}>
-            <span className="side-icon">🔔</span>
-            <span>Notifications</span>
+            <span className="side-icon">🔔</span><span>Notifications</span>
             <span className="side-badge">3</span>
           </button>
 
           <div className="side-divider" />
 
           <button className="side-nav-item" onClick={() => setMenuOpen(false)}>
-            <span className="side-icon">⚙️</span>
-            <span>Account & Settings</span>
+            <span className="side-icon">⚙️</span><span>Account & Settings</span>
           </button>
           <button className="side-nav-item" onClick={() => setMenuOpen(false)}>
-            <span className="side-icon">❓</span>
-            <span>Help & Support</span>
+            <span className="side-icon">❓</span><span>Help & Support</span>
           </button>
 
           {user && (
             <>
               <div className="side-divider" />
-              <button
-                className="side-nav-item side-nav-logout"
-                onClick={() => { handleLogout(); setMenuOpen(false) }}
-              >
-                <span className="side-icon">🚪</span>
-                <span>Logout</span>
+              <button className="side-nav-item side-nav-logout" onClick={() => { handleLogout(); setMenuOpen(false) }}>
+                <span className="side-icon">🚪</span><span>Logout</span>
               </button>
             </>
           )}
         </nav>
       </div>
 
-      {/* auth modal */}
       {authOpen && <AuthModal onClose={() => setAuthOpen(false)} />}
     </>
   )
