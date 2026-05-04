@@ -1,70 +1,134 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+import { useNavigation } from '../context/NavigationContext'
+import AuthModal from './AuthModal'
 import './Navbar.css'
 
-const cities = ['Mumbai', 'Delhi', 'Bangalore', 'Chennai', 'Hyderabad', 'Pune', 'Kolkata']
-
 export default function Navbar() {
+  const { user, theatreAccess, logout } = useAuth()
+  const { setPage } = useNavigation()
   const [menuOpen, setMenuOpen] = useState(false)
-  const [city, setCity] = useState('Mumbai')
-  const navigate = useNavigate()
+  const [authOpen, setAuthOpen] = useState(false)
+
+  const hasTheatre = theatreAccess?.hasTheatreAccess === true
+
+  const handleLogout = async () => {
+    await logout()
+  }
 
   return (
     <>
       <nav className="navbar">
-        {/* Logo */}
-        <div className="nav-logo">
-          <span className="logo-icon">🎬</span>
-          <span className="logo-text">CineBook</span>
-        </div>
-
-        {/* Search */}
-        <div className="nav-search">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-          </svg>
-          <input type="text" placeholder="Search movies, events..." />
-        </div>
-
-        {/* Location */}
-        <div className="nav-location">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-          </svg>
-          <select value={city} onChange={e => setCity(e.target.value)}>
-            {cities.map(c => <option key={c} value={c}>{c}</option>)}
-          </select>
-        </div>
-
-        {/* Sign In */}
-        <button className="nav-signin" onClick={() => navigate('/auth')}>Sign In</button>
-
-        {/* Hamburger */}
-        <button className="hamburger" onClick={() => setMenuOpen(true)} aria-label="Open menu">
-          <span /><span /><span />
+        <button className="nav-logo" onClick={() => setPage('home')}>
+          Movie<span>Mate</span>
         </button>
+
+        <div className="nav-right">
+          <button className="nav-link">My Bookings</button>
+
+          <div className="nav-city">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+            <span>Select City</span>
+          </div>
+
+          {user && hasTheatre && (
+            <button className="nav-my-theatre" onClick={() => setPage('my-theatre')}>
+              🎬 My Theatre
+            </button>
+          )}
+
+          {user ? (
+            <div className="nav-user">
+              <button className="nav-avatar-btn" onClick={() => setPage('profile')} aria-label="Open profile">
+                {user.imageUrl
+                  ? <img src={user.imageUrl} alt={user.firstName} className="nav-avatar" />
+                  : <div className="nav-avatar-placeholder">{user.firstName?.[0]}</div>
+                }
+              </button>
+              <span className="nav-username">{user.firstName}</span>
+            </div>
+          ) : (
+            <button className="nav-login" onClick={() => setAuthOpen(true)}>
+              Login / Sign Up
+            </button>
+          )}
+
+          <button className="hamburger" onClick={() => setMenuOpen(true)} aria-label="Menu">
+            <span /><span /><span />
+          </button>
+        </div>
       </nav>
 
-      {/* Overlay */}
+      {/* side menu */}
       {menuOpen && <div className="overlay" onClick={() => setMenuOpen(false)} />}
-
-      {/* Slide-in Menu */}
       <div className={`side-menu ${menuOpen ? 'open' : ''}`}>
-        <button className="close-btn" onClick={() => setMenuOpen(false)} aria-label="Close menu">✕</button>
-        <div className="side-logo">
-          <span className="logo-icon">🎬</span>
-          <span className="logo-text">CineBook</span>
-        </div>
+        <button className="close-btn" onClick={() => setMenuOpen(false)}>✕</button>
+        <button className="side-logo" onClick={() => { setPage('home'); setMenuOpen(false) }}>Movie<span>Mate</span></button>
+
         <nav className="side-nav">
-          <a href="#">Home</a>
-          <a href="#">Movies</a>
-          <a href="#">Events</a>
-          <a href="#">Plays</a>
-          <a href="#">Sports</a>
-          <a href="#">My Bookings</a>
+          {!user && (
+            <button className="side-nav-item side-nav-auth" onClick={() => { setMenuOpen(false); setAuthOpen(true) }}>
+              <span className="side-icon">👤</span>
+              <span>Login / Sign Up</span>
+            </button>
+          )}
+
+          {user && (
+            <div className="side-user-info">
+              {user.imageUrl
+                ? <img src={user.imageUrl} alt={user.firstName} className="side-avatar" />
+                : <div className="side-avatar-placeholder">{user.firstName?.[0]}</div>
+              }
+              <span className="side-username">{user.firstName} {user.lastName}</span>
+            </div>
+          )}
+
+          <div className="side-divider" />
+
+          <button className="side-nav-item" onClick={() => { setPage('home'); setMenuOpen(false) }}>
+            <span className="side-icon">🏠</span><span>Home</span>
+          </button>
+          <button className="side-nav-item" onClick={() => setMenuOpen(false)}>
+            <span className="side-icon">🎬</span><span>Movies</span>
+          </button>
+          <button className="side-nav-item" onClick={() => setMenuOpen(false)}>
+            <span className="side-icon">🎟️</span><span>Your Bookings</span>
+          </button>
+
+          {user && hasTheatre && (
+            <button className="side-nav-item side-nav-theatre" onClick={() => { setPage('my-theatre'); setMenuOpen(false) }}>
+              <span className="side-icon">🏟️</span><span>My Theatre</span>
+            </button>
+          )}
+
+          <button className="side-nav-item" onClick={() => setMenuOpen(false)}>
+            <span className="side-icon">🔔</span><span>Notifications</span>
+            <span className="side-badge">3</span>
+          </button>
+
+          <div className="side-divider" />
+
+          <button className="side-nav-item" onClick={() => setMenuOpen(false)}>
+            <span className="side-icon">⚙️</span><span>Account & Settings</span>
+          </button>
+          <button className="side-nav-item" onClick={() => setMenuOpen(false)}>
+            <span className="side-icon">❓</span><span>Help & Support</span>
+          </button>
+
+          {user && (
+            <>
+              <div className="side-divider" />
+              <button className="side-nav-item side-nav-logout" onClick={() => { handleLogout(); setMenuOpen(false) }}>
+                <span className="side-icon">🚪</span><span>Logout</span>
+              </button>
+            </>
+          )}
         </nav>
-        <button className="side-signin" onClick={() => { setMenuOpen(false); navigate('/auth') }}>Sign In / Register</button>
       </div>
+
+      {authOpen && <AuthModal onClose={() => setAuthOpen(false)} />}
     </>
   )
 }

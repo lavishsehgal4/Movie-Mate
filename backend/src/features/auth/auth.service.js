@@ -1,58 +1,146 @@
-const { hashPassword } = require("./auth.utils");
-const { createUserWithAuth } = require("./auth.repository");
+const { validateSignupData,validateLoginData } = require("./auth.validator");
+const { hashPassword ,comparePassword} = require("./auth.utils");
+const { addUserUsingPassword,findUserForLogin } = require("./auth.repository");
+const { findGoogleUser, createGoogleUser } = require("./auth.repository");
+const { getUserById } = require("./auth.repository");
+const { validateUpdateUserProfile } = require("./auth.validator");
+const { updateUserProfile } = require("./auth.repository");
+const { generateToken } = require("./auth.utils");
 
-// your existing validator stays as it is
-function validateSignupData(data) {
-  const { firstName, email, phoneNumber, dateOfBirth, password } = data;
-
-  if (!firstName || !email || !phoneNumber || !dateOfBirth || !password) {
-    throw new Error("All required fields must be provided");
+async function signUpUser(data) {
+  // 🔹 1. validate input
+  const validation=validateSignupData(data);
+  if(!validation.isValid){
+    throw new Error(validation.error);
   }
 
-  const emailRegex = /^\S+@\S+\.\S+$/;
-  if (!emailRegex.test(email)) {
-    throw new Error("Invalid email format");
-  }
-
-  if (!/^\d{10}$/.test(phoneNumber)) {
-    throw new Error("Phone number must be 10 digits");
-  }
-
-  if (password.length < 6) {
-    throw new Error("Password must be at least 6 characters");
-  }
-
-  const dob = new Date(dateOfBirth);
-  if (isNaN(dob.getTime())) {
-    throw new Error("Invalid date of birth");
-  }
-
-  return true;
-}
-
-// 🔥 ADD THIS
-async function signupWithPassword(data) {
-  // 1. validate input
-  validateSignupData(data);
-
-  // 2. convert date (keep data clean for repo)
-  const formattedData = {
-    ...data,
-    dateOfBirth: new Date(data.dateOfBirth),
-  };
-
-    
-  // 3. hash password
+  // 🔹 3. hash password
   const hashedPassword = await hashPassword(data.password);
 
-  // 4. call repository (DB insert)
-  return await createUserWithAuth({
-    ...formattedData,
+  // 🔹 4. send to repository
+  const user = await addUserUsingPassword({
+    ...data,
     password: hashedPassword,
   });
+  
+   // 🔥 5. generate JWT (auto login)
+  const token = generateToken({ userId: user.id });
+
+  // 6. return both
+  return {
+    user,
+    token,
+  };
+}
+
+async function loginUser(data) {
+  // 🔹 1. validate input
+  const validation=validateLoginData(data);
+  if(!validation.isValid){
+    throw new Error(validation.error);
+  }
+
+  const { identifier, password } = data;
+
+  // 🔹 2. fetch user (with hashed password)
+  const record = await findUserForLogin(identifier);
+
+  // 🔹 3. check if user exists
+  if (!record) {
+    throw new Error("Invalid credentials");
+  }
+
+  // 🔹 4. compare password
+  const isMatch = await comparePassword(password, record.password);
+
+  if (!isMatch) {
+    throw new Error("Invalid credentials");
+  }
+
+  // 🔹 5. generate JWT
+  const token = generateToken({ userId: record.id });
+
+  // 🔹 6. return safe user data + token
+  return {
+    user: {
+      id: record.id,
+      firstName: record.firstName,
+      lastName: record.lastName,
+      imageUrl: record.imageUrl,
+    },
+    token,
+  };
+}
+
+async function googleLogin(googleUser) {
+  // 🔹 1. check if user already exists (by google id)
+  let record = await findGoogleUser(googleUser.id);
+
+  let user;
+
+  // 🔹 2. if not exist → create user
+  if (!record) {
+    user = await createGoogleUser(googleUser);
+  } else {
+    user = record.user;
+  }
+
+  // 🔹 3. generate JWT
+  const token = generateToken({
+    userId: user.id,
+  });
+
+  // 🔹 4. return safe data
+  return {
+    user: {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      imageUrl: user.imageUrl,
+    },
+    token,
+  };
+}
+
+async function getCurrentUser(userId) {
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+
+  const user = await getUserById(userId);
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return user;
+}
+
+async function updateProfile(userId, data) {
+  // 🔹 1. validate input
+  const validation = validateUpdateUserProfile(data);
+  if (!validation.isValid) {
+    throw new Error(validation.error);
+  }
+
+  // 🔹 2. remove undefined fields (important)
+  const cleanData = {};
+  for (const key in data) {
+    if (data[key] !== undefined) {
+      cleanData[key] = data[key];
+    }
+  }
+
+  // 🔹 3. call repo
+  const user = await updateUserProfile(userId, cleanData);
+
+  return user;
 }
 
 module.exports = {
-  validateSignupData,
-  signupWithPassword,
+  signUpUser,
+  loginUser,
+  googleLogin,
+  getCurrentUser,
+  updateProfile
 };

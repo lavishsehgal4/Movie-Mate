@@ -1,45 +1,34 @@
-import { Routes, Route } from 'react-router-dom'
-import Navbar from './components/Navbar'
+import { useNavigation } from './context/NavigationContext'
+import { useAuth } from './context/AuthContext'
 import Hero from './components/Hero'
-import MovieSection from './components/MovieSection'
+import MoviesSection from './components/MoviesSection'
 import Footer from './components/Footer'
-import AuthPage from './pages/AuthPage'
-import { trending, inTheatres, comingSoon } from './data/movies'
+import ProfilePage from './pages/ProfilePage'
+import PartnerPage from './pages/PartnerPage'
+import MyTheatrePage from './pages/MyTheatrePage'
 import './App.css'
 
-function HomePage() {
+export default function App() {
+  const { page } = useNavigation()
+  const { authLoading } = useAuth()
+
+  if (authLoading) {
+    return (
+      <div style={{ minHeight: '100vh', background: '#0B0F1A', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ color: '#E8895B', fontSize: 14, fontFamily: 'sans-serif' }}>Loading...</div>
+      </div>
+    )
+  }
+
+  if (page === 'profile')    return <ProfilePage />
+  if (page === 'partner')    return <PartnerPage />
+  if (page === 'my-theatre') return <MyTheatrePage />
+
   return (
     <>
-      <Navbar />
       <Hero />
-      <MovieSection
-        title="Trending Now"
-        subtitle="Most booked movies this week"
-        movies={trending}
-      />
-      <MovieSection
-        title="Only in Theatres"
-        subtitle="Exclusive big-screen experiences"
-        movies={inTheatres}
-      />
-      <MovieSection
-        title="Coming Soon"
-        subtitle="Mark your calendars"
-        movies={comingSoon}
-        variant="coming"
-      />
+      <MoviesSection />
       <Footer />
     </>
   )
 }
-
-function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/auth" element={<AuthPage />} />
-    </Routes>
-  )
-}
-
-export default App

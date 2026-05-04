@@ -1,6 +1,7 @@
 const { prisma } = require("../../config/prisma");
 
-async function createUserWithAuth(data) {
+// create user + auth (password already hashed before coming here)
+async function addUserUsingPassword(data) {
   try {
     const {
       firstName,
@@ -9,7 +10,7 @@ async function createUserWithAuth(data) {
       phoneNumber,
       dateOfBirth,
       imageUrl,
-      password, // hashed
+      password,
     } = data;
 
     const user = await prisma.users.create({
@@ -21,7 +22,7 @@ async function createUserWithAuth(data) {
         dateOfBirth,
         imageUrl,
 
-        // create auth (not returned)
+        // create auth record
         auths: {
           create: {
             provider: "local",
@@ -30,51 +31,145 @@ async function createUserWithAuth(data) {
         },
       },
 
-      // 🔒 return ONLY what you want
+      // 🔒 YOU CONTROL WHAT GOES OUT
       select: {
         id: true,
         firstName: true,
         lastName: true,
-        dateOfBirth:true,
-        imageUrl:true,
+        imageUrl: true,
+        // 👉 if you want more fields, add here:
+        // email: true,
+        // phoneNumber: true,
+        // imageUrl: true,
       },
     });
 
     return user;
   } catch (err) {
     if (err.code === "P2002") {
-      throw new Error("Email already exists");
+      throw new Error("User already exists");
     }
 
     throw new Error(err.message || "Failed to create user");
   }
 }
 
-async function findUserForLogin(email) {
-  return await prisma.auth.findFirst({
+async function findUserForLogin(identifier) {
+  const record = await prisma.auth.findFirst({
     where: {
       provider: "local",
-      user: {
-        email: email, // used only for filtering, not returned
-      },
+      OR: [
+        { user: { email: identifier } },
+        { user: { phoneNumber: identifier } },
+      ],
     },
     select: {
-      password: true, // needed for comparison
-
+      password: true,
       user: {
         select: {
           id: true,
           firstName: true,
           lastName: true,
-          dateOfBirth: true,
           imageUrl: true,
+        },
+      },
+    },
+  });
+
+  if (!record) return null;
+
+  return {
+    id: record.user.id,
+    firstName: record.user.firstName,
+    lastName: record.user.lastName,
+    imageUrl: record.user.imageUrl,
+    password: record.password,
+  };
+}
+
+
+
+async function findGoogleUser(googleId) {
+  return await prisma.auth.findFirst({
+    where: {
+      provider: "google",
+      providerKey: googleId,
+    },
+    include: {
+      user: true,
+    },
+  });
+}
+
+async function createGoogleUser(googleUser) {
+  return await prisma.users.create({
+    data: {
+      firstName: googleUser.given_name,
+      lastName: googleUser.family_name,
+      email: googleUser.email,
+      imageUrl: googleUser.picture,
+
+      auths: {
+        create: {
+          provider: "google",
+          providerKey: googleUser.id,
         },
       },
     },
   });
 }
 
+async function getUserById(userId) {
+  try {
+    const user = await prisma.users.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        firstName: true,
+        lastName: true,
+        email: true,
+        phoneNumber: true,
+        role: true,
+        imageUrl: true,
+        dateOfBirth: true,
+        createdAt: true,
+      },
+    });
+
+    return user;
+  } catch (err) {
+    throw new Error("Failed to fetch user");
+  }
+}
+
+async function updateUserProfile(userId, data) {
+  try {
+    const user = await prisma.users.update({
+      where: { id: userId },
+      data, // 🔥 dynamic fields (only what is passed)
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        dateOfBirth: true,
+        imageUrl: true,
+      },
+    });
+
+    return user;
+  } catch (err) {
+    throw new Error("Failed to update user profile");
+  }
+}
+
+
 module.exports = {
-  createUserWithAuth,
-  findUserForLogin
+  addUserUsingPassword,
+  findUserForLogin,
+  findGoogleUser,
+  createGoogleUser,
+  getUserById,
+  updateUserProfile,
+  
 };

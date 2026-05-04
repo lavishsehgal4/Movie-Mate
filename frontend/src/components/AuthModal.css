@@ -1,0 +1,217 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modal-box {
+  background: #0E1628;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 36px 32px 28px;
+  width: 100%;
+  max-width: 440px;
+  position: relative;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  background: none;
+  border: none;
+  color: #A0A7B5;
+  font-size: 18px;
+  transition: color 0.2s;
+}
+
+.modal-close:hover { color: #E8895B; }
+
+.modal-logo {
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.modal-logo span { color: #E8895B; }
+
+/* tabs */
+.modal-tabs {
+  display: flex;
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 24px;
+}
+
+.modal-tab {
+  flex: 1;
+  background: none;
+  border: none;
+  color: #A0A7B5;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 9px;
+  border-radius: 8px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.modal-tab.active {
+  background: #E8895B;
+  color: #fff;
+}
+
+/* error */
+.modal-error {
+  background: rgba(220, 53, 69, 0.12);
+  border: 1px solid rgba(220, 53, 69, 0.35);
+  color: #ff6b7a;
+  font-size: 13px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+/* form */
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.field-row {
+  display: flex;
+  gap: 12px;
+}
+
+.field-row .field { flex: 1; }
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #A0A7B5;
+  letter-spacing: 0.3px;
+}
+
+.field input {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 11px 14px;
+  font-size: 14px;
+  color: #fff;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: inherit;
+  width: 100%;
+}
+
+.field input::placeholder { color: #4a5168; }
+
+.field input:focus {
+  border-color: rgba(232, 137, 91, 0.5);
+}
+
+/* date input color fix */
+.field input[type="date"] {
+  color-scheme: dark;
+}
+
+.modal-submit {
+  background: #E8895B;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 13px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 4px;
+  transition: background 0.2s, opacity 0.2s;
+  width: 100%;
+}
+
+.modal-submit:hover:not(:disabled) { background: #d4784a; }
+.modal-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* divider */
+.modal-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  color: #4a5168;
+  font-size: 12px;
+}
+
+.modal-divider::before,
+.modal-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+}
+
+/* google button */
+.google-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 12px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.2s, border-color 0.2s;
+  margin-bottom: 20px;
+}
+
+.google-btn:hover {
+  background: rgba(255,255,255,0.09);
+  border-color: rgba(255,255,255,0.2);
+}
+
+/* switch */
+.modal-switch {
+  text-align: center;
+  font-size: 13px;
+  color: #A0A7B5;
+}
+
+.modal-switch button {
+  background: none;
+  border: none;
+  color: #E8895B;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 0;
+  margin-left: 4px;
+  transition: opacity 0.2s;
+}
+
+.modal-switch button:hover { opacity: 0.8; }
+
+/* scrollbar inside modal */
+.modal-box::-webkit-scrollbar { width: 4px; }
+.modal-box::-webkit-scrollbar-thumb { background: #2a3050; border-radius: 4px; }

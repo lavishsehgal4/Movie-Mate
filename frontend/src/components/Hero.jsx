@@ -1,46 +1,63 @@
+import { useState } from 'react'
+import Navbar from './Navbar'
+import { heroSlides } from '../data/movies'
 import './Hero.css'
 
 export default function Hero() {
+  const [current, setCurrent] = useState(0)
+
+  const prev = () => setCurrent(i => (i === 0 ? heroSlides.length - 1 : i - 1))
+  const next = () => setCurrent(i => (i === heroSlides.length - 1 ? 0 : i + 1))
+
+  const slide = heroSlides[current]
+
   return (
     <section className="hero">
-      <div className="hero-bg" />
-      <div className="hero-content">
-        <div className="hero-badge">Now Showing</div>
-        <h1 className="hero-title">
-          Your City.<br />
-          Your Movies.<br />
-          <span>Book Instantly.</span>
-        </h1>
-        <p className="hero-desc">
-          Discover the latest blockbusters, indie gems, and live events near you.
-          Skip the queue — book your seats in seconds.
-        </p>
-        <div className="hero-actions">
-          <button className="hero-btn-primary">Explore Movies</button>
-          <button className="hero-btn-secondary">
-            <span className="play-icon">▶</span> Watch Trailer
-          </button>
-        </div>
-        <div className="hero-stats">
-          <div className="stat"><span className="stat-num">500+</span><span className="stat-label">Movies</span></div>
-          <div className="stat-divider" />
-          <div className="stat"><span className="stat-num">200+</span><span className="stat-label">Theatres</span></div>
-          <div className="stat-divider" />
-          <div className="stat"><span className="stat-num">50+</span><span className="stat-label">Cities</span></div>
+      <div
+        className="hero-bg-img"
+        style={{ backgroundImage: `url(${slide.bg})` }}
+      />
+      <div className="hero-dark" />
+      <div className="hero-gradient" />
+
+      <Navbar />
+
+      {/* text content — left aligned */}
+      <div className="hero-body">
+        <div className="hero-content">
+          <p className="hero-tag">Now Showing</p>
+          <h1 className="hero-title">
+            Where stories<br />
+            <span>come alive.</span><br />
+            Feel every moment.
+          </h1>
+          <p className="hero-sub">
+            Discover the latest movies, book tickets and
+            experience cinema like never before.
+          </p>
+          <div className="hero-btns">
+            <button className="btn-primary">Book Tickets</button>
+            <button className="btn-outline">
+              <span className="play-icon">▶</span> Watch Trailer
+            </button>
+          </div>
         </div>
       </div>
-      <div className="hero-visual">
-        <div className="poster-stack">
-          <div className="poster p1">
-            <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=200&h=300&fit=crop" alt="" />
-          </div>
-          <div className="poster p2">
-            <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=200&h=300&fit=crop" alt="" />
-          </div>
-          <div className="poster p3">
-            <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=200&h=300&fit=crop" alt="" />
-          </div>
-        </div>
+
+      {/* arrows */}
+      <button className="arrow arrow-left" onClick={prev} aria-label="Previous">&#8249;</button>
+      <button className="arrow arrow-right" onClick={next} aria-label="Next">&#8250;</button>
+
+      {/* dots */}
+      <div className="hero-dots">
+        {heroSlides.map((_, i) => (
+          <button
+            key={i}
+            className={`dot ${i === current ? 'active' : ''}`}
+            onClick={() => setCurrent(i)}
+            aria-label={`Slide ${i + 1}`}
+          />
+        ))}
       </div>
     </section>
   )

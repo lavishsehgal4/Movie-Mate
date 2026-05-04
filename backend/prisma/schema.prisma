@@ -7,32 +7,238 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum TheatreRole {
+  OWNER
+  MANAGER
+  STAFF
+}
+
 model users {
   id          Int      @id @default(autoincrement())
   firstName   String
-  lastName    String
-  email       String   @unique
-  phoneNumber String
-  dateOfBirth DateTime
-  imageUrl    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  lastName    String?   // optional
+  email       String    @unique
+  phoneNumber String?    @unique
 
-  auths Auth[]
+  role        UserRole @default(USER)  
+
+  dateOfBirth DateTime?
+  imageUrl    String?   // optional
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // relation
+  auths       Auth[]
+  theatreUsers TheatreUser[]  
 }
 
 model Auth {
   id           Int      @id @default(autoincrement())
   userId       Int
-  provider     String
-  providerKey  String?
-  password     String?
+  provider     String   // local, google, github...
+  providerKey  String?  // conditional
+  password     String?  // conditional
 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
+  // relation with cascade delete
   user users @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  // unique constraint
   @@unique([userId, provider])
+
+  // map to lowercase table name
   @@map("auth")
+}
+
+model TheatreUser {
+  user_id    Int
+  theatre_id Int
+  role       TheatreRole
+
+  user     users   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  theatre  Theatre @relation(fields: [theatre_id], references: [id], onDelete: Cascade)
+
+  @@id([user_id, theatre_id])
+  @@index([user_id])
+}
+
+model Movie {
+  id                Int      @id @default(autoincrement())
+
+  tmdb_id           Int      @unique
+  title             String
+  original_title    String?
+  overview          String?
+
+  poster_path       String
+  backdrop_path     String?
+
+  release_date      DateTime
+  runtime           Int?
+
+  popularity        Float
+  adult             Boolean
+
+  certification     String?
+
+  vote_average      Float
+  vote_count        Int
+
+  original_language String
+
+  genres            Json?
+  cast              Json?
+
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+
+  shows Show[]
+}
+
+model Theatre {
+  id             Int      @id @default(autoincrement())
+
+  theatre_name   String
+  chain_name     String
+  chain_logo     String
+
+  state          String
+  city           String
+  address        String
+
+  longitude      Decimal? @db.Decimal(9,6)
+  latitude       Decimal? @db.Decimal(9,6)
+
+  contact_no     String
+  email          String
+
+  total_screens  Int?
+
+  is_active      Boolean
+
+  rating         Decimal? @db.Decimal(3,1)
+
+  google_map_url String?
+
+  opening_time   DateTime
+  closing_time   DateTime
+
+  pincode        Int?
+  landmark       String?
+
+  is_verified    Boolean  @default(false)
+
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+  deleted_at     DateTime?
+
+  // Relations
+  theatreFacilities TheatreFacility[]
+  screens Screen[]
+  shows   Show[]
+  theatreUsers   TheatreUser[]
+  
+  @@index([city])
+  @@index([chain_name, city])
+  @@index([longitude, latitude])
+  @@index([state])
+}
+
+model Facility {
+  id            Int      @id @default(autoincrement())
+
+  facility_name String   @unique
+  facility_logo String?
+
+  theatreFacilities TheatreFacility[]
+}
+
+model TheatreFacility {
+  theatre_id  Int
+  facility_id Int
+
+  theatre  Theatre @relation(fields: [theatre_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  facility Facility @relation(fields: [facility_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  // ✅ Composite Primary Key
+  @@id([theatre_id, facility_id])
+
+  // ⚠️ IMPORTANT:
+  // Composite index works LEFT → RIGHT
+  // Means:
+  // ✔ WHERE theatre_id = ?         (fast)
+  // ✔ WHERE theatre_id = ? AND facility_id = ? (fast)
+  // ❌ WHERE facility_id = ?       (NOT optimized)
+
+  // ✅ So we add separate index for facility_id
+  @@index([facility_id])
+}
+
+// =========================
+// SCREENS
+// =========================
+model Screen {
+  id          Int     @id @default(autoincrement())
+  theatre_id  Int
+  screen_name String
+
+  theatre Theatre @relation(fields: [theatre_id], references: [id], onDelete: Cascade)
+
+  shows Show[]
+
+  @@index([theatre_id])
+}
+
+// =========================
+// SHOW STATUS ENUM
+// =========================
+enum ShowStatus {
+  scheduled
+  cancelled
+}
+
+// =========================
+// SHOWS
+// =========================
+model Show {
+  id         Int      @id @default(autoincrement())
+
+  movie_id   Int
+  screen_id  Int
+  theatre_id Int
+
+  start_time DateTime
+  end_time   DateTime
+
+  language   String
+  format     String
+
+  show_status ShowStatus @default(scheduled)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations
+  movie   Movie   @relation(fields: [movie_id], references: [id], onDelete: Restrict)
+  screen  Screen  @relation(fields: [screen_id], references: [id], onDelete: Cascade)
+  theatre Theatre @relation(fields: [theatre_id], references: [id], onDelete: Cascade)
+
+  // Indexes
+  @@index([movie_id])
+  @@index([screen_id])
+  @@index([theatre_id])
+  @@index([start_time, movie_id])
+  @@index([start_time])
+
+  // ⚠️ NOTE:
+  // Prisma does NOT support exclusion constraints (no overlap)
+  // You must enforce overlapping logic in backend/service layer
 }

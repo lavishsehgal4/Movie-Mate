@@ -1,0 +1,497 @@
+.mt-root {
+  min-height: 100vh;
+  background: #0a0a0a;
+  color: #fff;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── TOP NAV ── */
+.mt-topnav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 52px;
+  background: #111;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  flex-shrink: 0;
+}
+
+.mt-logo {
+  font-size: 17px;
+  font-weight: 800;
+  color: #fff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.mt-logo span { color: #E8895B; }
+
+.mt-topnav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.mt-tn-link {
+  background: none;
+  border: none;
+  color: #A0A7B5;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: color 0.2s;
+}
+
+.mt-tn-link:hover { color: #fff; }
+
+.mt-tn-theatre {
+  background: transparent;
+  border: 1.5px solid #E8895B;
+  color: #E8895B;
+  border-radius: 18px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.mt-tn-theatre.active {
+  background: rgba(232,137,91,0.12);
+}
+
+/* ── BODY ── */
+.mt-body {
+  flex: 1;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 24px 48px;
+}
+
+.mt-back {
+  background: none;
+  border: none;
+  color: #A0A7B5;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  margin-bottom: 20px;
+  transition: color 0.2s;
+  padding: 0;
+}
+
+.mt-back:hover { color: #fff; }
+
+/* page header */
+.mt-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.mt-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.mt-subtitle {
+  font-size: 13px;
+  color: #A0A7B5;
+}
+
+.mt-add-btn {
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.2s, background 0.2s;
+  white-space: nowrap;
+}
+
+.mt-add-btn:hover {
+  border-color: #E8895B;
+  color: #E8895B;
+}
+
+/* ── STATS ── */
+.mt-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.mt-stat-card {
+  background: #141414;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+
+.mt-stat-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #4a5168;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.mt-stat-val {
+  font-size: 28px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 4px;
+  line-height: 1;
+}
+
+.mt-stat-val.orange { color: #E8895B; }
+
+.mt-stat-sub {
+  font-size: 11px;
+  color: #4a5168;
+}
+
+/* ── TWO COLUMNS ── */
+.mt-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.mt-col-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #4a5168;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+/* ── THEATRE CARDS ── */
+.mt-theatre-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mt-theatre-card {
+  background: #141414;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.mt-theatre-card:hover,
+.mt-theatre-card.selected {
+  border-color: rgba(232,137,91,0.4);
+}
+
+.mt-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.mt-card-logo-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: rgba(232,137,91,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.mt-card-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 4px;
+}
+
+.mt-card-info { flex: 1; }
+
+.mt-card-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 3px;
+  line-height: 1.3;
+}
+
+.mt-card-loc {
+  font-size: 12px;
+  color: #A0A7B5;
+  margin-bottom: 8px;
+}
+
+.mt-card-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.mt-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 10px;
+}
+
+.mt-badge.role.owner {
+  background: rgba(232,137,91,0.15);
+  color: #E8895B;
+  border: 1px solid rgba(232,137,91,0.3);
+}
+
+.mt-badge.role.manager {
+  background: rgba(59,130,246,0.12);
+  color: #60a5fa;
+  border: 1px solid rgba(59,130,246,0.25);
+}
+
+.mt-badge.verified {
+  background: rgba(74,222,128,0.1);
+  color: #4ade80;
+  border: 1px solid rgba(74,222,128,0.25);
+}
+
+.mt-badge.pending {
+  background: rgba(251,191,36,0.1);
+  color: #fbbf24;
+  border: 1px solid rgba(251,191,36,0.25);
+}
+
+.mt-card-info-btn {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #A0A7B5;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 12px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.mt-card-info-btn:hover { border-color: #E8895B; color: #E8895B; }
+
+.mt-card-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.mt-cs-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  color: #4a5168;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.mt-cs-val {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.mt-cs-val.orange { color: #E8895B; }
+
+/* add another card */
+.mt-add-card {
+  background: #141414;
+  border: 1.5px dashed rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #4a5168;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.2s, color 0.2s;
+  width: 100%;
+}
+
+.mt-add-card:hover { border-color: #E8895B; color: #E8895B; }
+
+.mt-add-icon { font-size: 18px; }
+
+/* ── REVENUE CARD ── */
+.mt-revenue-card {
+  background: #141414;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.mt-revenue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mt-revenue-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.mt-revenue-total {
+  font-size: 12px;
+  color: #A0A7B5;
+}
+
+.mt-revenue-total span { color: #E8895B; font-weight: 600; }
+
+.mt-revenue-date {
+  font-size: 11px;
+  color: #4a5168;
+  white-space: nowrap;
+}
+
+.mt-revenue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.mt-revenue-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.mt-rev-rank {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  color: #A0A7B5;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.mt-rev-info { flex: 1; }
+
+.mt-rev-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.mt-rev-sub {
+  font-size: 11px;
+  color: #4a5168;
+  margin-bottom: 6px;
+}
+
+.mt-rev-bar-wrap {
+  height: 3px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.mt-rev-bar {
+  height: 100%;
+  background: #E8895B;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.mt-rev-amount {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.mt-rev-amount.muted { color: #4a5168; }
+
+.mt-revenue-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  font-size: 12px;
+}
+
+.mt-rev-summary { color: #A0A7B5; }
+.mt-rev-total-label { color: #E8895B; font-weight: 700; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .mt-columns { grid-template-columns: 1fr; }
+  .mt-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .mt-body { padding: 16px; }
+  .mt-stats { grid-template-columns: repeat(2, 1fr); }
+  .mt-topnav { padding: 0 16px; }
+}
+
+.mt-loading {
+  font-size: 13px;
+  color: #A0A7B5;
+  padding: 24px 0;
+  text-align: center;
+}
+
+.mt-error {
+  font-size: 13px;
+  color: #ff6b7a;
+  background: rgba(220,53,69,0.08);
+  border: 1px solid rgba(220,53,69,0.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+}
+
+.mt-card-logo-fallback {
+  font-size: 20px;
+}
