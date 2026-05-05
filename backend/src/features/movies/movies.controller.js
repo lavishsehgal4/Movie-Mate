@@ -1,5 +1,5 @@
 const { fetchMovieCounts, startMovieSync } = require('./movie.sync.service');
-
+const {fetchMovies}=require('./movies.service');
 async function getMovieCounts(req, res) {
   console.log(`🎯 [CONTROLLER] ${new Date().toISOString()} getMovieCounts called`);
   try {
@@ -40,7 +40,25 @@ async function startSyncController(req, res) {
   }
 }
 
+
+//
+async function httpGetMovies(req, res) {
+  try {
+    const movies = await fetchMovies(req.query);
+
+    res.status(200).json({
+      success: true,
+      data: movies,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message || "Failed to fetch movies",
+    });
+  }
+}
 module.exports = {
   getMovieCounts,
-  startSyncController
+  startSyncController,
+  httpGetMovies,
 };

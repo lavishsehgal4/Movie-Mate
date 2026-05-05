@@ -75,6 +75,7 @@ model Movie {
 
   tmdb_id           Int      @unique
   title             String
+  search_title      String  // ✅ ADD THIS
   original_title    String?
   overview          String?
 
@@ -82,6 +83,7 @@ model Movie {
   backdrop_path     String?
 
   release_date      DateTime
+  contract_end      DateTime?   // ✅ ADD THIS
   runtime           Int?
 
   popularity        Float
@@ -101,6 +103,12 @@ model Movie {
   updated_at        DateTime @updatedAt
 
   shows Show[]
+   // 🔥 INDEXES
+  @@index([popularity])
+  @@index([release_date])
+  @@index([contract_end])
+  @@index([original_language])
+  @@index([title])
 }
 
 model Theatre {

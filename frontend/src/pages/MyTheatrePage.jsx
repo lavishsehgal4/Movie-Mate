@@ -11,7 +11,7 @@ const revenueBreakdown = [
 ]
 
 export default function MyTheatrePage() {
-  const { setPage } = useNavigation()
+  const { setPage, goToTheatre } = useNavigation()
 
   const [theatres, setTheatres]   = useState([])
   const [loading, setLoading]     = useState(true)
@@ -118,7 +118,7 @@ export default function MyTheatrePage() {
                   <div
                     key={t.theatreId}
                     className={`mt-theatre-card ${selected === t.theatreId ? 'selected' : ''}`}
-                    onClick={() => setSelected(t.theatreId === selected ? null : t.theatreId)}
+                    onClick={() => goToTheatre(t)}
                   >
                     <div className="mt-card-top">
                       <div className="mt-card-logo-wrap">
