@@ -120,4 +120,53 @@ async function hasTheatreAccess(userId) {
   }
 }
 
-module.exports = { createTheatreWithOwner, getUserTheatres,addFacilitiesToTheatre,hasTheatreAccess};
+async function getTheatreByIdForUser(theatreId, userId) {
+  try {
+    const record = await prisma.theatreUser.findFirst({
+      where: {
+        theatre_id: theatreId,
+        user_id: userId,
+      },
+      select: {
+        role: true, // useful for future (OWNER / MANAGER / STAFF)
+
+        theatre: {
+          select: {
+            id: true,
+            theatre_name: true,
+            chain_name: true,
+            chain_logo: true,
+
+            state: true,
+            city: true,
+            address: true,
+
+            contact_no: true,
+            email: true,
+
+            total_screens: true,
+            rating: true,
+
+            opening_time: true,
+            closing_time: true,
+
+            is_active: true,
+            is_verified: true,
+
+            created_at: true,
+          },
+        },
+      },
+    });
+
+    return record; // null if not found (important)
+  } catch (error) {
+    console.error("Error fetching theatre by id:", error);
+    throw new Error("Failed to fetch theatre");
+  }
+}
+
+
+module.exports = { createTheatreWithOwner, getUserTheatres,addFacilitiesToTheatre,hasTheatreAccess
+  ,getTheatreByIdForUser
+};

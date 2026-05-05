@@ -1,5 +1,5 @@
 const { createTheatre,attachFacilitiesToTheatre  } = require("./theatre.service");
-const { checkUserTheatreAccess } = require("./theatre.service");
+const { checkUserTheatreAccess,getTheatreById } = require("./theatre.service");
 
 const {getMyTheatres}=require('./theatre.service')
 async function httpCreateTheatre(req, res) {
@@ -104,9 +104,42 @@ async function httpCheckUserTheatreAccess(req, res) {
   }
 }
 
+async function httpGetTheatreById(req, res) {
+  try {
+    // 🔹 1. get user from token
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
+    }
+
+    // 🔹 2. get theatre_id (query OR params — choose one and stay consistent)
+    const { theatre_id } = req.query;
+
+    // 🔹 3. call service
+    const result = await getTheatreById({ theatre_id }, userId);
+
+    // 🔹 4. success response
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
+
+  } catch (err) {
+    return res.status(400).json({
+      success: false,
+      message: err.message || "Failed to fetch theatre",
+    });
+  }
+}
+
 module.exports = {
   httpCreateTheatre,
   httpGetMyTheatres,
   httpAttachFacilitiesToTheatre,
-  httpCheckUserTheatreAccess
+  httpCheckUserTheatreAccess,
+  httpGetTheatreById
 };

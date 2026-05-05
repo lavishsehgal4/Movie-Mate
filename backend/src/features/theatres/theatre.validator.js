@@ -192,7 +192,27 @@ function validateAddFacilitiesToTheatre(data) {
 
   return { isValid: true };
 }
+
+function validateGetTheatreById(data) {
+  const temp = {};
+
+  // 🔹 theatre_id
+  const theatreId = normalizeNumber(data.theatre_id);
+
+  if (!theatreId) {
+    return { isValid: false, error: "Valid theatre_id is required" };
+  }
+
+  temp.theatre_id = theatreId;
+
+  // ✅ apply mutation (your pattern)
+  Object.assign(data, temp);
+
+  return { isValid: true };
+}
+
 module.exports={
     validateCreateTheatre,
-    validateAddFacilitiesToTheatre
+    validateAddFacilitiesToTheatre,
+    validateGetTheatreById
 }

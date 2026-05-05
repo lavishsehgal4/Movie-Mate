@@ -1,5 +1,5 @@
-const { validateCreateTheatre,validateAddFacilitiesToTheatre  } = require("./theatre.validator");
-const { createTheatreWithOwner,getUserTheatres,addFacilitiesToTheatre  } = require("./theatre.repository");
+const { validateCreateTheatre,validateAddFacilitiesToTheatre, validateGetTheatreById} = require("./theatre.validator");
+const { createTheatreWithOwner,getUserTheatres,addFacilitiesToTheatre,getTheatreByIdForUser  } = require("./theatre.repository");
 const{hasTheatreAccess}=require("./theatre.repository");
 
 async function createTheatre(data, userId) {
@@ -81,9 +81,64 @@ async function checkUserTheatreAccess(userId) {
     hasTheatreAccess: hasAccess,
   };
 }
+
+async function getTheatreById(data, userId) {
+  // 🔹 1. validate input
+  const validation = validateGetTheatreById(data);
+  if (!validation.isValid) {
+    throw new Error(validation.error);
+  }
+
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+
+  const { theatre_id } = data;
+
+  // 🔹 2. repo call
+  const record = await getTheatreByIdForUser(theatre_id, userId);
+
+  // 🔹 3. handle no access / not found
+  if (!record) {
+    throw new Error("Theatre not found or access denied");
+  }
+
+  const theatre = record.theatre;
+
+  // 🔹 4. clean response
+  return {
+    theatre: {
+      id: theatre.id,
+      theatre_name: theatre.theatre_name,
+      chain_name: theatre.chain_name,
+      chain_logo: theatre.chain_logo,
+
+      state: theatre.state,
+      city: theatre.city,
+      address: theatre.address,
+
+      contact_no: theatre.contact_no,
+      email: theatre.email,
+
+      total_screens: theatre.total_screens,
+      rating: theatre.rating,
+
+      opening_time: theatre.opening_time,
+      closing_time: theatre.closing_time,
+
+      is_active: theatre.is_active,
+      is_verified: theatre.is_verified,
+
+      created_at: theatre.created_at,
+    },
+    role: record.role, // 🔥 important for frontend decisions
+  };
+}
+
 module.exports = {
   createTheatre,
   getMyTheatres,
   attachFacilitiesToTheatre,
-  checkUserTheatreAccess
+  checkUserTheatreAccess,
+  getTheatreById
 };

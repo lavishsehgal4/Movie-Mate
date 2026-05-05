@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigation } from '../context/NavigationContext'
 import { useAuth } from '../context/AuthContext'
 import MoviesPanel from './theatre/MoviesPanel'
+import TheatreInfoPanel from './theatre/TheatreInfoPanel'
 import './TheatreDashboard.css'
 
 const SIDEBAR_SECTIONS = [
@@ -117,9 +118,10 @@ export default function TheatreDashboard() {
         {/* ── MAIN ── */}
         <main className="td-main">
           <div className="td-content">
-            {activeTab === 'overview'  && <OverviewPanel theatre={t} shows={dummyShows} />}
-            {activeTab === 'movies'    && <MoviesPanel theatre={t} />}
-            {activeTab !== 'overview' && activeTab !== 'movies' && (
+            {activeTab === 'overview'      && <OverviewPanel theatre={t} shows={dummyShows} />}
+            {activeTab === 'movies'        && <MoviesPanel theatre={t} />}
+            {activeTab === 'theatre-info'  && <TheatreInfoPanel theatre={t} />}
+            {activeTab !== 'overview' && activeTab !== 'movies' && activeTab !== 'theatre-info' && (
               <PlaceholderPanel label={SIDEBAR_SECTIONS.flatMap(s => s.items).find(i => i.id === activeTab)?.label} />
             )}
           </div>
