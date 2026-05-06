@@ -1,5 +1,5 @@
-const { validateCreateTheatre,validateAddFacilitiesToTheatre, validateGetTheatreById} = require("./theatre.validator");
-const { createTheatreWithOwner,getUserTheatres,addFacilitiesToTheatre,getTheatreByIdForUser  } = require("./theatre.repository");
+const { validateCreateTheatre,validateSyncTheatreFacilities , validateGetTheatreById,validateGetFacilitiesWithSelected} = require("./theatre.validator");
+const { createTheatreWithOwner,getUserTheatres,syncTheatreFacilities,getTheatreByIdForUser ,getFacilitiesWithSelected } = require("./theatre.repository");
 const{hasTheatreAccess}=require("./theatre.repository");
 
 async function createTheatre(data, userId) {
@@ -48,25 +48,24 @@ async function getMyTheatres(userId) {
   return theatres;
 }
 
-async function attachFacilitiesToTheatre(data) {
-  // 🔹 1. validate input
-  const validation = validateAddFacilitiesToTheatre(data);
+async function updateTheatreFacilities(data) {
+
+  // 🔹 1. validate
+  const validation = validateSyncTheatreFacilities(data);
+
   if (!validation.isValid) {
     throw new Error(validation.error);
   }
 
-  const { theatre_id } = data;
+  const { theatre_id, facility_ids } = data;
 
-  // 🔹 2. deduplicate
-  const facilityIds = [...new Set(data.facility_ids)];
+  // 🔹 2. repo call
+  await syncTheatreFacilities(theatre_id, facility_ids);
 
-  // 🔹 3. repo call
-  const result = await addFacilitiesToTheatre(theatre_id, facilityIds);
-
-  // 🔹 4. clean response
+  // 🔹 3. clean response
   return {
     theatre_id,
-    attached_count: result.count,
+    facility_ids,
   };
 }
 
@@ -135,10 +134,29 @@ async function getTheatreById(data, userId) {
   };
 }
 
+async function fetchFacilitiesWithSelected(data) {
+
+  // 🔹 1. validate
+  const validation = validateGetFacilitiesWithSelected(data);
+
+  if (!validation.isValid) {
+    throw new Error(validation.error);
+  }
+
+  // 🔹 2. repo call
+  const result = await getFacilitiesWithSelected(
+    data.theatre_id
+  );
+
+  // 🔹 3. return clean response
+  return result;
+}
+
 module.exports = {
   createTheatre,
   getMyTheatres,
-  attachFacilitiesToTheatre,
+  updateTheatreFacilities,
   checkUserTheatreAccess,
-  getTheatreById
+  getTheatreById,
+  fetchFacilitiesWithSelected,
 };

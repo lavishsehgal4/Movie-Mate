@@ -3,6 +3,7 @@ import { useNavigation } from '../context/NavigationContext'
 import { useAuth } from '../context/AuthContext'
 import MoviesPanel from './theatre/MoviesPanel'
 import TheatreInfoPanel from './theatre/TheatreInfoPanel'
+import FacilitiesPanel from './theatre/FacilitiesPanel'
 import './TheatreDashboard.css'
 
 const SIDEBAR_SECTIONS = [
@@ -23,7 +24,7 @@ const SIDEBAR_SECTIONS = [
     label: 'INFRASTRUCTURE',
     items: [
       { id: 'screens',    icon: '🖥', label: 'Screens' },
-      { id: 'facilities', icon: '⬡', label: 'Facilities' },
+      { id: 'facilities', icon: '⬡', label: 'Edit Facilities' },
     ],
   },
   {
@@ -121,7 +122,8 @@ export default function TheatreDashboard() {
             {activeTab === 'overview'      && <OverviewPanel theatre={t} shows={dummyShows} />}
             {activeTab === 'movies'        && <MoviesPanel theatre={t} />}
             {activeTab === 'theatre-info'  && <TheatreInfoPanel theatre={t} />}
-            {activeTab !== 'overview' && activeTab !== 'movies' && activeTab !== 'theatre-info' && (
+            {activeTab === 'facilities'    && <FacilitiesPanel theatre={t} />}
+            {activeTab !== 'overview' && activeTab !== 'movies' && activeTab !== 'theatre-info' && activeTab !== 'facilities' && (
               <PlaceholderPanel label={SIDEBAR_SECTIONS.flatMap(s => s.items).find(i => i.id === activeTab)?.label} />
             )}
           </div>

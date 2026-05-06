@@ -90,20 +90,38 @@ async function getUserTheatres(userId) {
   }
 }
 
-async function addFacilitiesToTheatre(theatreId, facilityIds) {
+async function syncTheatreFacilities(theatreId, facilityIds) {
   try {
-    const data = facilityIds.map((facilityId) => ({
-      theatre_id: theatreId,
-      facility_id: facilityId,
-    }));
+    return await prisma.$transaction(async (tx) => {
 
-    return await prisma.theatreFacility.createMany({
-      data,
-      skipDuplicates: true, // rely on DB to ignore duplicates
+      // 🔹 1. remove facilities not present anymore
+      await tx.theatreFacility.deleteMany({
+        where: {
+          theatre_id: theatreId,
+          facility_id: {
+            notIn: facilityIds,
+          },
+        },
+      });
+
+      // 🔹 2. prepare insert data
+      const data = facilityIds.map((facilityId) => ({
+        theatre_id: theatreId,
+        facility_id: facilityId,
+      }));
+
+      // 🔹 3. add missing facilities
+      const result = await tx.theatreFacility.createMany({
+        data,
+        skipDuplicates: true,
+      });
+
+      return result;
     });
+
   } catch (err) {
-    console.error("Error attaching facilities:", err);
-    throw new Error("Failed to attach facilities to theatre");
+    console.error("Error syncing theatre facilities:", err);
+    throw new Error("Failed to sync theatre facilities");
   }
 }
 
@@ -166,7 +184,45 @@ async function getTheatreByIdForUser(theatreId, userId) {
   }
 }
 
+async function getFacilitiesWithSelected(theatreId) {
+  try {
 
-module.exports = { createTheatreWithOwner, getUserTheatres,addFacilitiesToTheatre,hasTheatreAccess
-  ,getTheatreByIdForUser
+    const [allFacilities, theatreFacilities] = await Promise.all([
+
+      // 🔹 all available facilities
+      prisma.facility.findMany({
+        select: {
+          id: true,
+          facility_name: true,
+          facility_logo: true,
+        },
+      }),
+
+      // 🔹 theatre selected facilities
+      prisma.theatreFacility.findMany({
+        where: {
+          theatre_id: theatreId,
+        },
+
+        select: {
+          facility_id: true,
+        },
+      }),
+    ]);
+
+    return {
+      allFacilities,
+      selectedFacilities: theatreFacilities.map(
+        (item) => item.facility_id
+      ),
+    };
+
+  } catch (err) {
+    console.error("Error fetching facilities:", err);
+    throw new Error("Failed to fetch facilities");
+  }
+}
+
+module.exports = { createTheatreWithOwner, getUserTheatres,syncTheatreFacilities,hasTheatreAccess
+  ,getTheatreByIdForUser,getFacilitiesWithSelected
 };

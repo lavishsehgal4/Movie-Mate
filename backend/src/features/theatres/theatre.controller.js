@@ -1,4 +1,4 @@
-const { createTheatre,attachFacilitiesToTheatre  } = require("./theatre.service");
+const { createTheatre,updateTheatreFacilities,fetchFacilitiesWithSelected  } = require("./theatre.service");
 const { checkUserTheatreAccess,getTheatreById } = require("./theatre.service");
 
 const {getMyTheatres}=require('./theatre.service')
@@ -62,19 +62,20 @@ async function httpGetMyTheatres(req, res) {
   }
 }
 
-async function httpAttachFacilitiesToTheatre(req, res) {
+async function httpSyncTheatreFacilities(req, res) {
   try {
-    
-    const result = await attachFacilitiesToTheatre(req.body);
 
-    return res.status(201).json({
+    const result = await updateTheatreFacilities(req.body);
+
+    return res.status(200).json({
       success: true,
       data: result,
     });
+
   } catch (err) {
     return res.status(400).json({
       success: false,
-      message: err.message || "Failed to attach facilities",
+      message: err.message || "Failed to sync theatre facilities",
     });
   }
 }
@@ -136,10 +137,31 @@ async function httpGetTheatreById(req, res) {
   }
 }
 
+async function httpGetFacilitiesWithSelected(req, res) {
+  try {
+
+    const result = await fetchFacilitiesWithSelected(
+      req.query
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
+
+  } catch (err) {
+    return res.status(400).json({
+      success: false,
+      message: err.message || "Failed to fetch facilities",
+    });
+  }
+}
+
 module.exports = {
   httpCreateTheatre,
   httpGetMyTheatres,
-  httpAttachFacilitiesToTheatre,
+  httpSyncTheatreFacilities,
   httpCheckUserTheatreAccess,
-  httpGetTheatreById
+  httpGetTheatreById,
+  httpGetFacilitiesWithSelected
 };
