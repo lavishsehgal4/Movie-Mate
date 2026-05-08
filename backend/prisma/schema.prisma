@@ -35,7 +35,8 @@ model users {
 
   // relation
   auths       Auth[]
-  theatreUsers TheatreUser[]  
+  theatreUsers TheatreUser[] 
+  bookings Booking[]
 }
 
 model Auth {
@@ -197,11 +198,14 @@ model Screen {
   id          Int     @id @default(autoincrement())
   theatre_id  Int
   screen_name String
+  seat_layout   Json?     // Stores the grid layout selected by user
 
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
   theatre Theatre @relation(fields: [theatre_id], references: [id], onDelete: Cascade)
 
   shows Show[]
-
+  seats  Seat[]
   @@index([theatre_id])
 }
 
@@ -239,6 +243,9 @@ model Show {
   screen  Screen  @relation(fields: [screen_id], references: [id], onDelete: Cascade)
   theatre Theatre @relation(fields: [theatre_id], references: [id], onDelete: Cascade)
 
+  showSeats  ShowSeat[]
+  bookings Booking[]
+
   // Indexes
   @@index([movie_id])
   @@index([screen_id])
@@ -249,4 +256,121 @@ model Show {
   // ⚠️ NOTE:
   // Prisma does NOT support exclusion constraints (no overlap)
   // You must enforce overlapping logic in backend/service layer
+}
+
+// =========================
+// SEAT
+// =========================
+model Seat {
+  id                Int      @id @default(autoincrement())
+  screen_id         Int
+  row_label         String
+  seat_number       Int
+  price_multiplier  Decimal  @db.Decimal(3,2) @default(1.00)
+  seat_type         String
+  is_active         Boolean  @default(true)
+
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+
+  screen            Screen   @relation(fields: [screen_id], references: [id], onDelete: Cascade)
+  showSeats         ShowSeat[]
+
+  @@unique([screen_id, row_label, seat_number])
+  @@index([screen_id])
+  @@index([screen_id, is_active])
+}
+
+// =========================
+// SHOWSEAT
+// =========================
+model ShowSeat {
+  id                Int        @id @default(autoincrement())
+  show_id           Int
+  seat_id           Int
+  status            SeatStatus @default(AVAILABLE)
+  locked_by         Int?
+  lock_until        DateTime?
+
+  created_at        DateTime   @default(now())
+  updated_at        DateTime   @updatedAt
+
+  show              Show       @relation(fields: [show_id], references: [id], onDelete: Cascade)
+  seat              Seat       @relation(fields: [seat_id], references: [id], onDelete: Cascade)
+  bookingSeat       BookingSeat?
+
+  @@unique([show_id, seat_id])
+  @@index([show_id])
+  @@index([show_id, status])
+  @@index([locked_by])
+  @@index([lock_until])
+}
+
+// =========================
+// BOOKING
+// =========================
+model Booking {
+  id                Int            @id @default(autoincrement())
+  user_id           Int
+  show_id           Int
+  total_amount      Decimal        @db.Decimal(10, 2)
+  status            BookingStatus  @default(PENDING)
+  payment_status    PaymentStatus  @default(PENDING)
+  payment_id        String?
+
+  created_at        DateTime       @default(now())
+  updated_at        DateTime       @updatedAt
+
+  user              users          @relation(fields: [user_id], references: [id], onDelete: Restrict)
+  show              Show           @relation(fields: [show_id], references: [id], onDelete: Restrict)
+  bookingSeats BookingSeat[]
+
+  @@index([user_id])
+  @@index([show_id])
+  @@index([payment_id])
+}
+
+// =========================
+// BOOKINGSEAT (Junction)
+// =========================
+model BookingSeat {
+  booking_id   Int
+  showSeat_id  Int
+
+  booking  Booking  @relation(fields: [booking_id], references: [id], onDelete: Cascade)
+
+  showSeat ShowSeat @relation(fields: [showSeat_id], references: [id], onDelete: Restrict)
+
+  // composite primary key
+  @@id([booking_id, showSeat_id])
+
+  // indexes
+  @@index([booking_id])
+
+  // one show seat -> one booking only
+  @@unique([showSeat_id])
+}
+
+// =========================
+// ENUMS
+// =========================
+enum SeatStatus {
+  AVAILABLE
+  LOCKED
+  BOOKED
+  BLOCKED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  FAILED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
 }
