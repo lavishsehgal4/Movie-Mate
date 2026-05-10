@@ -8,6 +8,7 @@ const authRouter=require('./features/auth/auth.router');
 const movieRouter=require("./features/movies/movies.router");
 const theatreRouter=require("./features/theatres/theatre.router");
 const facilityRouter=require("./features/theatreFacilities/facilities.router");
+const screenRouter=require('./features/screens/screen.router');
 const app = express();
 
 app.use(cors({
@@ -26,4 +27,6 @@ app.use('/api/v1/auth',authRouter);
 app.use('/api/v1/movies',movieRouter);
 app.use('/api/v1/theatre',theatreRouter);
 app.use('/api/v1/facilities',facilityRouter);
+app.use('/api/v1/screens',screenRouter);
+
 module.exports = app;

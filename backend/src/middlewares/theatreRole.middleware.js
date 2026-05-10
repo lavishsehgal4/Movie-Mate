@@ -8,7 +8,7 @@ async function attachTheatreRole(req, res, next) {
     const userId = req.user?.userId;
 
     const theatreId = Number(
-      req.body.theatre_id || req.query.theatre_id
+     req.body?.theatre_id || req.query?.theatre_id
     );
 
     if (!userId || !theatreId) {
@@ -43,6 +43,31 @@ async function attachTheatreRole(req, res, next) {
   }
 }
 
+function allowRoles(...allowedRoles) {
+
+  return function (req, res, next) {
+
+    const role = req.theatreRole;
+
+    if (!role) {
+      return res.status(403).json({
+        success: false,
+        message: "Role not found",
+      });
+    }
+
+    if (!allowedRoles.includes(role)) {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied",
+      });
+    }
+
+    next();
+  };
+}
+
 module.exports = {
   attachTheatreRole,
+  allowRoles
 };

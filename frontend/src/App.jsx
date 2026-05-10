@@ -7,6 +7,7 @@ import ProfilePage from './pages/ProfilePage'
 import PartnerPage from './pages/PartnerPage'
 import MyTheatrePage from './pages/MyTheatrePage'
 import TheatreDashboard from './pages/TheatreDashboard'
+import ScreenDetailPage from './pages/ScreenDetailPage'
 import './App.css'
 
 export default function App() {
@@ -25,6 +26,7 @@ export default function App() {
   if (page === 'partner')           return <PartnerPage />
   if (page === 'my-theatre')        return <MyTheatrePage />
   if (page === 'theatre-dashboard') return <TheatreDashboard />
+  if (page === 'screen-detail')     return <ScreenDetailPage />
 
   return (
     <>

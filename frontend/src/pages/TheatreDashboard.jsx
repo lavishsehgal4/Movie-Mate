@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import MoviesPanel from './theatre/MoviesPanel'
 import TheatreInfoPanel from './theatre/TheatreInfoPanel'
 import FacilitiesPanel from './theatre/FacilitiesPanel'
+import ScreensPanel from './theatre/ScreensPanel'
 import './TheatreDashboard.css'
 
 const SIDEBAR_SECTIONS = [
@@ -123,7 +124,8 @@ export default function TheatreDashboard() {
             {activeTab === 'movies'        && <MoviesPanel theatre={t} />}
             {activeTab === 'theatre-info'  && <TheatreInfoPanel theatre={t} />}
             {activeTab === 'facilities'    && <FacilitiesPanel theatre={t} />}
-            {activeTab !== 'overview' && activeTab !== 'movies' && activeTab !== 'theatre-info' && activeTab !== 'facilities' && (
+            {activeTab === 'screens'       && <ScreensPanel theatre={t} />}
+            {!['overview','movies','theatre-info','facilities','screens'].includes(activeTab) && (
               <PlaceholderPanel label={SIDEBAR_SECTIONS.flatMap(s => s.items).find(i => i.id === activeTab)?.label} />
             )}
           </div>
