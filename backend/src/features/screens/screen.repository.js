@@ -16,7 +16,6 @@ async function createScreen(data) {
         id: true,
         theatre_id: true,
         screen_name: true,
-        seat_layout: true,
         created_at: true,
       },
     });
@@ -46,7 +45,6 @@ async function updateScreen(screenId, data) {
         id: true,
         theatre_id: true,
         screen_name: true,
-        seat_layout: true,
         updated_at: true,
       },
     });
@@ -70,7 +68,6 @@ async function getTheatreScreens(theatreId) {
       select: {
         id: true,
         screen_name: true,
-        seat_layout: true,
         created_at: true,
         updated_at: true,
       },
@@ -83,6 +80,34 @@ async function getTheatreScreens(theatreId) {
 }
 
 
+// seatLayouts operations
+
+// adding seat_layout
+
+async function updateScreenSeatLayout(screenId, seatLayout) {
+  try {
+
+    return await prisma.screen.update({
+      where: {
+        id: screenId,
+      },
+
+      data: {
+        seat_layout: seatLayout,
+      },
+
+      select: {
+        id: true,
+        seat_layout: true,
+        updated_at: true,
+      },
+    });
+
+  } catch (err) {
+    console.error("Error updating seat layout:", err);
+    throw new Error("Failed to update seat layout");
+  }
+}
 
 // exports
 
@@ -90,4 +115,5 @@ module.exports={
     createScreen,
     updateScreen,
     getTheatreScreens,
+    updateScreenSeatLayout
 }

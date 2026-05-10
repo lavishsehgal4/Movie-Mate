@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
-import { useNavigation } from '../../context/NavigationContext'
+import SeatLayoutEditor from './SeatLayoutEditor'
+import ScreenDetailPage from './ScreenDetailPage'
 import './ScreensPanel.css'
+import './ScreenDetailPage.css'
 
 const BASE = 'http://localhost:5000/api/v1/screens'
 
 export default function ScreensPanel({ theatre }) {
-  const { goToScreen } = useNavigation()
   const theatreId = theatre?.theatreId
   const canEdit   = theatre?.role === 'OWNER' || theatre?.role === 'MANAGER'
 
@@ -14,6 +15,7 @@ export default function ScreensPanel({ theatre }) {
   const [error,    setError]    = useState('')
   const [showAdd,  setShowAdd]  = useState(false)
   const [editId,   setEditId]   = useState(null)
+  const [openScreen, setOpenScreen] = useState(null)  // screen object for layout editor
 
   const load = () => {
     setLoading(true); setError('')
@@ -25,6 +27,17 @@ export default function ScreensPanel({ theatre }) {
   }
 
   useEffect(() => { if (theatreId) load() }, [theatreId])
+
+  // open layout editor for a screen
+  if (openScreen) {
+    return (
+      <ScreenDetailPage
+        screen={openScreen}
+        theatre={theatre}
+        onBack={() => setOpenScreen(null)}
+      />
+    )
+  }
 
   return (
     <div className="sp-root">
@@ -51,7 +64,7 @@ export default function ScreensPanel({ theatre }) {
               canEdit={canEdit}
               theatre={theatre}
               onEdit={e => { e.stopPropagation(); setEditId(s.id) }}
-              onClick={() => goToScreen({ ...s, theatre })}
+              onClick={() => setOpenScreen(s)}
             />
           ))}
           {canEdit && (

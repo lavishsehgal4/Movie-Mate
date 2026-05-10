@@ -1,4 +1,4 @@
-.sd-root {
+/*.sd-root {
   min-height: 100vh;
   background: #0f1117;
   color: #fff;
@@ -42,11 +42,12 @@
   padding: 28px 32px 48px;
 }
 
-/* breadcrumb */
+
 .sd-breadcrumb {
   display: flex; align-items: center; gap: 8px;
   font-size: 12px; color: #4a5168; margin-bottom: 20px;
 }
+
 .sd-breadcrumb button {
   background: none; border: none; color: #4a5168;
   font-size: 12px; cursor: pointer; font-family: inherit;
@@ -55,7 +56,7 @@
 .sd-breadcrumb button:hover { color: #A0A7B5; }
 .sd-bc-active { color: #E8895B; font-weight: 600; }
 
-/* header */
+
 .sd-header {
   display: flex; align-items: flex-start;
   justify-content: space-between;
@@ -75,7 +76,7 @@
 }
 .sd-back-btn:hover { border-color: #E8895B; color: #E8895B; }
 
-/* info grid */
+
 .sd-info-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -100,7 +101,7 @@
   font-size: 15px; font-weight: 600; color: #fff;
 }
 
-/* sections */
+
 .sd-sections { display: flex; flex-direction: column; gap: 16px; }
 
 .sd-section {
@@ -129,3 +130,4 @@
   .sd-body { padding: 16px; }
   .sd-info-grid { grid-template-columns: 1fr 1fr; }
 }
+*/
