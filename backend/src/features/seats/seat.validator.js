@@ -10,6 +10,14 @@ function normalizeNumber(value) {
   return num;
 }
 
+function normalizeString(value) {
+  if (typeof value !== "string") {
+    return "";
+  }
+
+  return value.trim();
+}
+
 // ------------------ main validator ------------------
 
 function validateCreateSeats(data) {
@@ -165,33 +173,50 @@ function validateUpdateSeatStatus(data) {
 
   temp.screen_id = screenId;
 
-  // row_label
-  const rowLabel = normalizeString(
-    data.row_label
-  );
-
-  if (!rowLabel) {
+  // seats
+  if (
+    !Array.isArray(data.seats) ||
+    data.seats.length === 0
+  ) {
     return {
       isValid: false,
-      error: "row_label is required",
+      error: "seats must be non-empty array",
     };
   }
 
-  temp.row_label = rowLabel;
+  const normalizedSeats = [];
 
-  // seat_number
-  const seatNumber = normalizeNumber(
-    data.seat_number
-  );
+  for (const seat of data.seats) {
 
-  if (!seatNumber) {
-    return {
-      isValid: false,
-      error: "Valid seat_number is required",
-    };
+    const rowLabel = normalizeString(
+      seat.row_label
+    );
+
+    if (!rowLabel) {
+      return {
+        isValid: false,
+        error: "row_label is required",
+      };
+    }
+
+    const seatNumber = normalizeNumber(
+      seat.seat_number
+    );
+
+    if (!seatNumber) {
+      return {
+        isValid: false,
+        error: "Valid seat_number is required",
+      };
+    }
+
+    normalizedSeats.push({
+      row_label: rowLabel,
+      seat_number: seatNumber,
+    });
   }
 
-  temp.seat_number = seatNumber;
+  temp.seats = normalizedSeats;
 
   // is_active
   if (typeof data.is_active !== "boolean") {

@@ -69,13 +69,17 @@ async function getScreenSeatLayout(screenId) {
 async function updateSeatStatus(data) {
   try {
 
+    const conditions = data.seats.map((seat) => ({
+      screen_id: data.screen_id,
+
+      row_label: seat.row_label,
+
+      seat_number: seat.seat_number,
+    }));
+
     return await prisma.seat.updateMany({
       where: {
-        screen_id: data.screen_id,
-
-        row_label: data.row_label,
-
-        seat_number: data.seat_number,
+        OR: conditions,
       },
 
       data: {

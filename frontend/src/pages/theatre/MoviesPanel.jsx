@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import CreateShowPage from './CreateShowPage'
 import './MoviesPanel.css'
 
 const TMDB_IMG = 'https://image.tmdb.org/t/p/w92'
@@ -31,7 +32,7 @@ function buildQuery(filters, page) {
   return p.toString()
 }
 
-export default function MoviesPanel() {
+export default function MoviesPanel({ theatre }) {
   const [filters, setFilters] = useState({ search: '', type: '', language: '', sort: 'popularity_desc' })
   const [applied, setApplied] = useState({ search: '', type: '', language: '', sort: 'popularity_desc' })
   const [movies,  setMovies]  = useState([])
@@ -39,6 +40,7 @@ export default function MoviesPanel() {
   const [total,   setTotal]   = useState(0)
   const [loading, setLoading] = useState(false)
   const [error,   setError]   = useState('')
+  const [createShowMovie, setCreateShowMovie] = useState(null)
 
   const totalPages = Math.ceil(total / 10) || 1
 
@@ -64,6 +66,10 @@ export default function MoviesPanel() {
   }, [])
 
   useEffect(() => { fetchMovies(applied, page) }, [applied, page, fetchMovies])
+
+  if (createShowMovie) {
+    return <CreateShowPage movie={createShowMovie} theatre={theatre} onBack={() => setCreateShowMovie(null)} />
+  }
 
   const handleSearch = () => {
     setApplied({ ...filters })
@@ -193,6 +199,7 @@ export default function MoviesPanel() {
               <th>TYPE</th>
               <th>LANGUAGE</th>
               <th>RELEASE DATE</th>
+              <th>RUNTIME</th>
               <th>POPULARITY</th>
               <th>ACTIONS</th>
             </tr>
@@ -235,16 +242,22 @@ export default function MoviesPanel() {
                   <td>{langName}</td>
                   <td>{rel ? rel.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }) : '—'}</td>
                   <td>
+                    <span className="mp-runtime">
+                      {m.runtime ? `${m.runtime} min` : '—'}
+                    </span>
+                  </td>
+                  <td>
                     <span className="mp-pop">
                       🔥 {m.popularity ? m.popularity.toFixed(1) : '—'}
                     </span>
                   </td>
                   <td>
-                    <div className="mp-actions">
-                      <button className="mp-action-btn" title="View">👁</button>
-                      <button className="mp-action-btn" title="Edit">✏️</button>
-                      <button className="mp-action-btn" title="More">⋯</button>
-                    </div>
+                    <button
+                      className="mp-create-show-btn"
+                      onClick={() => setCreateShowMovie(m)}
+                    >
+                      + Create Show
+                    </button>
                   </td>
                 </tr>
               )

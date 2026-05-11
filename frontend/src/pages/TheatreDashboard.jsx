@@ -5,6 +5,7 @@ import MoviesPanel from './theatre/MoviesPanel'
 import TheatreInfoPanel from './theatre/TheatreInfoPanel'
 import FacilitiesPanel from './theatre/FacilitiesPanel'
 import ScreensPanel from './theatre/ScreensPanel'
+import ManageShowsPanel from './theatre/ManageShowsPanel'
 import './TheatreDashboard.css'
 
 const SIDEBAR_SECTIONS = [
@@ -18,8 +19,7 @@ const SIDEBAR_SECTIONS = [
     label: 'MOVIES & SHOWS',
     items: [
       { id: 'movies',        icon: '⊟', label: 'Movies' },
-      { id: 'manage-shows',  icon: '📅', label: 'Manage Shows' },
-    ],
+      { id: 'manage-shows',  icon: '📅', label: 'Manage Shows' },    ],
   },
   {
     label: 'INFRASTRUCTURE',
@@ -125,7 +125,8 @@ export default function TheatreDashboard() {
             {activeTab === 'theatre-info'  && <TheatreInfoPanel theatre={t} />}
             {activeTab === 'facilities'    && <FacilitiesPanel theatre={t} />}
             {activeTab === 'screens'       && <ScreensPanel theatre={t} />}
-            {!['overview','movies','theatre-info','facilities','screens'].includes(activeTab) && (
+            {activeTab === 'manage-shows'  && <ManageShowsPanel theatre={t} />}
+            {!['overview','movies','theatre-info','facilities','screens','manage-shows'].includes(activeTab) && (
               <PlaceholderPanel label={SIDEBAR_SECTIONS.flatMap(s => s.items).find(i => i.id === activeTab)?.label} />
             )}
           </div>

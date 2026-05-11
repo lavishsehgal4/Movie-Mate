@@ -381,3 +381,20 @@
   font-size: 13px;
   padding: 0 4px;
 }
+
+.mp-runtime { font-size: 12px; color: #A0A7B5; }
+
+.mp-create-show-btn {
+  background: #E8895B;
+  border: none;
+  color: #fff;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.mp-create-show-btn:hover { background: #d4784a; }

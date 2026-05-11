@@ -126,6 +126,7 @@ async function getMovies(filters) {
         adult:true,
         poster_path: true,
         release_date: true,
+        runtime:true,
         popularity: true,
         original_language: true,
       },

@@ -196,39 +196,39 @@ function SeatStatusManager({ screen, theatre, layoutData, onBack }) {
   }
 
   const save = async () => {
-    const toActivate   = [...origSet].filter(k => !inactive.has(k))   // had ID, now active
-    const toDeactivate = [...inactive].filter(k => !origSet.has(k))   // newly inactive, no ID yet
+    // Build changes: compare current inactive set vs original
+    const toActivate   = [...origSet].filter(k => !inactive.has(k))   // was inactive, now active
+    const toDeactivate = [...inactive].filter(k => !origSet.has(k))   // was active, now inactive
 
     if (!toActivate.length && !toDeactivate.length) {
       setMsg({ text: 'No changes to save.', type: 'info' }); return
     }
 
     setSaving(true); setMsg(null)
+
+    const callStatus = async (keys, is_active) => {
+      const seats = keys.map(k => {
+        const idx = k.lastIndexOf('-')
+        return { row_label: k.slice(0, idx), seat_number: Number(k.slice(idx + 1)) }
+      })
+      const r = await fetch(`${API}/status`, {
+        method: 'PATCH', credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          screen_id:  screen.id,
+          theatre_id: theatre.theatreId,
+          seats,
+          is_active,
+        }),
+      })
+      const d = await r.json()
+      if (!d.success) throw new Error(d.message)
+    }
+
     try {
-      if (toActivate.length) {
-        const ids = toActivate.map(k => idMap[k]).filter(Boolean)
-        if (ids.length) {
-          const r = await fetch(`${API}/status`, {
-            method: 'PATCH', credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ seat_ids: ids, is_active: true, theatre_id: theatre.theatreId }),
-          })
-          const d = await r.json()
-          if (!d.success) throw new Error(d.message)
-        }
-      }
-
-      if (toDeactivate.length) {
-        // Active seats don't have IDs in the current /layout response.
-        // To deactivate them, a "get all seats with IDs" endpoint is needed.
-        setMsg({
-          text: `✓ ${toActivate.length} seat(s) re-activated. Note: deactivating active seats requires a full seats endpoint (seat IDs not returned for active seats).`,
-          type: 'warn'
-        })
-        setSaving(false); return
-      }
-
-      setMsg({ text: `✓ ${toActivate.length} seat(s) re-activated successfully.`, type: 'success' })
+      if (toActivate.length)   await callStatus(toActivate, true)
+      if (toDeactivate.length) await callStatus(toDeactivate, false)
+      setMsg({ text: `✓ ${toActivate.length + toDeactivate.length} seat(s) updated successfully.`, type: 'success' })
     } catch (e) {
       setMsg({ text: `⚠️ ${e.message}`, type: 'error' })
     } finally {
