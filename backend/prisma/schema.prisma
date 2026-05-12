@@ -377,3 +377,42 @@ enum PaymentStatus {
   FAILED
   REFUNDED
 }
+
+
+
+// state and city table yet to be modified 
+
+model State {
+  id         Int      @id @default(autoincrement())
+
+  name       String   @unique
+
+  code       String   @unique
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations
+  cities     City[]
+}
+
+model City {
+  id         Int      @id @default(autoincrement())
+
+  name       String
+
+  state_id   Int
+
+  is_default Boolean  @default(false)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relations
+  state      State    @relation(fields: [state_id], references: [id], onDelete: Cascade)
+
+  // Indexes
+  @@index([state_id])
+
+  @@unique([state_id, name])
+}

@@ -11,6 +11,7 @@ const facilityRouter=require("./features/theatreFacilities/facilities.router");
 const screenRouter=require('./features/screens/screen.router');
 const seatRouter=require('./features/seats/seat.router');
 const showRouter=require('./features/shows/show.router');
+const locationRouter=require('./features/location/location.router');
 const app = express();
 
 app.use(cors({
@@ -32,5 +33,6 @@ app.use('/api/v1/facilities',facilityRouter);
 app.use('/api/v1/screens',screenRouter);
 app.use('/api/v1/seats',seatRouter);
 app.use('/api/v1/shows',showRouter);
+app.use('/api/v1/location',locationRouter);
 
 module.exports = app;
