@@ -382,37 +382,108 @@ enum PaymentStatus {
 
 // state and city table yet to be modified 
 
+
 model State {
-  id         Int      @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
 
-  name       String   @unique
+  name        String
+  code        String   @unique
 
-  code       String   @unique
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
 
   // Relations
-  cities     City[]
+  regions     Region[]
+
+  @@unique([name])
 }
 
-model City {
-  id         Int      @id @default(autoincrement())
 
-  name       String
 
-  state_id   Int
+model Region {
+  id                       Int      @id @default(autoincrement())
 
-  is_default Boolean  @default(false)
+  name                     String
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  code                     String   @unique
+
+  slug                     String   @unique
+
+  aliases                  String[]
+
+  latitude                 Decimal  @db.Decimal(9,6)
+  longitude                Decimal  @db.Decimal(9,6)
+
+  allow_sales              Boolean  @default(true)
+
+  geohash                  String?
+
+  priority                 Int      @default(0)
+
+  honour_subregion_slug    Boolean  @default(false)
+
+  state_id                 Int
+
+  created_at               DateTime @default(now())
+  updated_at               DateTime @updatedAt
 
   // Relations
-  state      State    @relation(fields: [state_id], references: [id], onDelete: Cascade)
+  state                    State @relation(fields: [state_id], references: [id], onDelete: Cascade)
+
+  subregions               SubRegion[]
+
+  
 
   // Indexes
   @@index([state_id])
 
+  @@index([slug])
+
+  @@index([priority])
+
+  @@index([latitude, longitude])
+
   @@unique([state_id, name])
+}
+
+
+
+model SubRegion {
+  id              Int      @id @default(autoincrement())
+
+  name            String
+
+  code            String   @unique
+
+  slug            String
+
+  latitude        Decimal  @db.Decimal(9,6)
+  longitude       Decimal  @db.Decimal(9,6)
+
+  allow_sales     Boolean  @default(true)
+
+  geohash         String?
+
+  priority        Int      @default(0)
+
+  region_id       Int
+
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  // Relations
+  region          Region @relation(fields: [region_id], references: [id], onDelete: Cascade)
+
+  
+
+  // Indexes
+  @@index([region_id])
+
+  @@index([slug])
+
+  @@index([priority])
+
+  @@index([latitude, longitude])
+
+  @@unique([region_id, name])
 }
