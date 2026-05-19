@@ -1,24 +1,11 @@
 const express = require("express");
 
 const {
-  httpAddStates,
-  httpAddCities,
+  getAllLocationsController,
 } = require("./location.controller");
 
 const locationRouter = express.Router();
 
-// =========================
-// LOCATION ROUTES
-// =========================
-
-locationRouter.post(
-  "/states",
-  httpAddStates
-);
-
-locationRouter.post(
-  "/cities",
-  httpAddCities
-);
+locationRouter.get("/", getAllLocationsController);
 
 module.exports = locationRouter;

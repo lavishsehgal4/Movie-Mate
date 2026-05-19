@@ -1,61 +1,20 @@
 const {
-  createStates,
-  createCities,
+  getAllLocationsService,
 } = require("./location.service");
 
-// =========================
-// ADD STATES
-// =========================
-
-async function httpAddStates(req, res) {
+const getAllLocationsController = async (req, res, next) => {
   try {
+    const data = await getAllLocationsService();
 
-    const result = await createStates(
-      req.body
-    );
-
-    return res.status(201).json({
+    return res.status(200).json({
       success: true,
-      data: result,
+      data,
     });
-
-  } catch (err) {
-
-    return res.status(400).json({
-      success: false,
-      message:
-        err.message || "Failed to add states",
-    });
+  } catch (error) {
+    next(error);
   }
-}
-
-// =========================
-// ADD CITIES
-// =========================
-
-async function httpAddCities(req, res) {
-  try {
-
-    const result = await createCities(
-      req.body
-    );
-
-    return res.status(201).json({
-      success: true,
-      data: result,
-    });
-
-  } catch (err) {
-
-    return res.status(400).json({
-      success: false,
-      message:
-        err.message || "Failed to add cities",
-    });
-  }
-}
+};
 
 module.exports = {
-  httpAddStates,
-  httpAddCities,
+  getAllLocationsController,
 };

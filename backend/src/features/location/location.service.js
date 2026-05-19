@@ -1,64 +1,11 @@
 const {
-  validateAddStates,
-  validateAddCities,
-} = require("./location.validator");
-
-const {
-  addStates,
-  addCities,
+  getAllLocationsRepo,
 } = require("./location.repository");
 
-// =========================
-// ADD STATES
-// =========================
-
-async function createStates(data) {
-
-  // validate
-  const validation =
-    validateAddStates(data);
-
-  if (!validation.isValid) {
-    throw new Error(validation.error);
-  }
-
-  // repo call
-  const result = await addStates(
-    data.normalizedStates
-  );
-
-  // response
-  return {
-    inserted_count: result.count,
-  };
-}
-
-// =========================
-// ADD CITIES
-// =========================
-
-async function createCities(data) {
-
-  // validate
-  const validation =
-    validateAddCities(data);
-
-  if (!validation.isValid) {
-    throw new Error(validation.error);
-  }
-
-  // repo call
-  const result = await addCities(
-    data.normalizedCities
-  );
-
-  // response
-  return {
-    inserted_count: result.count,
-  };
-}
+const getAllLocationsService = async () => {
+  return await getAllLocationsRepo();
+};
 
 module.exports = {
-  createStates,
-  createCities,
+  getAllLocationsService,
 };

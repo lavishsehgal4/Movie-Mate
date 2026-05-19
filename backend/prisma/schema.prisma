@@ -253,7 +253,7 @@ model Show {
   @@index([screen_id])
   @@index([theatre_id])
   @@index([screen_id, start_time])
-  @@index([city, start_time])
+  @@index([city, start_time, movie_id])
   @@index([start_time])
 
   // ⚠️ NOTE:

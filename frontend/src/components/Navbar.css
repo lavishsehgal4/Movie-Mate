@@ -540,3 +540,143 @@
   .city-dropdown { width: calc(100vw - 32px); left: auto; right: 0; transform: none; }
   .city-grid { grid-template-columns: repeat(4, 1fr); }
 }
+
+/* ── CITY SELECTOR ── */
+.nav-city-wrap { position: relative; }
+
+.nav-city {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 13px; color: #A0A7B5;
+  cursor: pointer; background: none; border: none;
+  font-family: inherit; padding: 0; transition: color 0.2s;
+}
+.nav-city:hover { color: #fff; }
+
+/* modal panel */
+.city-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(680px, calc(100vw - 32px));
+  max-height: 75vh;
+  overflow-y: auto;
+  background: #0E1628;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 24px;
+  z-index: 9999;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+}
+
+/* search */
+.city-search-row {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px; padding: 11px 14px;
+  margin-bottom: 12px;
+}
+.city-search-input {
+  background: none; border: none; outline: none;
+  color: #fff; font-size: 14px; width: 100%; font-family: inherit;
+}
+.city-search-input::placeholder { color: #4a5168; }
+
+/* detect */
+.city-detect {
+  display: flex; align-items: center; gap: 7px;
+  background: none; border: none; color: #E8895B;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  font-family: inherit; padding: 4px 0; transition: opacity 0.2s;
+}
+.city-detect:hover { opacity: 0.8; }
+
+.city-hr { height: 1px; background: rgba(255,255,255,0.07); margin: 14px 0; }
+
+.city-section-title {
+  font-size: 13px; font-weight: 600; color: #A0A7B5;
+  text-align: center; margin-bottom: 16px;
+}
+
+/* top cities grid */
+.city-top-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px; margin-bottom: 8px;
+}
+
+.city-top-item {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  background: none; border: 1px solid transparent;
+  border-radius: 10px; padding: 10px 6px;
+  cursor: pointer; font-family: inherit; transition: all 0.2s;
+}
+.city-top-item:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+.city-top-item.active { background: rgba(232,137,91,0.1); border-color: rgba(232,137,91,0.4); }
+
+.city-top-icon {
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+}
+.city-top-icon img { width: 40px; height: 40px; object-fit: contain; }
+.city-top-emoji { font-size: 28px; }
+
+.city-top-name {
+  font-size: 11px; font-weight: 500; color: #A0A7B5;
+  text-align: center; line-height: 1.3;
+}
+.city-top-item.active .city-top-name { color: #E8895B; }
+
+/* subregion search results */
+.city-sub-item {
+  display: flex; align-items: center; gap: 6px;
+  width: 100%; background: none;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px; padding: 8px 12px;
+  cursor: pointer; font-family: inherit;
+  font-size: 13px; color: #A0A7B5;
+  transition: background 0.2s; margin-bottom: 4px;
+}
+.city-sub-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
+.city-sub-item.active { background: rgba(232,137,91,0.1); color: #E8895B; border-color: rgba(232,137,91,0.3); }
+.city-sub-parent { color: #4a5168; font-size: 12px; }
+.city-sub-name { font-weight: 600; }
+
+/* other cities grid */
+.city-other-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+}
+.city-other-item {
+  background: none; border: none;
+  color: #6b7280; font-size: 12px;
+  cursor: pointer; font-family: inherit;
+  padding: 5px 4px; text-align: left;
+  border-radius: 6px; transition: color 0.2s;
+}
+.city-other-item:hover { color: #fff; }
+.city-other-item.active { color: #E8895B; font-weight: 600; }
+
+/* view/hide all */
+.city-toggle-all {
+  display: block; width: 100%; background: none; border: none;
+  color: #E8895B; font-size: 13px; font-weight: 600;
+  cursor: pointer; font-family: inherit;
+  text-align: center; padding: 10px 0 2px;
+  transition: opacity 0.2s;
+}
+.city-toggle-all:hover { opacity: 0.8; }
+
+@media (max-width: 600px) {
+  .city-top-grid { grid-template-columns: repeat(4, 1fr); }
+  .city-other-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.city-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 9998;
+}
