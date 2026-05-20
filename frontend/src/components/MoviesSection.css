@@ -1,193 +1,37 @@
-.movies-section {
-  background: linear-gradient(180deg, #0B0F1A 0%, #0E1628 100%);
-  padding: 72px 0 80px;
-}
+.ms-section { background: linear-gradient(180deg, #0B0F1A 0%, #0E1628 100%); padding: 56px 0 64px; }
+.ms-inner { max-width: 1280px; margin: 0 auto; padding: 0 40px; }
 
-.movies-inner {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 40px;
-}
+.ms-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+.ms-title-wrap { display: flex; align-items: center; gap: 14px; }
+.ms-accent { width: 4px; height: 28px; background: #E8895B; border-radius: 2px; flex-shrink: 0; }
+.ms-title { font-size: 24px; font-weight: 700; color: #fff; }
 
-.movies-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 40px;
-  flex-wrap: wrap;
-  gap: 20px;
-}
+.ms-loading { font-size: 13px; color: #A0A7B5; padding: 32px 0; }
+.ms-error { font-size: 13px; color: #ff6b7a; background: rgba(220,53,69,0.08); border: 1px solid rgba(220,53,69,0.2); border-radius: 8px; padding: 10px 14px; }
 
-.movies-title-wrap {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
+.ms-empty { display: flex; flex-direction: column; align-items: center; padding: 60px 20px; gap: 8px; color: #4a5168; text-align: center; }
+.ms-empty span:first-child { font-size: 40px; margin-bottom: 4px; }
+.ms-empty p { font-size: 16px; font-weight: 600; color: #A0A7B5; }
 
-.title-accent {
-  width: 4px;
-  height: 32px;
-  background: #E8895B;
-  border-radius: 2px;
-  flex-shrink: 0;
-}
+.ms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
 
-.movies-title {
-  font-size: 28px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: -0.5px;
-}
+.ms-card { cursor: pointer; transition: transform 0.2s; }
+.ms-card:hover { transform: translateY(-4px); }
 
-.movies-controls {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
+.ms-poster { position: relative; aspect-ratio: 2/3; border-radius: 10px; overflow: hidden; background: #1a2035; }
+.ms-poster img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; display: block; }
+.ms-card:hover .ms-poster img { transform: scale(1.05); }
+.ms-poster-ph { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 32px; }
 
-.search-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 10px;
-  padding: 10px 16px;
-  width: 280px;
-  transition: border-color 0.2s;
-}
+.ms-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.55); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 14px; opacity: 0; transition: opacity 0.25s; }
+.ms-card:hover .ms-overlay { opacity: 1; }
+.ms-book-btn { background: #E8895B; color: #fff; border: none; border-radius: 6px; padding: 7px 16px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; }
 
-.search-bar:focus-within {
-  border-color: rgba(232, 137, 91, 0.5);
-}
+.ms-rating { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.7); color: #fff; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 10px; }
 
-.search-bar input {
-  background: none;
-  border: none;
-  outline: none;
-  color: #fff;
-  font-size: 13px;
-  width: 100%;
-}
+.ms-info { padding: 10px 2px 0; }
+.ms-movie-title { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ms-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.ms-tag { font-size: 10px; padding: 2px 7px; border-radius: 4px; background: #1e2535; color: #A0A7B5; }
 
-.search-bar input::placeholder { color: #A0A7B5; }
-
-.upcoming-btn {
-  background: transparent;
-  color: #E8895B;
-  border: 1.5px solid #E8895B;
-  border-radius: 10px;
-  padding: 10px 20px;
-  font-size: 13px;
-  font-weight: 600;
-  transition: background 0.2s, color 0.2s;
-  white-space: nowrap;
-}
-
-.upcoming-btn:hover {
-  background: #E8895B;
-  color: #fff;
-}
-
-/* Grid */
-.movies-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 24px;
-}
-
-.movie-card {
-  cursor: pointer;
-  transition: transform 0.25s;
-}
-
-.movie-card:hover { transform: translateY(-6px); }
-
-.card-poster {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 2/3;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #1a2035;
-}
-
-.card-poster img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.35s;
-}
-
-.movie-card:hover .card-poster img { transform: scale(1.06); }
-
-.card-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding-bottom: 18px;
-  opacity: 0;
-  transition: opacity 0.25s;
-}
-
-.movie-card:hover .card-overlay { opacity: 1; }
-
-.card-book-btn {
-  background: #E8895B;
-  color: #fff;
-  border: none;
-  border-radius: 20px;
-  padding: 8px 20px;
-  font-size: 13px;
-  font-weight: 600;
-  transition: background 0.2s;
-}
-
-.card-book-btn:hover { background: #d4784a; }
-
-.card-rating {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(11, 15, 26, 0.75);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 3px 9px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  gap: 3px;
-}
-
-.star { color: #E8895B; }
-
-.card-info {
-  padding: 12px 4px 0;
-}
-
-.card-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.card-genre {
-  font-size: 12px;
-  color: #A0A7B5;
-}
-
-@media (max-width: 768px) {
-  .movies-inner { padding: 0 16px; }
-  .movies-header { flex-direction: column; align-items: flex-start; }
-  .search-bar { width: 100%; }
-  .movies-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; }
-}
+@media (max-width: 768px) { .ms-inner { padding: 0 16px; } .ms-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 14px; } }

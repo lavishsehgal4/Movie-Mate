@@ -1,59 +1,116 @@
-import { useState } from 'react'
-import { movies } from '../data/movies'
+import { useState, useEffect } from 'react'
+import { useLocation } from '../context/LocationContext'
+import { useNavigation } from '../context/NavigationContext'
 import './MoviesSection.css'
 
-export default function MoviesSection() {
-  const [search, setSearch] = useState('')
+const BASE = 'http://localhost:5000/api/v1'
 
-  const filtered = movies.filter(m =>
-    m.title.toLowerCase().includes(search.toLowerCase())
-  )
+export default function MoviesSection() {
+  const { selected } = useLocation()
+  const { setPage, setSelectedMovie } = useNavigation()
+  const [movies,  setMovies]  = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error,   setError]   = useState('')
+  const [mode,    setMode]    = useState('city') // 'city' | 'nearby'
+
+  const isNearby = selected?.isDetected
+
+  useEffect(() => {
+    if (!selected) return
+    if (selected.isDetected && selected.latitude && selected.longitude) {
+      fetchNearby(selected.latitude, selected.longitude)
+    } else if (selected.cities?.length) {
+      fetchByCity(selected.cities)
+    }
+  }, [selected])
+
+  const fetchByCity = async (cities) => {
+    setLoading(true); setError(''); setMode('city')
+    try {
+      const r = await fetch(`${BASE}/shows/movies`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cities }),
+      })
+      const d = await r.json()
+      if (!d.success) throw new Error(d.message)
+      setMovies(d.data.movies || [])
+    } catch (e) { setError(e.message) }
+    finally { setLoading(false) }
+  }
+
+  const fetchNearby = async (lat, lng) => {
+    setLoading(true); setError(''); setMode('nearby')
+    try {
+      const r = await fetch(`${BASE}/shows/movies/nearby`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ latitude: lat, longitude: lng, distance: 30 }),
+      })
+      const d = await r.json()
+      if (!d.success) throw new Error(d.message)
+      setMovies(d.data.movies || [])
+    } catch (e) { setError(e.message) }
+    finally { setLoading(false) }
+  }
+
+  const openMovie = (movie) => {
+    setSelectedMovie(movie)
+    setPage('movie-detail')
+  }
+
+  const heading = mode === 'nearby'
+    ? 'Movies Near Your Location'
+    : `Movies in ${selected?.regionName || 'Your City'}`
 
   return (
-    <section className="movies-section">
-      <div className="movies-inner">
-        {/* Header */}
-        <div className="movies-header">
-          <div className="movies-title-wrap">
-            <div className="title-accent" />
-            <h2 className="movies-title">Movies in Your City</h2>
-          </div>
-          <div className="movies-controls">
-            <div className="search-bar">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#A0A7B5" strokeWidth="2">
-                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-              </svg>
-              <input
-                type="text"
-                placeholder="Search for movies, cinemas..."
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-              />
-            </div>
-            <button className="upcoming-btn">Upcoming Movies</button>
+    <section className="ms-section">
+      <div className="ms-inner">
+        <div className="ms-header">
+          <div className="ms-title-wrap">
+            <div className="ms-accent" />
+            <h2 className="ms-title">{heading}</h2>
           </div>
         </div>
 
-        {/* Grid */}
-        <div className="movies-grid">
-          {filtered.map(movie => (
-            <div className="movie-card" key={movie.id}>
-              <div className="card-poster">
-                <img src={movie.img} alt={movie.title} loading="lazy" />
-                <div className="card-overlay">
-                  <button className="card-book-btn">Book Now</button>
+        {loading && <div className="ms-loading">Loading movies...</div>}
+        {error   && <div className="ms-error">⚠️ {error}</div>}
+
+        {!loading && !error && movies.length === 0 && (
+          <div className="ms-empty">
+            <span>🎬</span>
+            <p>No movies found near you</p>
+            <span>Try changing your location or city</span>
+          </div>
+        )}
+
+        {!loading && movies.length > 0 && (
+          <div className="ms-grid">
+            {movies.map(m => (
+              <div key={m.id} className="ms-card" onClick={() => openMovie(m)}>
+                <div className="ms-poster">
+                  {m.poster_path
+                    ? <img src={m.poster_path} alt={m.title} loading="lazy" />
+                    : <div className="ms-poster-ph">🎬</div>
+                  }
+                  <div className="ms-overlay">
+                    <button className="ms-book-btn">Book Now</button>
+                  </div>
+                  {m.vote_average > 0 && (
+                    <div className="ms-rating">★ {Number(m.vote_average).toFixed(1)}</div>
+                  )}
                 </div>
-                <div className="card-rating">
-                  <span className="star">★</span> {movie.rating}
+                <div className="ms-info">
+                  <h3 className="ms-movie-title">{m.title}</h3>
+                  <div className="ms-tags">
+                    {m.original_language && <span className="ms-tag">{m.original_language.toUpperCase()}</span>}
+                    {m.certification && <span className="ms-tag">{m.certification}</span>}
+                  </div>
                 </div>
               </div>
-              <div className="card-info">
-                <h3 className="card-title">{movie.title}</h3>
-                <span className="card-genre">{movie.genre}</span>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   )

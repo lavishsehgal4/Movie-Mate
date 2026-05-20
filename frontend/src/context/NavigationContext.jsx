@@ -6,6 +6,7 @@ export function NavigationProvider({ children }) {
   const [page, setPage] = useState('home')
   const [selectedTheatre, setSelectedTheatre] = useState(null)
   const [selectedScreen,  setSelectedScreen]  = useState(null)
+  const [selectedMovie,   setSelectedMovie]   = useState(null)
 
   const goToTheatre = (theatre) => {
     setSelectedTheatre(theatre)
@@ -18,7 +19,7 @@ export function NavigationProvider({ children }) {
   }
 
   return (
-    <NavigationContext.Provider value={{ page, setPage, selectedTheatre, goToTheatre, selectedScreen, goToScreen }}>
+    <NavigationContext.Provider value={{ page, setPage, selectedTheatre, goToTheatre, selectedScreen, goToScreen, selectedMovie, setSelectedMovie }}>
       {children}
     </NavigationContext.Provider>
   )

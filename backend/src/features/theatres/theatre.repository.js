@@ -44,6 +44,25 @@ async function createTheatreWithOwner(data, userId) {
         },
       });
 
+      //adiing geo indexing
+      if (
+  createdTheatre.longitude &&
+  createdTheatre.latitude
+) {
+  await tx.$executeRaw`
+    UPDATE "Theatre"
+    SET location =
+      ST_SetSRID(
+        ST_MakePoint(
+          ${Number(createdTheatre.longitude)},
+          ${Number(createdTheatre.latitude)}
+        ),
+        4326
+      )::geography
+    WHERE id = ${createdTheatre.id}
+  `;
+}
+
       return createdTheatre;
     });
 

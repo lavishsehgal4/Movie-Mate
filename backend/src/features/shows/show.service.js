@@ -1,12 +1,16 @@
 const {
   validateCreateShows,
   validateGetScreenShows,
+  validateGetMoviesByCities,
+  validateGetNearbyMovies,
 } = require("./show.validator");
 
 const {
   getScreenShowsInRange,
   createShowsWithSeats,
   getScreenShowsByDate,
+  getMoviesByCities,
+  getNearbyMovies,
 } = require("./show.repository");
 
 // =========================
@@ -155,7 +159,104 @@ async function fetchScreenShows(data) {
   };
 }
 
+//fetch all movies of city
+
+async function getCityMovies(data) {
+
+  // =========================
+  // 1. validate input
+  // =========================
+
+  const validation =
+    validateGetMoviesByCities(data);
+
+  if (!validation.isValid) {
+    throw new Error(validation.error);
+  }
+
+  // =========================
+  // 2. fetch movies
+  // =========================
+
+  
+  const movies =
+    await getMoviesByCities(
+      data.cities
+    );
+
+  // =========================
+  // 3. add tmdb base url
+  // =========================
+
+  const moviesWithImages =
+    movies.map((movie) => ({
+      ...movie,
+
+      poster_path:
+        movie.poster_path
+          ? `${process.env.TMDB_IMAGE_BASE}${movie.poster_path}`
+          : null,
+    }));
+
+  // =========================
+  // 4. return response
+  // =========================
+
+  return {
+    movies: moviesWithImages,
+  };
+}
+
+async function getNearbyMoviesService(data) {
+
+  // =========================
+  // 1. validate input
+  // =========================
+
+  const validation =
+    validateGetNearbyMovies(data);
+
+  if (!validation.isValid) {
+    throw new Error(validation.error);
+  }
+
+  // =========================
+  // 2. fetch movies
+  // =========================
+
+  const movies =
+    await getNearbyMovies(
+      data.latitude,
+      data.longitude,
+      data.distance
+    );
+
+  // =========================
+  // 3. add tmdb base url
+  // =========================
+
+  const moviesWithImages =
+    movies.map((movie) => ({
+      ...movie,
+
+      poster_path:
+        movie.poster_path
+          ? `${process.env.TMDB_IMAGE_BASE}${movie.poster_path}`
+          : null,
+    }));
+
+  // =========================
+  // 4. return response
+  // =========================
+
+  return {
+    movies: moviesWithImages,
+  };
+}
+
 module.exports = {
   addShows,
-  fetchScreenShows
+  fetchScreenShows,
+  getCityMovies,
+  getNearbyMoviesService
 };

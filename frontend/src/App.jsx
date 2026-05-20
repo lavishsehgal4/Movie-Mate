@@ -8,6 +8,7 @@ import PartnerPage from './pages/PartnerPage'
 import MyTheatrePage from './pages/MyTheatrePage'
 import TheatreDashboard from './pages/TheatreDashboard'
 import ScreenDetailPage from './pages/ScreenDetailPage'
+import MovieDetailPage from './pages/MovieDetailPage'
 import './App.css'
 
 export default function App() {
@@ -27,6 +28,7 @@ export default function App() {
   if (page === 'my-theatre')        return <MyTheatrePage />
   if (page === 'theatre-dashboard') return <TheatreDashboard />
   if (page === 'screen-detail')     return <ScreenDetailPage />
+  if (page === 'movie-detail')      return <MovieDetailPage />
 
   return (
     <>

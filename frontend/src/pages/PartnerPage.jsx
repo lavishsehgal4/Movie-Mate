@@ -31,7 +31,7 @@ export default function PartnerPage() {
   const [submitError, setSubmitError] = useState('')
 
   const [identity, setIdentity] = useState({ theatreName: '', chainName: '', chainLogoUrl: '', totalScreens: '', customChainName: '' })
-  const [location, setLocation] = useState({ state: '', city: '', address: '', pincode: '', landmark: '', mapsUrl: '' })
+  const [location, setLocation] = useState({ state: '', city: '', address: '', pincode: '', landmark: '', mapsUrl: '', latitude: '', longitude: '' })
   const [operations, setOperations] = useState({ contact: '', email: '', opensAt: '09:00 AM', closesAt: '11:30 PM' })
 
   const next = () => setStep(s => Math.min(s + 1, 4))
@@ -64,6 +64,8 @@ export default function PartnerPage() {
         pincode:        location.pincode ? Number(location.pincode) : null,
         landmark:       location.landmark || null,
         google_map_url: location.mapsUrl || null,
+        latitude:       location.latitude  ? Number(location.latitude)  : null,
+        longitude:      location.longitude ? Number(location.longitude) : null,
         contact_no:     operations.contact.replace(/\D/g, '').slice(-10), // strip to 10 digits
         email:          operations.email,
         opening_time:   timeToISO(operations.opensAt),
@@ -207,8 +209,23 @@ function StepIdentity({ data, setData, onNext }) {
 /* ── STEP 2: LOCATION ── */
 function StepLocation({ data, setData, onNext, onBack }) {
   const set = (k, v) => setData(d => ({ ...d, [k]: v }))
+  const [locating, setLocating] = useState(false)
+  const [locErr,   setLocErr]   = useState('')
 
-  const isMapUrl = data.mapsUrl.includes('google.com/maps') || data.mapsUrl.includes('goo.gl')
+  const fetchLocation = () => {
+    if (!navigator.geolocation) { setLocErr('Geolocation not supported'); return }
+    setLocating(true); setLocErr('')
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        set('latitude',  pos.coords.latitude.toFixed(6))
+        set('longitude', pos.coords.longitude.toFixed(6))
+        setLocating(false)
+      },
+      (err) => { setLocErr('Location access denied or unavailable'); setLocating(false) }
+    )
+  }
+
+  const isMapUrl = data.mapsUrl?.includes('google.com/maps') || data.mapsUrl?.includes('goo.gl')
 
   return (
     <div>
@@ -250,6 +267,25 @@ function StepLocation({ data, setData, onNext, onBack }) {
         <label>GOOGLE MAPS URL</label>
         <input placeholder="Paste your Google Maps link here..." value={data.mapsUrl} onChange={e => set('mapsUrl', e.target.value)} />
       </div>
+
+      {/* lat/lng */}
+      <div className="form-row" style={{ alignItems: 'flex-end' }}>
+        <div className="form-group">
+          <label>LATITUDE</label>
+          <input placeholder="e.g. 30.7333" value={data.latitude || ''} onChange={e => set('latitude', e.target.value)} />
+        </div>
+        <div className="form-group">
+          <label>LONGITUDE</label>
+          <input placeholder="e.g. 76.7794" value={data.longitude || ''} onChange={e => set('longitude', e.target.value)} />
+        </div>
+        <div className="form-group" style={{ flexShrink: 0 }}>
+          <label>&nbsp;</label>
+          <button type="button" className="btn-fetch-loc" onClick={fetchLocation} disabled={locating}>
+            {locating ? '📡 Fetching...' : '📍 Fetch Location'}
+          </button>
+        </div>
+      </div>
+      {locErr && <p style={{ fontSize: 12, color: '#ff6b7a', marginTop: -10, marginBottom: 8 }}>⚠️ {locErr}</p>}
 
       <div className="form-group">
         <label>MAP PREVIEW</label>

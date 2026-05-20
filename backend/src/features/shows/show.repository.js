@@ -235,10 +235,204 @@ async function getScreenShowsByDate(
   }
 }
 
+// get movies in city by fetching shows of today in city
+
+async function getMoviesByCities(cities) {
+
+  try {
+
+    // =========================
+    // get unique movie ids
+    // =========================
+
+    const movieIds = await prisma.show.findMany({
+      where: {
+        city: {
+          in: cities,
+        },
+
+        start_time: {
+          gte: new Date(),
+        },
+
+        show_status: "scheduled",
+      },
+
+      distinct: ["movie_id"],
+
+      select: {
+        movie_id: true,
+      },
+    });
+
+    // =========================
+    // extract ids
+    // =========================
+
+    const ids = movieIds.map(
+      (item) => item.movie_id
+    );
+
+    // =========================
+    // fetch movies
+    // =========================
+
+    return await prisma.movie.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+
+      select: {
+        id: true,
+
+        title: true,
+
+        original_title: true,
+
+        poster_path: true,
+      },
+    });
+
+  } catch (err) {
+
+    console.error(
+      "Error fetching movies by cities:",
+      err
+    );
+
+    throw new Error(
+      "Failed to fetch movies"
+    );
+  }
+}
+
+
+//get movies with radius of x km
+
+async function getNearbyMovies(
+  latitude,
+  longitude,
+  distanceInKm
+) {
+  try {
+
+    // =========================
+    // 1. get nearby theatres
+    // =========================
+
+    const nearbyTheatres =
+      await prisma.$queryRaw`
+
+      SELECT id
+      FROM "Theatre"
+
+      WHERE location IS NOT NULL
+
+      AND ST_DWithin(
+        location,
+
+        ST_SetSRID(
+          ST_MakePoint(
+            ${longitude},
+            ${latitude}
+          ),
+          4326
+        )::geography,
+
+        ${distanceInKm * 1000}
+      )
+    `;
+
+    // =========================
+    // 2. extract theatre ids
+    // =========================
+
+    const theatreIds =
+      nearbyTheatres.map(
+        (theatre) => theatre.id
+      );
+
+    if (theatreIds.length === 0) {
+      return [];
+    }
+
+    // =========================
+    // 3. get unique movie ids
+    // =========================
+
+    const movieIds =
+      await prisma.show.findMany({
+        where: {
+          theatre_id: {
+            in: theatreIds,
+          },
+
+          start_time: {
+            gte: new Date(),
+          },
+
+          show_status: "scheduled",
+        },
+
+        distinct: ["movie_id"],
+
+        select: {
+          movie_id: true,
+        },
+      });
+
+    // =========================
+    // 4. extract ids
+    // =========================
+
+    const ids = movieIds.map(
+      (item) => item.movie_id
+    );
+
+    // =========================
+    // 5. fetch movies
+    // =========================
+
+    return await prisma.movie.findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+
+      select: {
+        id: true,
+
+        title: true,
+
+        original_title: true,
+
+        poster_path: true,
+
+      },
+    });
+
+  } catch (err) {
+
+    console.error(
+      "Error fetching nearby movies:",
+      err
+    );
+
+    throw new Error(
+      "Failed to fetch nearby movies"
+    );
+  }
+}
+
 //exports
 
 module.exports={
     getScreenShowsInRange,
     createShowsWithSeats,
     getScreenShowsByDate,
+    getMoviesByCities,
+    getNearbyMovies,
 }

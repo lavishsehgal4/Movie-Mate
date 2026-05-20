@@ -110,8 +110,10 @@ function validateCreateTheatre(data) {
 
   // city
   const city = validateRequiredString(data.city, "City");
+
   if (!city.isValid) return city;
-  temp.city = city.value;
+
+  temp.city = city.value.toLowerCase();
 
   // address
   const address = validateRequiredString(data.address, "Address");

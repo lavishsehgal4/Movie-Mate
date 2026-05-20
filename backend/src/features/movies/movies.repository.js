@@ -140,7 +140,66 @@ async function getMovies(filters) {
 }
 
 
+async function getMovieDetails(
+  movieId
+) {
+  try {
+
+    return await prisma.movie.findUnique({
+      where: {
+        id: movieId,
+      },
+
+      select: {
+        id: true,
+
+        title: true,
+
+        original_title: true,
+
+        overview: true,
+
+        poster_path: true,
+
+        backdrop_path: true,
+
+        release_date: true,
+
+        runtime: true,
+
+        certification: true,
+
+        vote_average: true,
+
+        vote_count: true,
+
+        popularity: true,
+
+        original_language: true,
+
+        genres: true,
+
+        cast: true,
+
+        adult: true,
+      },
+    });
+
+  } catch (err) {
+
+    console.error(
+      "Error fetching movie details:",
+      err
+    );
+
+    throw new Error(
+      "Failed to fetch movie details"
+    );
+  }
+}
+
 module.exports = {
   upsertMovie,
   getMovies,
+  getMovieDetails,
 };

@@ -8,13 +8,14 @@ import './Navbar.css'
 export default function Navbar() {
   const { user, theatreAccess, logout } = useAuth()
   const { setPage } = useNavigation()
-  const { locationData, selected, selectRegion, selectSubRegion } = useLocation()
+  const { locationData, selected, selectRegion, selectSubRegion, selectDetected } = useLocation()
 
   const [menuOpen,   setMenuOpen]   = useState(false)
   const [authOpen,   setAuthOpen]   = useState(false)
   const [cityOpen,   setCityOpen]   = useState(false)
   const [search,     setSearch]     = useState('')
   const [showOther,  setShowOther]  = useState(false)
+  const [detecting,  setDetecting]  = useState(false)
   const cityRef = useRef(null)
 
   const hasTheatre = theatreAccess?.hasTheatreAccess === true
@@ -31,10 +32,13 @@ export default function Navbar() {
   }, [])
 
   const topCities   = locationData?.TopCities   || []
-  const otherCities = locationData?.OtherCities  || []
+  const otherCities = [...(locationData?.OtherCities || [])].sort((a, b) =>
+    a.RegionName.localeCompare(b.RegionName)
+  )
 
-  // search across top + other + subregions
   const searchLower = search.toLowerCase().trim()
+
+  // when searching: search both top + other + subregions
   const filteredTop = searchLower
     ? topCities.filter(c =>
         c.RegionName.toLowerCase().includes(searchLower) ||
@@ -49,6 +53,31 @@ export default function Navbar() {
         c.Alias?.some(a => a.toLowerCase().includes(searchLower))
       )
     : otherCities
+
+  // detect location using browser geolocation
+  const handleDetect = () => {
+    if (!navigator.geolocation) return
+    setDetecting(true)
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const { latitude, longitude } = pos.coords
+        try {
+          const r = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`,
+            { headers: { 'Accept-Language': 'en' } }
+          )
+          const d = await r.json()
+          const city = d.address?.city || d.address?.town || d.address?.village || d.address?.county || 'Your Location'
+          selectDetected(city, latitude, longitude)
+        } catch {
+          selectDetected('Your Location', latitude, longitude)
+        }
+        setDetecting(false)
+        setCityOpen(false)
+      },
+      () => setDetecting(false)
+    )
+  }
 
   const handleSelectRegion = (region) => {
     selectRegion(region)
@@ -183,11 +212,11 @@ export default function Navbar() {
                 value={search} onChange={e => setSearch(e.target.value)} />
             </div>
 
-            <button className="city-detect">
+            <button className="city-detect" onClick={handleDetect} disabled={detecting}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
               </svg>
-              Detect my location
+              {detecting ? 'Detecting...' : 'Detect my location'}
             </button>
 
             <div className="city-hr" />

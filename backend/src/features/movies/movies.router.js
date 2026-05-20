@@ -1,5 +1,5 @@
 const express=require('express');
-const {getMovieCounts,startSyncController,httpGetMovies}=require('./movies.controller');
+const {getMovieCounts,startSyncController,httpGetMovies,httpGetMovieDetails}=require('./movies.controller');
 const {verifyToken}=require('../../middlewares/auth.middleware');
 
 const movieRouter=express.Router();
@@ -16,4 +16,10 @@ movieRouter.post("/start-sync", (req, res, next) => {
 
 
 movieRouter.get("/",httpGetMovies);
+
+movieRouter.get(
+  "/movie-details",
+  httpGetMovieDetails
+);
+
 module.exports=movieRouter;

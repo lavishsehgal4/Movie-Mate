@@ -1,3 +1,14 @@
+function normalizeNumber(value) {
+
+  const num = Number(value);
+
+  if (isNaN(num) || num <= 0) {
+    return null;
+  }
+
+  return num;
+}
+
 function validateGetMoviesQuery(query) {
   const temp = {};
 
@@ -74,6 +85,43 @@ function validateGetMoviesQuery(query) {
   return { isValid: true };
 }
 
+function validateGetMovieDetails(
+  query
+) {
+
+  const temp = {};
+
+  // =========================
+  // movie_id
+  // =========================
+
+  const movieId =
+    normalizeNumber(
+      query.movie_id
+    );
+
+  if (!movieId) {
+    return {
+      isValid: false,
+      error:
+        "Valid movie_id is required",
+    };
+  }
+
+  temp.movie_id = movieId;
+
+  // =========================
+  // apply mutation
+  // =========================
+
+  Object.assign(query, temp);
+
+  return {
+    isValid: true,
+  };
+}
+
 module.exports = {
   validateGetMoviesQuery,
+  validateGetMovieDetails,
 };

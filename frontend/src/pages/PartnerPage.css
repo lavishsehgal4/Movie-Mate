@@ -513,3 +513,19 @@
   word-break: break-all;
   line-height: 1.4;
 }
+
+.btn-fetch-loc {
+  background: rgba(232,137,91,0.12);
+  border: 1px solid rgba(232,137,91,0.4);
+  color: #E8895B;
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.btn-fetch-loc:hover:not(:disabled) { background: rgba(232,137,91,0.2); }
+.btn-fetch-loc:disabled { opacity: 0.5; cursor: not-allowed; }

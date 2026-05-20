@@ -231,7 +231,7 @@ function validateCreateShows(data) {
     // city
     const city = normalizeString(
         data.city
-    );
+    ).toLowerCase();;
 
     if (!city) {
         return {
@@ -343,7 +343,133 @@ function validateGetScreenShows(data) {
   };
 }
 
+function validateGetMoviesByCities(data) {
+
+  const temp = {};
+
+  // =========================
+  // cities
+  // =========================
+
+  if (
+    !Array.isArray(data.cities) ||
+    data.cities.length === 0
+  ) {
+    return {
+      isValid: false,
+      error: "cities must be non-empty array",
+    };
+  }
+
+  const normalizedCities = [];
+
+  const citySet = new Set();
+
+  for (const city of data.cities) {
+
+    const normalizedCity =
+      normalizeString(city);
+
+    if (!normalizedCity) {
+      return {
+        isValid: false,
+        error: "Valid city is required",
+      };
+    }
+
+    const lowerCity =
+      normalizedCity.toLowerCase();
+
+    if (citySet.has(lowerCity)) {
+      continue;
+    }
+
+    citySet.add(lowerCity);
+
+    normalizedCities.push(
+      lowerCity
+    );
+  }
+
+  temp.cities = normalizedCities;
+
+  // =========================
+  // apply mutation
+  // =========================
+
+  Object.assign(data, temp);
+
+  return {
+    isValid: true,
+  };
+}
+
+function validateGetNearbyMovies(data) {
+
+  const temp = {};
+
+  // =========================
+  // latitude
+  // =========================
+
+  const latitude =
+    normalizeNumber(data.latitude);
+
+  if (latitude === null) {
+    return {
+      isValid: false,
+      error: "Valid latitude is required",
+    };
+  }
+
+  // =========================
+  // longitude
+  // =========================
+
+  const longitude =
+    normalizeNumber(data.longitude);
+
+  if (longitude === null) {
+    return {
+      isValid: false,
+      error: "Valid longitude is required",
+    };
+  }
+
+  // =========================
+  // distance
+  // =========================
+
+  const distance =
+    normalizeNumber(data.distance);
+
+  if (distance === null) {
+    return {
+      isValid: false,
+      error: "Valid distance is required",
+    };
+  }
+
+  temp.latitude = latitude;
+
+  temp.longitude = longitude;
+
+  temp.distance = distance;
+
+  // =========================
+  // apply mutation
+  // =========================
+
+  Object.assign(data, temp);
+
+  return {
+    isValid: true,
+  };
+}
+
 module.exports = {
   validateCreateShows,
   validateGetScreenShows,
+  validateGetMoviesByCities,
+  validateGetNearbyMovies,
 };

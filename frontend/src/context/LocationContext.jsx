@@ -38,7 +38,6 @@ export function LocationProvider({ children }) {
   }, [])
 
   const selectRegion = (region) => {
-    // region = TopCity or OtherCity object
     const cities = region.SubRegions?.length
       ? [region.RegionName, ...region.SubRegions.map(s => s.SubRegionName)]
       : [region.RegionName]
@@ -48,6 +47,7 @@ export function LocationProvider({ children }) {
       regionCode:  region.RegionCode,
       regionSlug:  region.RegionSlug,
       isSubRegion: false,
+      isDetected:  false,
       cities,
     }
     setSelectedRaw(sel)
@@ -60,6 +60,7 @@ export function LocationProvider({ children }) {
       regionCode:  subRegion.SubRegionCode,
       regionSlug:  subRegion.SubRegionSlug,
       isSubRegion: true,
+      isDetected:  false,
       cities:      [subRegion.SubRegionName],
       parentName:  parentRegion.RegionName,
     }
@@ -67,8 +68,23 @@ export function LocationProvider({ children }) {
     writeSel(sel)
   }
 
+  const selectDetected = (name, lat, lng) => {
+    const sel = {
+      regionName: name,
+      regionCode: 'DETECT',
+      regionSlug: 'detected',
+      isSubRegion: false,
+      isDetected: true,
+      latitude: lat,
+      longitude: lng,
+      cities: [name],
+    }
+    setSelectedRaw(sel)
+    writeSel(sel)
+  }
+
   return (
-    <LocationContext.Provider value={{ locationData, loading, selected, selectRegion, selectSubRegion }}>
+    <LocationContext.Provider value={{ locationData, loading, selected, selectRegion, selectSubRegion, selectDetected }}>
       {children}
     </LocationContext.Provider>
   )

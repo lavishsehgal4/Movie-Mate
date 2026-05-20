@@ -3,6 +3,8 @@ const express = require("express");
 const {
   httpCreateShows,
   httpGetScreenShows,
+  httpGetCityMovies,
+  httpGetNearbyMovies,
 } = require("./show.controller");
 
 const {
@@ -34,6 +36,16 @@ showRouter.get(
   attachTheatreRole,
   allowRoles("OWNER", "MANAGER", "STAFF"),
   httpGetScreenShows
+);
+
+showRouter.post(
+  "/movies",
+  httpGetCityMovies
+);
+
+showRouter.post(
+  "/movies/nearby",
+  httpGetNearbyMovies
 );
 
 module.exports = showRouter;
