@@ -747,11 +747,11 @@ async function getShowSeatLayout(
 
             seat_layout: true,
 
-            seats: {
-              where: {
-                is_active: false,
-              },
+            // =========================
+            // all seats
+            // =========================
 
+            seats: {
               select: {
                 id: true,
 
@@ -760,10 +760,18 @@ async function getShowSeatLayout(
                 row_label: true,
 
                 seat_type: true,
+
+                is_active: true,
+
+                price_multiplier: true,
               },
             },
           },
         },
+
+        // =========================
+        // unavailable seats
+        // =========================
 
         showSeats: {
           where: {
@@ -793,6 +801,8 @@ async function getShowSeatLayout(
 
           select: {
             status: true,
+
+            lock_until: true,
 
             seat: {
               select: {

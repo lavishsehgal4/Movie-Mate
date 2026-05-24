@@ -535,13 +535,11 @@ async function getShowSeatLayoutService(
   // =========================
   // 2. fetch seat layout
   // =========================
-  
+
   const show =
     await getShowSeatLayout(
       data.show_id
     );
-
-   
 
   if (!show) {
     throw new Error(
@@ -560,8 +558,17 @@ async function getShowSeatLayoutService(
     base_price:
       Number(show.base_price),
 
-    inactive_seats:
-      show.screen.seats,
+    all_seats:
+      show.screen.seats.map(
+        (seat) => ({
+          ...seat,
+
+          price_multiplier:
+            Number(
+              seat.price_multiplier
+            ),
+        })
+      ),
 
     unavailable_seats:
       show.showSeats,

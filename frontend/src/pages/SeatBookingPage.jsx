@@ -4,51 +4,51 @@ import './SeatBookingPage.css'
 const BASE = 'http://localhost:5000/api/v1'
 const MAX_SEATS = 5
 
-const TYPE_COLOR = {
-  STANDARD:   '#4a5168',
-  PREMIUM:    '#7c6af7',
-  RECLINER:   '#06b6d4',
-  VIP:        '#f59e0b',
-  WHEELCHAIR: '#4ade80',
-}
-
 function fmtTime(iso) {
   if (!iso) return '—'
   return new Date(iso).toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit', hour12:true })
 }
-
 function fmtDate(iso) {
   if (!iso) return '—'
   return new Date(iso).toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' })
 }
 
 export default function SeatBookingPage({ show, theatre, movie, onBack }) {
-  const [layout,   setLayout]   = useState(null)
-  const [loading,  setLoading]  = useState(true)
-  const [error,    setError]    = useState('')
-  const [selected, setSelected] = useState(new Set())
+  const [layoutData, setLayoutData] = useState(null)
+  const [loading,    setLoading]    = useState(true)
+  const [error,      setError]      = useState('')
+  // selected: Map of "rowLabel-seatNum" → { id, price }
+  const [selected,   setSelected]   = useState(new Map())
+  const [locking,    setLocking]    = useState(false)
+  const [msg,        setMsg]        = useState('')
+  const [showPayment, setShowPayment] = useState(false)
+  const [lockedData,  setLockedData]  = useState(null)
 
   useEffect(() => {
     fetch(`${BASE}/shows/show-seat-layout?show_id=${show.id}`, { credentials: 'include' })
       .then(r => r.json())
-      .then(d => { if (!d.success) throw new Error(d.message); setLayout(d.data) })
+      .then(d => { if (!d.success) throw new Error(d.message); setLayoutData(d.data) })
       .catch(e => setError(e.message))
       .finally(() => setLoading(false))
   }, [show.id])
 
-  const toggle = (key) => {
-    setSelected(prev => {
-      const next = new Set(prev)
-      if (next.has(key)) { next.delete(key); return next }
-      if (next.size >= MAX_SEATS) return prev
-      next.add(key)
-      return next
-    })
-  }
+  if (loading) return <div className="sbp-loading">Loading seats...</div>
+  if (error)   return <div className="sbp-error">⚠️ {error}</div>
+  if (!layoutData) return null
 
-  const seatLayout    = layout?.seat_layout
-  const inactiveSeats = layout?.seats || []
-  const inactiveSet   = new Set(inactiveSeats.map(s => `${s.row_label}-${s.seat_number}`))
+  const seatLayout      = layoutData.seat_layout
+  const basePrice       = layoutData.base_price || show.base_price || 0
+  const allSeats        = layoutData.all_seats || []
+  const unavailableSeats = layoutData.unavailable_seats || []
+
+  // Build lookup maps
+  // key: "rowLabel-seatNumber"
+  const seatMap = {}        // key → seat object from all_seats
+  allSeats.forEach(s => { seatMap[`${s.row_label}-${s.seat_number}`] = s })
+
+  const unavailableSet = new Set(
+    unavailableSeats.map(s => `${s.seat.row_label}-${s.seat.seat_number}`)
+  )
 
   // trim empty edge columns
   const activeCols = (() => {
@@ -62,52 +62,107 @@ export default function SeatBookingPage({ show, theatre, movie, onBack }) {
     return end === -1 ? { start: 0, end: 19 } : { start, end }
   })()
 
-  const totalPrice = selected.size * (show.base_price || 0)
+  const toggle = (key, seatData) => {
+    setSelected(prev => {
+      const next = new Map(prev)
+      if (next.has(key)) { next.delete(key); return next }
+      if (next.size >= MAX_SEATS) return prev
+      next.set(key, seatData)
+      return next
+    })
+    setMsg('')
+  }
+
+  const totalPrice = [...selected.values()].reduce((sum, s) => sum + s.price, 0)
+  const selectedIds = [...selected.values()].map(s => s.id)
+
+  const handleProceed = async () => {
+    if (selected.size === 0) return
+    setLocking(true); setMsg('')
+    try {
+      const r = await fetch(`${BASE}/showSeat/seat-lock`, {
+        method: 'POST', credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ show_id: show.id, seat_ids: selectedIds, action: 'LOCK' }),
+      })
+      const d = await r.json()
+      if (!d.success) throw new Error(d.message)
+      // success — open payment page
+      setLockedData({ seats: [...selected.entries()].map(([k, v]) => ({ key: k, ...v })), total: totalPrice })
+      setShowPayment(true)
+    } catch (e) {
+      setMsg(`⚠️ ${e.message}`)
+    } finally {
+      setLocking(false)
+    }
+  }
+
+  // show payment page after lock
+  if (showPayment && lockedData) {
+    return (
+      <div className="sbp-root">
+        <div className="sbp-topnav">
+          <button className="sbp-back" onClick={() => setShowPayment(false)}>← Back to Seats</button>
+          <span className="sbp-brand">Movie<span>Mate</span></span>
+          <div style={{ width: 60 }} />
+        </div>
+        <div className="sbp-payment-page">
+          <div className="sbp-payment-card">
+            <div className="sbp-payment-icon">🎟</div>
+            <h2 className="sbp-payment-title">Confirm Booking</h2>
+            <p className="sbp-payment-movie">{movie?.title}</p>
+            <p className="sbp-payment-meta">{theatre?.theatre_name} · {fmtDate(show.start_time)} · {fmtTime(show.start_time)}</p>
+            <div className="sbp-payment-seats">
+              {lockedData.seats.map(s => (
+                <span key={s.key} className="sbp-payment-seat-chip">{s.key}</span>
+              ))}
+            </div>
+            <div className="sbp-payment-total">
+              <span>Total Amount</span>
+              <span className="sbp-payment-amount">₹{lockedData.total}</span>
+            </div>
+            <p className="sbp-payment-note">⏳ Seats locked for 10 minutes. Complete payment to confirm.</p>
+            <button className="sbp-pay-now-btn">Pay ₹{lockedData.total}</button>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="sbp-root">
 
-      {/* ── TOP NAV ── */}
+      {/* top nav */}
       <div className="sbp-topnav">
         <button className="sbp-back" onClick={onBack}>← Back</button>
         <span className="sbp-brand">Movie<span>Mate</span></span>
-        <div style={{ width: 60 }} />
+        <button className="sbp-refresh" title="Refresh">↻</button>
       </div>
 
-      {/* ── MOVIE + SHOW INFO ── */}
+      {/* movie + show info */}
       <div className="sbp-movie-info">
         <h1 className="sbp-movie-title">{movie?.title}</h1>
         <div className="sbp-show-meta">
           <span className="sbp-meta-item">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#E8895B" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#e8813a" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
             {theatre?.theatre_name}
           </span>
-          <span className="sbp-meta-sep">·</span>
-          <span className="sbp-meta-item">Screen {show.screen_id}</span>
           <span className="sbp-meta-sep">|</span>
           <span className="sbp-meta-item">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#E8895B" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#e8813a" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
             {fmtDate(show.start_time)}
           </span>
           <span className="sbp-meta-sep">|</span>
           <span className="sbp-meta-item">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#E8895B" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#e8813a" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
             {fmtTime(show.start_time)} – {fmtTime(show.end_time)}
           </span>
           <span className="sbp-meta-sep">|</span>
-          <span className="sbp-meta-item">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#E8895B" strokeWidth="2"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-            {show.language}
-          </span>
-          <span className="sbp-meta-sep">|</span>
-          <span className="sbp-meta-item">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#E8895B" strokeWidth="2"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M17 2l5 5-5 5"/><path d="M7 2L2 7l5 5"/></svg>
-            {show.format}
-          </span>
+          <span className="sbp-meta-item">{show.language} · {show.format}</span>
         </div>
       </div>
 
-      {/* ── LEGEND ── */}
+      {/* legend */}
       <div className="sbp-legend">
         <span className="sbp-leg-item"><span className="sbp-leg-box avail" />Available</span>
         <span className="sbp-leg-item"><span className="sbp-leg-box sel" />Selected</span>
@@ -115,11 +170,8 @@ export default function SeatBookingPage({ show, theatre, movie, onBack }) {
         <span className="sbp-leg-item"><span className="sbp-leg-box damaged" />Damaged</span>
       </div>
 
-      {loading && <div className="sbp-loading">Loading seats...</div>}
-      {error   && <div className="sbp-error">⚠️ {error}</div>}
-
-      {/* ── SEAT GRID CARD ── */}
-      {!loading && seatLayout && (
+      {/* seat grid */}
+      {seatLayout && (
         <div className="sbp-card-wrap">
           <div className="sbp-card">
             <div className="sbp-grid-scroll">
@@ -134,18 +186,32 @@ export default function SeatBookingPage({ show, theatre, movie, onBack }) {
                       <div className="sbp-seats">
                         {vis.map((s, ci) => {
                           if (s.type === 0) return <div key={ci} className="sbp-gap" />
+
                           const key = `${row.rowName}-${s.displayNumber}`
-                          const isInactive = inactiveSet.has(key)
-                          const isSel = selected.has(key)
-                          const typeColor = TYPE_COLOR[s.seat_type] || TYPE_COLOR.STANDARD
+                          const dbSeat = seatMap[key]
+
+                          // determine seat state
+                          const isDamaged    = dbSeat && !dbSeat.is_active
+                          const isUnavailable = unavailableSet.has(key)
+                          const isSel        = selected.has(key)
+
+                          const price = dbSeat
+                            ? Math.round(basePrice * (dbSeat.price_multiplier || 1))
+                            : basePrice
+
+                          const seatClass = isDamaged ? 'damaged'
+                            : isUnavailable ? 'booked'
+                            : isSel ? 'selected'
+                            : ''
+
                           return (
                             <button key={ci}
-                              className={`sbp-seat ${isInactive ? 'booked' : ''} ${isSel ? 'selected' : ''}`}
-                              disabled={isInactive}
-                              onClick={() => toggle(key)}
-                              title={`${row.rowName}${s.displayNumber}${isInactive ? ' · Booked' : ''}`}
+                              className={`sbp-seat ${seatClass}`}
+                              disabled={isDamaged || isUnavailable}
+                              onClick={() => !isDamaged && !isUnavailable && toggle(key, { id: dbSeat?.id, price })}
+                              title={`${row.rowName}${s.displayNumber}${dbSeat ? ` · ${dbSeat.seat_type} · ₹${price}` : ''}${isDamaged ? ' · Damaged' : isUnavailable ? ' · Booked' : ''}`}
                             >
-                              {s.displayNumber}
+                              {isDamaged ? '' : s.displayNumber}
                             </button>
                           )
                         })}
@@ -155,8 +221,6 @@ export default function SeatBookingPage({ show, theatre, movie, onBack }) {
                 })}
               </div>
             </div>
-
-            {/* screen label */}
             <div className="sbp-screen-label">
               <div className="sbp-screen-bar">SCREEN THIS WAY</div>
             </div>
@@ -164,17 +228,19 @@ export default function SeatBookingPage({ show, theatre, movie, onBack }) {
         </div>
       )}
 
-      {/* ── BOTTOM BAR ── */}
+      {/* bottom bar */}
       <div className="sbp-bottom">
         <div className="sbp-bottom-left">
           <span className="sbp-sel-label">Selected: <strong>{selected.size} seat{selected.size !== 1 ? 's' : ''}</strong></span>
+          {msg && <span style={{ fontSize: 11, color: msg.startsWith('✓') ? '#4ade80' : '#ff6b7a' }}>{msg}</span>}
           <span className="sbp-price">₹{totalPrice}</span>
         </div>
         <button
           className={`sbp-pay-btn ${selected.size === 0 ? 'disabled' : ''}`}
-          disabled={selected.size === 0}
+          disabled={selected.size === 0 || locking}
+          onClick={handleProceed}
         >
-          🎟 Proceed to Pay
+          {locking ? 'Locking...' : '🎟 Proceed to Pay'}
         </button>
       </div>
     </div>

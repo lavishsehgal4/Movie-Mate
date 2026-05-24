@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigation } from './context/NavigationContext'
 import { useAuth } from './context/AuthContext'
 import Hero from './components/Hero'
@@ -9,11 +10,14 @@ import MyTheatrePage from './pages/MyTheatrePage'
 import TheatreDashboard from './pages/TheatreDashboard'
 import ScreenDetailPage from './pages/ScreenDetailPage'
 import MovieDetailPage from './pages/MovieDetailPage'
+import ActiveLockBanner from './components/ActiveLockBanner'
+import LockPaymentPage from './pages/LockPaymentPage'
 import './App.css'
 
 export default function App() {
   const { page } = useNavigation()
-  const { authLoading } = useAuth()
+  const { authLoading, user } = useAuth()
+  const [pendingLock, setPendingLock] = useState(null)
 
   if (authLoading) {
     return (
@@ -23,18 +27,29 @@ export default function App() {
     )
   }
 
+  // payment page from active lock banner
+  if (pendingLock) {
+    return <LockPaymentPage lock={pendingLock} onBack={() => setPendingLock(null)} />
+  }
+
   if (page === 'profile')           return <ProfilePage />
   if (page === 'partner')           return <PartnerPage />
   if (page === 'my-theatre')        return <MyTheatrePage />
   if (page === 'theatre-dashboard') return <TheatreDashboard />
   if (page === 'screen-detail')     return <ScreenDetailPage />
-  if (page === 'movie-detail')      return <MovieDetailPage />
+  if (page === 'movie-detail')      return (
+    <>
+      <MovieDetailPage />
+      {user && <ActiveLockBanner onContinue={lock => setPendingLock(lock)} />}
+    </>
+  )
 
   return (
     <>
       <Hero />
       <MoviesSection />
       <Footer />
+      {user && <ActiveLockBanner onContinue={lock => setPendingLock(lock)} />}
     </>
   )
 }

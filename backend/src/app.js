@@ -12,6 +12,7 @@ const screenRouter=require('./features/screens/screen.router');
 const seatRouter=require('./features/seats/seat.router');
 const showRouter=require('./features/shows/show.router');
 const locationRouter=require('./features/location/location.router');
+const showSeatRouter=require('./features/showSeat/showSeat.router');
 const app = express();
 
 app.use(cors({
@@ -34,5 +35,6 @@ app.use('/api/v1/screens',screenRouter);
 app.use('/api/v1/seats',seatRouter);
 app.use('/api/v1/shows',showRouter);
 app.use('/api/v1/location',locationRouter);
+app.use('/api/v1/showSeat',showSeatRouter);
 
 module.exports = app;
