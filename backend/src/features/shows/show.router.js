@@ -7,6 +7,7 @@ const {
   httpGetNearbyMovies,
   httpGetMovieShowsByCities,
   httpGetNearbyMovieShows,
+  httpGetShowSeatLayout
 } = require("./show.controller");
 
 const {
@@ -58,6 +59,12 @@ showRouter.post(
 showRouter.post(
   "/movie-shows/nearby",
   httpGetNearbyMovieShows
+);
+
+showRouter.get(
+  "/show-seat-layout",
+  verifyToken,
+  httpGetShowSeatLayout
 );
 
 module.exports = showRouter;

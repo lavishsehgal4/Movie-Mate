@@ -1,0 +1,1352 @@
+{
+  "id": 14,
+  "base_price": "200",
+  "screen": {
+    "id": 1,
+    "seat_layout": {
+      "rows": [
+        {
+          "text": "",
+          "seats": [
+            {
+              "type": 1,
+              "position": 1,
+              "seat_type": "PREMIUM",
+              "displayNumber": 1
+            },
+            {
+              "type": 1,
+              "position": 2,
+              "seat_type": "PREMIUM",
+              "displayNumber": 2
+            },
+            {
+              "type": 1,
+              "position": 3,
+              "seat_type": "PREMIUM",
+              "displayNumber": 3
+            },
+            {
+              "type": 1,
+              "position": 4,
+              "seat_type": "PREMIUM",
+              "displayNumber": 4
+            },
+            {
+              "type": 1,
+              "position": 5,
+              "seat_type": "PREMIUM",
+              "displayNumber": 5
+            },
+            {
+              "type": 1,
+              "position": 6,
+              "seat_type": "PREMIUM",
+              "displayNumber": 6
+            },
+            {
+              "type": 1,
+              "position": 7,
+              "seat_type": "PREMIUM",
+              "displayNumber": 7
+            },
+            {
+              "type": 1,
+              "position": 8,
+              "seat_type": "PREMIUM",
+              "displayNumber": 8
+            },
+            {
+              "type": 1,
+              "position": 9,
+              "seat_type": "PREMIUM",
+              "displayNumber": 9
+            },
+            {
+              "type": 1,
+              "position": 10,
+              "seat_type": "PREMIUM",
+              "displayNumber": 10
+            },
+            {
+              "type": 1,
+              "position": 11,
+              "seat_type": "PREMIUM",
+              "displayNumber": 11
+            },
+            {
+              "type": 1,
+              "position": 12,
+              "seat_type": "PREMIUM",
+              "displayNumber": 12
+            },
+            {
+              "type": 1,
+              "position": 13,
+              "seat_type": "PREMIUM",
+              "displayNumber": 13
+            },
+            {
+              "type": 1,
+              "position": 14,
+              "seat_type": "PREMIUM",
+              "displayNumber": 14
+            },
+            {
+              "type": 1,
+              "position": 15,
+              "seat_type": "PREMIUM",
+              "displayNumber": 15
+            },
+            {
+              "type": 1,
+              "position": 16,
+              "seat_type": "PREMIUM",
+              "displayNumber": 16
+            },
+            {
+              "type": 1,
+              "position": 17,
+              "seat_type": "PREMIUM",
+              "displayNumber": 17
+            },
+            {
+              "type": 1,
+              "position": 18,
+              "seat_type": "PREMIUM",
+              "displayNumber": 18
+            },
+            {
+              "type": 1,
+              "position": 19,
+              "seat_type": "PREMIUM",
+              "displayNumber": 19
+            },
+            {
+              "type": 1,
+              "position": 20,
+              "seat_type": "PREMIUM",
+              "displayNumber": 20
+            }
+          ],
+          "hasText": false,
+          "rowName": "A",
+          "hasSeats": true,
+          "rowNumber": 1
+        },
+        {
+          "text": "",
+          "seats": [
+            {
+              "type": 1,
+              "position": 1,
+              "seat_type": "PREMIUM",
+              "displayNumber": 1
+            },
+            {
+              "type": 1,
+              "position": 2,
+              "seat_type": "PREMIUM",
+              "displayNumber": 2
+            },
+            {
+              "type": 1,
+              "position": 3,
+              "seat_type": "PREMIUM",
+              "displayNumber": 3
+            },
+            {
+              "type": 1,
+              "position": 4,
+              "seat_type": "PREMIUM",
+              "displayNumber": 4
+            },
+            {
+              "type": 1,
+              "position": 5,
+              "seat_type": "PREMIUM",
+              "displayNumber": 5
+            },
+            {
+              "type": 1,
+              "position": 6,
+              "seat_type": "PREMIUM",
+              "displayNumber": 6
+            },
+            {
+              "type": 1,
+              "position": 7,
+              "seat_type": "PREMIUM",
+              "displayNumber": 7
+            },
+            {
+              "type": 1,
+              "position": 8,
+              "seat_type": "PREMIUM",
+              "displayNumber": 8
+            },
+            {
+              "type": 0,
+              "position": 9,
+              "seat_type": "PREMIUM",
+              "displayNumber": 0
+            },
+            {
+              "type": 1,
+              "position": 10,
+              "seat_type": "PREMIUM",
+              "displayNumber": 10
+            },
+            {
+              "type": 1,
+              "position": 11,
+              "seat_type": "PREMIUM",
+              "displayNumber": 11
+            },
+            {
+              "type": 1,
+              "position": 12,
+              "seat_type": "PREMIUM",
+              "displayNumber": 12
+            },
+            {
+              "type": 1,
+              "position": 13,
+              "seat_type": "PREMIUM",
+              "displayNumber": 13
+            },
+            {
+              "type": 1,
+              "position": 14,
+              "seat_type": "PREMIUM",
+              "displayNumber": 14
+            },
+            {
+              "type": 1,
+              "position": 15,
+              "seat_type": "PREMIUM",
+              "displayNumber": 15
+            },
+            {
+              "type": 1,
+              "position": 16,
+              "seat_type": "PREMIUM",
+              "displayNumber": 16
+            },
+            {
+              "type": 1,
+              "position": 17,
+              "seat_type": "PREMIUM",
+              "displayNumber": 17
+            },
+            {
+              "type": 1,
+              "position": 18,
+              "seat_type": "PREMIUM",
+              "displayNumber": 18
+            },
+            {
+              "type": 1,
+              "position": 19,
+              "seat_type": "PREMIUM",
+              "displayNumber": 19
+            },
+            {
+              "type": 1,
+              "position": 20,
+              "seat_type": "PREMIUM",
+              "displayNumber": 20
+            }
+          ],
+          "hasText": false,
+          "rowName": "B",
+          "hasSeats": true,
+          "rowNumber": 2
+        },
+        {
+          "text": "",
+          "seats": [
+            {
+              "type": 1,
+              "position": 1,
+              "seat_type": "PREMIUM",
+              "displayNumber": 1
+            },
+            {
+              "type": 1,
+              "position": 2,
+              "seat_type": "PREMIUM",
+              "displayNumber": 2
+            },
+            {
+              "type": 1,
+              "position": 3,
+              "seat_type": "PREMIUM",
+              "displayNumber": 3
+            },
+            {
+              "type": 1,
+              "position": 4,
+              "seat_type": "PREMIUM",
+              "displayNumber": 4
+            },
+            {
+              "type": 1,
+              "position": 5,
+              "seat_type": "PREMIUM",
+              "displayNumber": 5
+            },
+            {
+              "type": 1,
+              "position": 6,
+              "seat_type": "PREMIUM",
+              "displayNumber": 6
+            },
+            {
+              "type": 1,
+              "position": 7,
+              "seat_type": "PREMIUM",
+              "displayNumber": 7
+            },
+            {
+              "type": 1,
+              "position": 8,
+              "seat_type": "PREMIUM",
+              "displayNumber": 8
+            },
+            {
+              "type": 0,
+              "position": 9,
+              "seat_type": "PREMIUM",
+              "displayNumber": 0
+            },
+            {
+              "type": 1,
+              "position": 10,
+              "seat_type": "PREMIUM",
+              "displayNumber": 10
+            },
+            {
+              "type": 1,
+              "position": 11,
+              "seat_type": "PREMIUM",
+              "displayNumber": 11
+            },
+            {
+              "type": 1,
+              "position": 12,
+              "seat_type": "PREMIUM",
+              "displayNumber": 12
+            },
+            {
+              "type": 1,
+              "position": 13,
+              "seat_type": "PREMIUM",
+              "displayNumber": 13
+            },
+            {
+              "type": 1,
+              "position": 14,
+              "seat_type": "PREMIUM",
+              "displayNumber": 14
+            },
+            {
+              "type": 1,
+              "position": 15,
+              "seat_type": "PREMIUM",
+              "displayNumber": 15
+            },
+            {
+              "type": 1,
+              "position": 16,
+              "seat_type": "PREMIUM",
+              "displayNumber": 16
+            },
+            {
+              "type": 1,
+              "position": 17,
+              "seat_type": "PREMIUM",
+              "displayNumber": 17
+            },
+            {
+              "type": 1,
+              "position": 18,
+              "seat_type": "PREMIUM",
+              "displayNumber": 18
+            },
+            {
+              "type": 1,
+              "position": 19,
+              "seat_type": "PREMIUM",
+              "displayNumber": 19
+            },
+            {
+              "type": 0,
+              "position": 20,
+              "seat_type": "PREMIUM",
+              "displayNumber": 0
+            }
+          ],
+          "hasText": false,
+          "rowName": "C",
+          "hasSeats": true,
+          "rowNumber": 3
+        },
+        {
+          "text": "",
+          "seats": [
+            {
+              "type": 1,
+              "position": 1,
+              "seat_type": "PREMIUM",
+              "displayNumber": 1
+            },
+            {
+              "type": 1,
+              "position": 2,
+              "seat_type": "PREMIUM",
+              "displayNumber": 2
+            },
+            {
+              "type": 1,
+              "position": 3,
+              "seat_type": "PREMIUM",
+              "displayNumber": 3
+            },
+            {
+              "type": 1,
+              "position": 4,
+              "seat_type": "PREMIUM",
+              "displayNumber": 4
+            },
+            {
+              "type": 1,
+              "position": 5,
+              "seat_type": "PREMIUM",
+              "displayNumber": 5
+            },
+            {
+              "type": 1,
+              "position": 6,
+              "seat_type": "PREMIUM",
+              "displayNumber": 6
+            },
+            {
+              "type": 1,
+              "position": 7,
+              "seat_type": "PREMIUM",
+              "displayNumber": 7
+            },
+            {
+              "type": 1,
+              "position": 8,
+              "seat_type": "PREMIUM",
+              "displayNumber": 8
+            },
+            {
+              "type": 0,
+              "position": 9,
+              "seat_type": "PREMIUM",
+              "displayNumber": 0
+            },
+            {
+              "type": 1,
+              "position": 10,
+              "seat_type": "PREMIUM",
+              "displayNumber": 10
+            },
+            {
+              "type": 1,
+              "position": 11,
+              "seat_type": "PREMIUM",
+              "displayNumber": 11
+            },
+            {
+              "type": 1,
+              "position": 12,
+              "seat_type": "PREMIUM",
+              "displayNumber": 12
+            },
+            {
+              "type": 1,
+              "position": 13,
+              "seat_type": "PREMIUM",
+              "displayNumber": 13
+            },
+            {
+              "type": 1,
+              "position": 14,
+              "seat_type": "PREMIUM",
+              "displayNumber": 14
+            },
+            {
+              "type": 1,
+              "position": 15,
+              "seat_type": "PREMIUM",
+              "displayNumber": 15
+            },
+            {
+              "type": 1,
+              "position": 16,
+              "seat_type": "PREMIUM",
+              "displayNumber": 16
+            },
+            {
+              "type": 1,
+              "position": 17,
+              "seat_type": "PREMIUM",
+              "displayNumber": 17
+            },
+            {
+              "type": 1,
+              "position": 18,
+              "seat_type": "PREMIUM",
+              "displayNumber": 18
+            },
+            {
+              "type": 1,
+              "position": 19,
+              "seat_type": "PREMIUM",
+              "displayNumber": 19
+            },
+            {
+              "type": 0,
+              "position": 20,
+              "seat_type": "PREMIUM",
+              "displayNumber": 0
+            }
+          ],
+          "hasText": false,
+          "rowName": "D",
+          "hasSeats": true,
+          "rowNumber": 4
+        },
+        {
+          "text": "",
+          "seats": [
+            {
+              "type": 1,
+              "position": 1,
+              "seat_type": "PREMIUM",
+              "displayNumber": 1
+            },
+            {
+              "type": 1,
+              "position": 2,
+              "seat_type": "PREMIUM",
+              "displayNumber": 2
+            },
+            {
+              "type": 1,
+              "position": 3,
+              "seat_type": "PREMIUM",
+              "displayNumber": 3
+            },
+            {
+              "type": 1,
+              "position": 4,
+              "seat_type": "PREMIUM",
+              "displayNumber": 4
+            },
+            {
+              "type": 1,
+              "position": 5,
+              "seat_type": "PREMIUM",
+              "displayNumber": 5
+            },
+            {
+              "type": 1,
+              "position": 6,
+              "seat_type": "PREMIUM",
+              "displayNumber": 6
+            },
+            {
+              "type": 1,
+              "position": 7,
+              "seat_type": "PREMIUM",
+              "displayNumber": 7
+            },
+            {
+              "type": 1,
+              "position": 8,
+              "seat_type": "PREMIUM",
+              "displayNumber": 8
+            },
+            {
+              "type": 0,
+              "position": 9,
+              "seat_type": "PREMIUM",
+              "displayNumber": 0
+            },
+            {
+              "type": 1,
+              "position": 10,
+              "seat_type": "PREMIUM",
+              "displayNumber": 10
+            },
+            {
+              "type": 1,
+              "position": 11,
+              "seat_type": "PREMIUM",
+              "displayNumber": 11
+            },
+            {
+              "type": 1,
+              "position": 12,
+              "seat_type": "PREMIUM",
+              "displayNumber": 12
+            },
+            {
+              "type": 1,
+              "position": 13,
+              "seat_type": "PREMIUM",
+              "displayNumber": 13
+            },
+            {
+              "type": 1,
+              "position": 14,
+              "seat_type": "PREMIUM",
+              "displayNumber": 14
+            },
+            {
+              "type": 1,
+              "position": 15,
+              "seat_type": "PREMIUM",
+              "displayNumber": 15
+            },
+            {
+              "type": 1,
+              "position": 16,
+              "seat_type": "PREMIUM",
+              "displayNumber": 16
+            },
+            {
+              "type": 1,
+              "position": 17,
+              "seat_type": "PREMIUM",
+              "displayNumber": 17
+            },
+            {
+              "type": 1,
+              "position": 18,
+              "seat_type": "PREMIUM",
+              "displayNumber": 18
+            },
+            {
+              "type": 1,
+              "position": 19,
+              "seat_type": "PREMIUM",
+              "displayNumber": 19
+            },
+            {
+              "type": 0,
+              "position": 20,
+              "seat_type": "PREMIUM",
+              "displayNumber": 0
+            }
+          ],
+          "hasText": false,
+          "rowName": "E",
+          "hasSeats": true,
+          "rowNumber": 5
+        },
+        {
+          "text": "",
+          "seats": [
+            {
+              "type": 1,
+              "position": 1,
+              "seat_type": "PREMIUM",
+              "displayNumber": 1
+            },
+            {
+              "type": 1,
+              "position": 2,
+              "seat_type": "PREMIUM",
+              "displayNumber": 2
+            },
+            {
+              "type": 1,
+              "position": 3,
+              "seat_type": "PREMIUM",
+              "displayNumber": 3
+            },
+            {
+              "type": 1,
+              "position": 4,
+              "seat_type": "PREMIUM",
+              "displayNumber": 4
+            },
+            {
+              "type": 1,
+              "position": 5,
+              "seat_type": "PREMIUM",
+              "displayNumber": 5
+            },
+            {
+              "type": 1,
+              "position": 6,
+              "seat_type": "PREMIUM",
+              "displayNumber": 6
+            },
+            {
+              "type": 1,
+              "position": 7,
+              "seat_type": "PREMIUM",
+              "displayNumber": 7
+            },
+            {
+              "type": 1,
+              "position": 8,
+              "seat_type": "PREMIUM",
+              "displayNumber": 8
+            },
+            {
+              "type": 0,
+              "position": 9,
+              "seat_type": "PREMIUM",
+              "displayNumber": 0
+            },
+            {
+              "type": 1,
+              "position": 10,
+              "seat_type": "PREMIUM",
+              "displayNumber": 10
+            },
+            {
+              "type": 1,
+              "position": 11,
+              "seat_type": "PREMIUM",
+              "displayNumber": 11
+            },
+            {
+              "type": 1,
+              "position": 12,
+              "seat_type": "PREMIUM",
+              "displayNumber": 12
+            },
+            {
+              "type": 1,
+              "position": 13,
+              "seat_type": "PREMIUM",
+              "displayNumber": 13
+            },
+            {
+              "type": 1,
+              "position": 14,
+              "seat_type": "PREMIUM",
+              "displayNumber": 14
+            },
+            {
+              "type": 1,
+              "position": 15,
+              "seat_type": "PREMIUM",
+              "displayNumber": 15
+            },
+            {
+              "type": 1,
+              "position": 16,
+              "seat_type": "PREMIUM",
+              "displayNumber": 16
+            },
+            {
+              "type": 1,
+              "position": 17,
+              "seat_type": "PREMIUM",
+              "displayNumber": 17
+            },
+            {
+              "type": 1,
+              "position": 18,
+              "seat_type": "PREMIUM",
+              "displayNumber": 18
+            },
+            {
+              "type": 1,
+              "position": 19,
+              "seat_type": "PREMIUM",
+              "displayNumber": 19
+            },
+            {
+              "type": 0,
+              "position": 20,
+              "seat_type": "PREMIUM",
+              "displayNumber": 0
+            }
+          ],
+          "hasText": false,
+          "rowName": "F",
+          "hasSeats": true,
+          "rowNumber": 6
+        },
+        {
+          "text": "",
+          "seats": [
+            {
+              "type": 1,
+              "position": 1,
+              "seat_type": "PREMIUM",
+              "displayNumber": 1
+            },
+            {
+              "type": 1,
+              "position": 2,
+              "seat_type": "PREMIUM",
+              "displayNumber": 2
+            },
+            {
+              "type": 1,
+              "position": 3,
+              "seat_type": "PREMIUM",
+              "displayNumber": 3
+            },
+            {
+              "type": 1,
+              "position": 4,
+              "seat_type": "PREMIUM",
+              "displayNumber": 4
+            },
+            {
+              "type": 1,
+              "position": 5,
+              "seat_type": "PREMIUM",
+              "displayNumber": 5
+            },
+            {
+              "type": 1,
+              "position": 6,
+              "seat_type": "PREMIUM",
+              "displayNumber": 6
+            },
+            {
+              "type": 1,
+              "position": 7,
+              "seat_type": "PREMIUM",
+              "displayNumber": 7
+            },
+            {
+              "type": 1,
+              "position": 8,
+              "seat_type": "PREMIUM",
+              "displayNumber": 8
+            },
+            {
+              "type": 0,
+              "position": 9,
+              "seat_type": "PREMIUM",
+              "displayNumber": 0
+            },
+            {
+              "type": 1,
+              "position": 10,
+              "seat_type": "PREMIUM",
+              "displayNumber": 10
+            },
+            {
+              "type": 1,
+              "position": 11,
+              "seat_type": "PREMIUM",
+              "displayNumber": 11
+            },
+            {
+              "type": 1,
+              "position": 12,
+              "seat_type": "PREMIUM",
+              "displayNumber": 12
+            },
+            {
+              "type": 1,
+              "position": 13,
+              "seat_type": "PREMIUM",
+              "displayNumber": 13
+            },
+            {
+              "type": 1,
+              "position": 14,
+              "seat_type": "PREMIUM",
+              "displayNumber": 14
+            },
+            {
+              "type": 1,
+              "position": 15,
+              "seat_type": "PREMIUM",
+              "displayNumber": 15
+            },
+            {
+              "type": 1,
+              "position": 16,
+              "seat_type": "PREMIUM",
+              "displayNumber": 16
+            },
+            {
+              "type": 1,
+              "position": 17,
+              "seat_type": "PREMIUM",
+              "displayNumber": 17
+            },
+            {
+              "type": 1,
+              "position": 18,
+              "seat_type": "PREMIUM",
+              "displayNumber": 18
+            },
+            {
+              "type": 1,
+              "position": 19,
+              "seat_type": "PREMIUM",
+              "displayNumber": 19
+            },
+            {
+              "type": 0,
+              "position": 20,
+              "seat_type": "PREMIUM",
+              "displayNumber": 0
+            }
+          ],
+          "hasText": false,
+          "rowName": "G",
+          "hasSeats": true,
+          "rowNumber": 7
+        },
+        {
+          "text": "",
+          "seats": [
+            {
+              "type": 1,
+              "position": 1,
+              "seat_type": "PREMIUM",
+              "displayNumber": 1
+            },
+            {
+              "type": 1,
+              "position": 2,
+              "seat_type": "PREMIUM",
+              "displayNumber": 2
+            },
+            {
+              "type": 1,
+              "position": 3,
+              "seat_type": "PREMIUM",
+              "displayNumber": 3
+            },
+            {
+              "type": 1,
+              "position": 4,
+              "seat_type": "PREMIUM",
+              "displayNumber": 4
+            },
+            {
+              "type": 1,
+              "position": 5,
+              "seat_type": "PREMIUM",
+              "displayNumber": 5
+            },
+            {
+              "type": 1,
+              "position": 6,
+              "seat_type": "PREMIUM",
+              "displayNumber": 6
+            },
+            {
+              "type": 1,
+              "position": 7,
+              "seat_type": "PREMIUM",
+              "displayNumber": 7
+            },
+            {
+              "type": 1,
+              "position": 8,
+              "seat_type": "PREMIUM",
+              "displayNumber": 8
+            },
+            {
+              "type": 0,
+              "position": 9,
+              "seat_type": "PREMIUM",
+              "displayNumber": 0
+            },
+            {
+              "type": 1,
+              "position": 10,
+              "seat_type": "PREMIUM",
+              "displayNumber": 10
+            },
+            {
+              "type": 1,
+              "position": 11,
+              "seat_type": "PREMIUM",
+              "displayNumber": 11
+            },
+            {
+              "type": 1,
+              "position": 12,
+              "seat_type": "PREMIUM",
+              "displayNumber": 12
+            },
+            {
+              "type": 1,
+              "position": 13,
+              "seat_type": "PREMIUM",
+              "displayNumber": 13
+            },
+            {
+              "type": 1,
+              "position": 14,
+              "seat_type": "PREMIUM",
+              "displayNumber": 14
+            },
+            {
+              "type": 1,
+              "position": 15,
+              "seat_type": "PREMIUM",
+              "displayNumber": 15
+            },
+            {
+              "type": 1,
+              "position": 16,
+              "seat_type": "PREMIUM",
+              "displayNumber": 16
+            },
+            {
+              "type": 1,
+              "position": 17,
+              "seat_type": "PREMIUM",
+              "displayNumber": 17
+            },
+            {
+              "type": 1,
+              "position": 18,
+              "seat_type": "PREMIUM",
+              "displayNumber": 18
+            },
+            {
+              "type": 1,
+              "position": 19,
+              "seat_type": "PREMIUM",
+              "displayNumber": 19
+            },
+            {
+              "type": 0,
+              "position": 20,
+              "seat_type": "PREMIUM",
+              "displayNumber": 0
+            }
+          ],
+          "hasText": false,
+          "rowName": "H",
+          "hasSeats": true,
+          "rowNumber": 8
+        },
+        {
+          "text": "",
+          "seats": [],
+          "hasText": false,
+          "rowName": "",
+          "hasSeats": false,
+          "rowNumber": 9
+        },
+        {
+          "text": "Recliner",
+          "seats": [],
+          "hasText": true,
+          "rowName": "",
+          "hasSeats": false,
+          "rowNumber": 10
+        },
+        {
+          "text": "",
+          "seats": [
+            {
+              "type": 1,
+              "position": 1,
+              "seat_type": "STANDARD",
+              "displayNumber": 1
+            },
+            {
+              "type": 1,
+              "position": 2,
+              "seat_type": "STANDARD",
+              "displayNumber": 2
+            },
+            {
+              "type": 1,
+              "position": 3,
+              "seat_type": "STANDARD",
+              "displayNumber": 3
+            },
+            {
+              "type": 1,
+              "position": 4,
+              "seat_type": "STANDARD",
+              "displayNumber": 4
+            },
+            {
+              "type": 1,
+              "position": 5,
+              "seat_type": "STANDARD",
+              "displayNumber": 5
+            },
+            {
+              "type": 1,
+              "position": 6,
+              "seat_type": "STANDARD",
+              "displayNumber": 6
+            },
+            {
+              "type": 1,
+              "position": 7,
+              "seat_type": "STANDARD",
+              "displayNumber": 7
+            },
+            {
+              "type": 1,
+              "position": 8,
+              "seat_type": "STANDARD",
+              "displayNumber": 8
+            },
+            {
+              "type": 0,
+              "position": 9,
+              "seat_type": "STANDARD",
+              "displayNumber": 0
+            },
+            {
+              "type": 1,
+              "position": 10,
+              "seat_type": "STANDARD",
+              "displayNumber": 10
+            },
+            {
+              "type": 1,
+              "position": 11,
+              "seat_type": "STANDARD",
+              "displayNumber": 11
+            },
+            {
+              "type": 1,
+              "position": 12,
+              "seat_type": "STANDARD",
+              "displayNumber": 12
+            },
+            {
+              "type": 1,
+              "position": 13,
+              "seat_type": "STANDARD",
+              "displayNumber": 13
+            },
+            {
+              "type": 1,
+              "position": 14,
+              "seat_type": "STANDARD",
+              "displayNumber": 14
+            },
+            {
+              "type": 1,
+              "position": 15,
+              "seat_type": "STANDARD",
+              "displayNumber": 15
+            },
+            {
+              "type": 1,
+              "position": 16,
+              "seat_type": "STANDARD",
+              "displayNumber": 16
+            },
+            {
+              "type": 1,
+              "position": 17,
+              "seat_type": "STANDARD",
+              "displayNumber": 17
+            },
+            {
+              "type": 1,
+              "position": 18,
+              "seat_type": "STANDARD",
+              "displayNumber": 18
+            },
+            {
+              "type": 1,
+              "position": 19,
+              "seat_type": "STANDARD",
+              "displayNumber": 19
+            },
+            {
+              "type": 1,
+              "position": 20,
+              "seat_type": "STANDARD",
+              "displayNumber": 20
+            }
+          ],
+          "hasText": false,
+          "rowName": "I",
+          "hasSeats": true,
+          "rowNumber": 11
+        },
+        {
+          "text": "",
+          "seats": [
+            {
+              "type": 1,
+              "position": 1,
+              "seat_type": "STANDARD",
+              "displayNumber": 1
+            },
+            {
+              "type": 1,
+              "position": 2,
+              "seat_type": "STANDARD",
+              "displayNumber": 2
+            },
+            {
+              "type": 1,
+              "position": 3,
+              "seat_type": "STANDARD",
+              "displayNumber": 3
+            },
+            {
+              "type": 1,
+              "position": 4,
+              "seat_type": "STANDARD",
+              "displayNumber": 4
+            },
+            {
+              "type": 1,
+              "position": 5,
+              "seat_type": "STANDARD",
+              "displayNumber": 5
+            },
+            {
+              "type": 1,
+              "position": 6,
+              "seat_type": "STANDARD",
+              "displayNumber": 6
+            },
+            {
+              "type": 1,
+              "position": 7,
+              "seat_type": "STANDARD",
+              "displayNumber": 7
+            },
+            {
+              "type": 1,
+              "position": 8,
+              "seat_type": "STANDARD",
+              "displayNumber": 8
+            },
+            {
+              "type": 0,
+              "position": 9,
+              "seat_type": "STANDARD",
+              "displayNumber": 0
+            },
+            {
+              "type": 1,
+              "position": 10,
+              "seat_type": "STANDARD",
+              "displayNumber": 10
+            },
+            {
+              "type": 1,
+              "position": 11,
+              "seat_type": "STANDARD",
+              "displayNumber": 11
+            },
+            {
+              "type": 1,
+              "position": 12,
+              "seat_type": "STANDARD",
+              "displayNumber": 12
+            },
+            {
+              "type": 1,
+              "position": 13,
+              "seat_type": "STANDARD",
+              "displayNumber": 13
+            },
+            {
+              "type": 1,
+              "position": 14,
+              "seat_type": "STANDARD",
+              "displayNumber": 14
+            },
+            {
+              "type": 1,
+              "position": 15,
+              "seat_type": "STANDARD",
+              "displayNumber": 15
+            },
+            {
+              "type": 1,
+              "position": 16,
+              "seat_type": "STANDARD",
+              "displayNumber": 16
+            },
+            {
+              "type": 1,
+              "position": 17,
+              "seat_type": "STANDARD",
+              "displayNumber": 17
+            },
+            {
+              "type": 1,
+              "position": 18,
+              "seat_type": "STANDARD",
+              "displayNumber": 18
+            },
+            {
+              "type": 1,
+              "position": 19,
+              "seat_type": "STANDARD",
+              "displayNumber": 19
+            },
+            {
+              "type": 1,
+              "position": 20,
+              "seat_type": "STANDARD",
+              "displayNumber": 20
+            }
+          ],
+          "hasText": false,
+          "rowName": "J",
+          "hasSeats": true,
+          "rowNumber": 12
+        }
+      ],
+      "gridCols": 20,
+      "gridRows": 12
+    },
+    "seats": [
+      {
+        "id": 20,
+        "seat_number": 20,
+        "row_label": "A",
+        "seat_type": "PREMIUM"
+      },
+      {
+        "id": 19,
+        "seat_number": 19,
+        "row_label": "A",
+        "seat_type": "PREMIUM"
+      },
+      {
+        "id": 18,
+        "seat_number": 18,
+        "row_label": "A",
+        "seat_type": "PREMIUM"
+      },
+      {
+        "id": 16,
+        "seat_number": 16,
+        "row_label": "A",
+        "seat_type": "PREMIUM"
+      },
+      {
+        "id": 39,
+        "seat_number": 20,
+        "row_label": "B",
+        "seat_type": "PREMIUM"
+      }
+    ]
+  },
+  "showSeats": []
+}

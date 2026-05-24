@@ -5,8 +5,8 @@ const {
   validateGetNearbyMovies,
   validateGetMovieShowsByCities,
   validateGetNearbyMovieShows,
+  validateGetShowSeatLayout,
 } = require("./show.validator");
-
 const {
   getScreenShowsInRange,
   createShowsWithSeats,
@@ -14,7 +14,8 @@ const {
   getMoviesByCities,
   getNearbyMovies,
   getMovieShowsByCities,
-  getNearbyMovieShows
+  getNearbyMovieShows,
+  getShowSeatLayout,
 } = require("./show.repository");
 
 // =========================
@@ -318,7 +319,7 @@ async function getMovieShowsByCitiesService(
 
             chain_logo:
               show.theatre.chain_logo
-                ? `${process.env.TMDB_IMAGE_BASE}${show.theatre.chain_logo}`
+                ? `${show.theatre.chain_logo}`
                 : null,
 
             facilities:
@@ -511,6 +512,62 @@ async function getNearbyMovieShowsService(
   };
 }
 
+
+async function getShowSeatLayoutService(
+  data
+) {
+
+  // =========================
+  // 1. validate input
+  // =========================
+
+  const validation =
+    validateGetShowSeatLayout(
+      data
+    );
+
+  if (!validation.isValid) {
+    throw new Error(
+      validation.error
+    );
+  }
+
+  // =========================
+  // 2. fetch seat layout
+  // =========================
+  
+  const show =
+    await getShowSeatLayout(
+      data.show_id
+    );
+
+   
+
+  if (!show) {
+    throw new Error(
+      "Show not found"
+    );
+  }
+
+  // =========================
+  // 3. return response
+  // =========================
+
+  return {
+    seat_layout:
+      show.screen.seat_layout,
+
+    base_price:
+      Number(show.base_price),
+
+    inactive_seats:
+      show.screen.seats,
+
+    unavailable_seats:
+      show.showSeats,
+  };
+}
+
 module.exports = {
   addShows,
   fetchScreenShows,
@@ -518,4 +575,5 @@ module.exports = {
   getNearbyMoviesService,
   getMovieShowsByCitiesService,
   getNearbyMovieShowsService,
+  getShowSeatLayoutService,
 };

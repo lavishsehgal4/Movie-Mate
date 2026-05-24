@@ -625,6 +625,42 @@ function validateGetNearbyMovieShows(
   };
 }
 
+function validateGetShowSeatLayout(
+  data
+) {
+
+  const temp = {};
+
+  // =========================
+  // show_id
+  // =========================
+
+  const showId =
+    normalizeNumber(
+      data.show_id
+    );
+
+  if (!showId) {
+    return {
+      isValid: false,
+      error:
+        "Valid show_id is required",
+    };
+  }
+
+  temp.show_id = showId;
+
+  // =========================
+  // apply mutation
+  // =========================
+
+  Object.assign(data, temp);
+
+  return {
+    isValid: true,
+  };
+}
+
 module.exports = {
   validateCreateShows,
   validateGetScreenShows,
@@ -632,4 +668,5 @@ module.exports = {
   validateGetNearbyMovies,
   validateGetMovieShowsByCities,
   validateGetNearbyMovieShows,
+  validateGetShowSeatLayout,
 };

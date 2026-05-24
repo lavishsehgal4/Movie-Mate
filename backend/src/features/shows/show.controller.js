@@ -5,6 +5,7 @@ const {
   getNearbyMoviesService,
   getMovieShowsByCitiesService,
   getNearbyMovieShowsService,
+  getShowSeatLayoutService
 } = require("./show.service");
 
 // =========================
@@ -162,6 +163,34 @@ async function httpGetNearbyMovieShows(
   }
 }
 
+async function httpGetShowSeatLayout(
+  req,
+  res
+) {
+  try {
+
+    const result =
+      await getShowSeatLayoutService(
+        req.query
+      );
+
+       
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
+
+  } catch (err) {
+
+    return res.status(400).json({
+      success: false,
+      message:
+        err.message ||
+        "Failed to fetch show seat layout",
+    });
+  }
+}
+
 module.exports = {
   httpCreateShows,
   httpGetScreenShows,
@@ -169,4 +198,5 @@ module.exports = {
   httpGetNearbyMovies,
   httpGetMovieShowsByCities,
   httpGetNearbyMovieShows,
+  httpGetShowSeatLayout
 };

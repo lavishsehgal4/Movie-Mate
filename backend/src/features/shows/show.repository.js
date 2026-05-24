@@ -723,6 +723,106 @@ async function getNearbyMovieShows(
   }
 }
 
+
+//bookins logic 
+
+async function getShowSeatLayout(
+  showId
+) {
+  try {
+
+    return await prisma.show.findUnique({
+      where: {
+        id: showId,
+      },
+
+      select: {
+        id: true,
+
+        base_price: true,
+
+        screen: {
+          select: {
+            id: true,
+
+            seat_layout: true,
+
+            seats: {
+              where: {
+                is_active: false,
+              },
+
+              select: {
+                id: true,
+
+                seat_number: true,
+
+                row_label: true,
+
+                seat_type: true,
+              },
+            },
+          },
+        },
+
+        showSeats: {
+          where: {
+            OR: [
+
+              // =========================
+              // permanently booked
+              // =========================
+
+              {
+                status: "BOOKED",
+              },
+
+              // =========================
+              // active locks only
+              // =========================
+
+              {
+                status: "LOCKED",
+
+                lock_until: {
+                  gt: new Date(),
+                },
+              },
+            ],
+          },
+
+          select: {
+            status: true,
+
+            seat: {
+              select: {
+                id: true,
+
+                seat_number: true,
+
+                row_label: true,
+
+                seat_type: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+  } catch (err) {
+
+    console.error(
+      "Error fetching show seat layout:",
+      err
+    );
+
+    throw new Error(
+      "Failed to fetch show seat layout"
+    );
+  }
+}
+
 //exports
 
 module.exports={
@@ -733,4 +833,5 @@ module.exports={
     getNearbyMovies,
     getMovieShowsByCities,
     getNearbyMovieShows,
+    getShowSeatLayout,
 }
