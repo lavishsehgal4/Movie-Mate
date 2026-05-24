@@ -3,6 +3,8 @@ const {
   fetchScreenShows,
   getCityMovies,
   getNearbyMoviesService,
+  getMovieShowsByCitiesService,
+  getNearbyMovieShowsService,
 } = require("./show.service");
 
 // =========================
@@ -106,9 +108,65 @@ async function httpGetNearbyMovies(
   }
 }
 
+async function httpGetMovieShowsByCities(
+  req,
+  res
+) {
+  try {
+
+    const result =
+      await getMovieShowsByCitiesService(
+        req.body
+      );
+
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
+
+  } catch (err) {
+
+    return res.status(400).json({
+      success: false,
+      message:
+        err.message ||
+        "Failed to fetch movie shows",
+    });
+  }
+}
+
+async function httpGetNearbyMovieShows(
+  req,
+  res
+) {
+  try {
+
+    const result =
+      await getNearbyMovieShowsService(
+        req.body
+      );
+
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
+
+  } catch (err) {
+
+    return res.status(400).json({
+      success: false,
+      message:
+        err.message ||
+        "Failed to fetch nearby movie shows",
+    });
+  }
+}
+
 module.exports = {
   httpCreateShows,
   httpGetScreenShows,
   httpGetCityMovies,
   httpGetNearbyMovies,
+  httpGetMovieShowsByCities,
+  httpGetNearbyMovieShows,
 };

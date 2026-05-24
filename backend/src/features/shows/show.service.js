@@ -3,6 +3,8 @@ const {
   validateGetScreenShows,
   validateGetMoviesByCities,
   validateGetNearbyMovies,
+  validateGetMovieShowsByCities,
+  validateGetNearbyMovieShows,
 } = require("./show.validator");
 
 const {
@@ -11,6 +13,8 @@ const {
   getScreenShowsByDate,
   getMoviesByCities,
   getNearbyMovies,
+  getMovieShowsByCities,
+  getNearbyMovieShows
 } = require("./show.repository");
 
 // =========================
@@ -254,9 +258,264 @@ async function getNearbyMoviesService(data) {
   };
 }
 
+
+async function getMovieShowsByCitiesService(
+  data
+) {
+
+  // =========================
+  // 1. validate input
+  // =========================
+
+  const validation =
+    validateGetMovieShowsByCities(
+      data
+    );
+
+  if (!validation.isValid) {
+    throw new Error(
+      validation.error
+    );
+  }
+
+  // =========================
+  // 2. fetch shows
+  // =========================
+
+  const shows =
+    await getMovieShowsByCities(
+      data.movie_id,
+      data.cities
+    );
+
+  // =========================
+  // 3. group by theatre
+  // =========================
+
+  const theatreMap =
+    new Map();
+
+  for (const show of shows) {
+
+    const theatreId =
+      show.theatre.id;
+
+    // =========================
+    // create theatre group
+    // =========================
+
+    if (
+      !theatreMap.has(
+        theatreId
+      )
+    ) {
+
+      theatreMap.set(
+        theatreId,
+        {
+          theatre: {
+            ...show.theatre,
+
+            chain_logo:
+              show.theatre.chain_logo
+                ? `${process.env.TMDB_IMAGE_BASE}${show.theatre.chain_logo}`
+                : null,
+
+            facilities:
+              show.theatre.theatreFacilities.map(
+                (item) => ({
+                  id:
+                    item.facility.id,
+
+                  facility_name:
+                    item.facility.facility_name,
+
+                  facility_logo:
+                    item.facility.facility_logo
+                      ? `${process.env.TMDB_IMAGE_BASE}${item.facility.facility_logo}`
+                      : null,
+                })
+              ),
+          },
+
+          shows: [],
+        }
+      );
+    }
+
+    // =========================
+    // add show
+    // =========================
+
+    theatreMap
+      .get(theatreId)
+      .shows.push({
+        id: show.id,
+
+        screen_id:
+          show.screen_id,
+
+        start_time:
+          show.start_time,
+
+        end_time:
+          show.end_time,
+
+        language:
+          show.language,
+
+        format:
+          show.format,
+
+        base_price:
+          show.base_price,
+      });
+  }
+
+  // =========================
+  // 4. return response
+  // =========================
+
+  return {
+    theatres:
+      Array.from(
+        theatreMap.values()
+      ),
+  };
+}
+
+
+async function getNearbyMovieShowsService(
+  data
+) {
+
+  // =========================
+  // 1. validate input
+  // =========================
+
+  const validation =
+    validateGetNearbyMovieShows(
+      data
+    );
+
+  if (!validation.isValid) {
+    throw new Error(
+      validation.error
+    );
+  }
+
+  // =========================
+  // 2. fetch shows
+  // =========================
+
+  const shows =
+    await getNearbyMovieShows(
+      data.movie_id,
+      data.latitude,
+      data.longitude
+    );
+
+  // =========================
+  // 3. group by theatre
+  // =========================
+
+  const theatreMap =
+    new Map();
+
+  for (const show of shows) {
+
+    const theatreId =
+      show.theatre.id;
+
+    // =========================
+    // create theatre group
+    // =========================
+
+    if (
+      !theatreMap.has(
+        theatreId
+      )
+    ) {
+
+      theatreMap.set(
+        theatreId,
+        {
+          theatre: {
+            ...show.theatre,
+
+            chain_logo:
+              show.theatre.chain_logo
+                ? `${process.env.TMDB_IMAGE_BASE}${show.theatre.chain_logo}`
+                : null,
+
+            facilities:
+              show.theatre.theatreFacilities.map(
+                (item) => ({
+                  id:
+                    item.facility.id,
+
+                  facility_name:
+                    item.facility.facility_name,
+
+                  facility_logo:
+                    item.facility.facility_logo
+                      ? `${process.env.TMDB_IMAGE_BASE}${item.facility.facility_logo}`
+                      : null,
+                })
+              ),
+          },
+
+          shows: [],
+        }
+      );
+    }
+
+    // =========================
+    // add show
+    // =========================
+
+    theatreMap
+      .get(theatreId)
+      .shows.push({
+        id: show.id,
+
+        screen_id:
+          show.screen_id,
+
+        start_time:
+          show.start_time,
+
+        end_time:
+          show.end_time,
+
+        language:
+          show.language,
+
+        format:
+          show.format,
+
+        base_price:
+          show.base_price,
+      });
+  }
+
+  // =========================
+  // 4. return response
+  // =========================
+
+  return {
+    theatres:
+      Array.from(
+        theatreMap.values()
+      ),
+  };
+}
+
 module.exports = {
   addShows,
   fetchScreenShows,
   getCityMovies,
-  getNearbyMoviesService
+  getNearbyMoviesService,
+  getMovieShowsByCitiesService,
+  getNearbyMovieShowsService,
 };

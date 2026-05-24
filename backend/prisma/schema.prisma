@@ -255,6 +255,7 @@ model Show {
   @@index([theatre_id])
   @@index([screen_id, start_time])
   @@index([city, show_status, start_time, movie_id])
+  @@index([movie_id, city, show_status, start_time])
   @@index([start_time])
 
   // ⚠️ NOTE:

@@ -427,6 +427,302 @@ async function getNearbyMovies(
   }
 }
 
+
+//
+
+
+async function getMovieShowsByCities(
+  movieId,
+  cities
+) {
+  try {
+
+    return await prisma.show.findMany({
+      where: {
+        movie_id: movieId,
+
+        city: {
+          in: cities,
+        },
+
+        start_time: {
+          gte: new Date(),
+        },
+
+        show_status: "scheduled",
+      },
+
+      select: {
+        id: true,
+
+        theatre_id: true,
+
+        screen_id: true,
+
+        start_time: true,
+
+        end_time: true,
+
+        language: true,
+
+        format: true,
+
+        base_price: true,
+
+        theatre: {
+          select: {
+            id: true,
+
+            theatre_name: true,
+
+            chain_name: true,
+
+            chain_logo: true,
+
+            address: true,
+
+            city: true,
+
+            state: true,
+
+            theatreFacilities: {
+              select: {
+                facility: {
+                  select: {
+                    id: true,
+
+                    facility_name: true,
+
+                    facility_logo: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+
+      orderBy: [
+        {
+          theatre_id: "asc",
+        },
+        {
+          start_time: "asc",
+        },
+      ],
+    });
+
+  } catch (err) {
+
+    console.error(
+      "Error fetching movie shows:",
+      err
+    );
+
+    throw new Error(
+      "Failed to fetch movie shows"
+    );
+  }
+}
+
+
+// shows of movies by coordinates and movie_id
+
+async function getNearbyMovieShows(
+  movieId,
+  latitude,
+  longitude
+) {
+  try {
+
+    // =========================
+    // 1. get nearby theatres
+    // =========================
+
+    const nearbyTheatres =
+      await prisma.$queryRaw`
+
+      SELECT
+        id,
+
+        ST_Distance(
+          location,
+
+          ST_SetSRID(
+            ST_MakePoint(
+              ${longitude},
+              ${latitude}
+            ),
+            4326
+          )::geography
+        ) / 1000
+        AS distance_km
+
+      FROM "Theatre"
+
+      WHERE
+        location IS NOT NULL
+
+        AND ST_DWithin(
+          location,
+
+          ST_SetSRID(
+            ST_MakePoint(
+              ${longitude},
+              ${latitude}
+            ),
+            4326
+          )::geography,
+
+          30000
+        )
+
+      ORDER BY distance_km ASC
+    `;
+
+    // =========================
+    // 2. extract theatre ids
+    // =========================
+
+    const theatreIds =
+      nearbyTheatres.map(
+        (theatre) => theatre.id
+      );
+
+    if (theatreIds.length === 0) {
+      return [];
+    }
+
+    // =========================
+    // 3. distance map
+    // =========================
+
+    const distanceMap =
+      new Map(
+        nearbyTheatres.map(
+          (theatre) => [
+            theatre.id,
+            Number(
+              theatre.distance_km
+            ),
+          ]
+        )
+      );
+
+    // =========================
+    // 4. fetch shows
+    // =========================
+
+    const shows =
+      await prisma.show.findMany({
+        where: {
+          movie_id: movieId,
+
+          theatre_id: {
+            in: theatreIds,
+          },
+
+          start_time: {
+            gte: new Date(),
+          },
+
+          show_status: "scheduled",
+        },
+
+        select: {
+          id: true,
+
+          theatre_id: true,
+
+          screen_id: true,
+
+          start_time: true,
+
+          end_time: true,
+
+          language: true,
+
+          format: true,
+
+          base_price: true,
+
+          theatre: {
+            select: {
+              id: true,
+
+              theatre_name: true,
+
+              chain_name: true,
+
+              chain_logo: true,
+
+              address: true,
+
+              city: true,
+
+              state: true,
+
+              latitude: true,
+
+              longitude: true,
+
+              theatreFacilities: {
+                select: {
+                  facility: {
+                    select: {
+                      id: true,
+
+                      facility_name: true,
+
+                      facility_logo: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+
+        orderBy: [
+          {
+            theatre_id: "asc",
+          },
+          {
+            start_time: "asc",
+          },
+        ],
+      });
+
+    // =========================
+    // 5. attach distance
+    // =========================
+
+    return shows.map((show) => ({
+      ...show,
+
+      theatre: {
+        ...show.theatre,
+
+        distance_km:
+          distanceMap.get(
+            show.theatre.id
+          ) || 0,
+      },
+    }));
+
+  } catch (err) {
+
+    console.error(
+      "Error fetching nearby movie shows:",
+      err
+    );
+
+    throw new Error(
+      "Failed to fetch nearby movie shows"
+    );
+  }
+}
+
 //exports
 
 module.exports={
@@ -435,4 +731,6 @@ module.exports={
     getScreenShowsByDate,
     getMoviesByCities,
     getNearbyMovies,
+    getMovieShowsByCities,
+    getNearbyMovieShows,
 }

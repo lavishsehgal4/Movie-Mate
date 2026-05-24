@@ -467,9 +467,169 @@ function validateGetNearbyMovies(data) {
   };
 }
 
+function validateGetMovieShowsByCities(
+  data
+) {
+
+  const temp = {};
+
+  // =========================
+  // movie_id
+  // =========================
+
+  const movieId =
+    normalizeNumber(
+      data.movie_id
+    );
+
+  if (!movieId) {
+    return {
+      isValid: false,
+      error:
+        "Valid movie_id is required",
+    };
+  }
+
+  temp.movie_id = movieId;
+
+  // =========================
+  // cities
+  // =========================
+
+  if (
+    !Array.isArray(data.cities) ||
+    data.cities.length === 0
+  ) {
+    return {
+      isValid: false,
+      error:
+        "cities must be non-empty array",
+    };
+  }
+
+  const normalizedCities = [];
+
+  const citySet = new Set();
+
+  for (const city of data.cities) {
+
+    const normalizedCity =
+      normalizeString(city);
+
+    if (!normalizedCity) {
+      return {
+        isValid: false,
+        error:
+          "Valid city is required",
+      };
+    }
+
+    const lowerCity =
+      normalizedCity.toLowerCase();
+
+    if (citySet.has(lowerCity)) {
+      continue;
+    }
+
+    citySet.add(lowerCity);
+
+    normalizedCities.push(
+      lowerCity
+    );
+  }
+
+  temp.cities = normalizedCities;
+
+  // =========================
+  // apply mutation
+  // =========================
+
+  Object.assign(data, temp);
+
+  return {
+    isValid: true,
+  };
+}
+
+function validateGetNearbyMovieShows(
+  data
+) {
+
+  const temp = {};
+
+  // =========================
+  // movie_id
+  // =========================
+
+  const movieId =
+    normalizeNumber(
+      data.movie_id
+    );
+
+  if (!movieId) {
+    return {
+      isValid: false,
+      error:
+        "Valid movie_id is required",
+    };
+  }
+
+  temp.movie_id = movieId;
+
+  // =========================
+  // latitude
+  // =========================
+
+  const latitude =
+    normalizeNumber(
+      data.latitude
+    );
+
+  if (latitude === null) {
+    return {
+      isValid: false,
+      error:
+        "Valid latitude is required",
+    };
+  }
+
+  temp.latitude = latitude;
+
+  // =========================
+  // longitude
+  // =========================
+
+  const longitude =
+    normalizeNumber(
+      data.longitude
+    );
+
+  if (longitude === null) {
+    return {
+      isValid: false,
+      error:
+        "Valid longitude is required",
+    };
+  }
+
+  temp.longitude = longitude;
+
+  // =========================
+  // apply mutation
+  // =========================
+
+  Object.assign(data, temp);
+
+  return {
+    isValid: true,
+  };
+}
+
 module.exports = {
   validateCreateShows,
   validateGetScreenShows,
   validateGetMoviesByCities,
   validateGetNearbyMovies,
+  validateGetMovieShowsByCities,
+  validateGetNearbyMovieShows,
 };
