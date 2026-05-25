@@ -13,10 +13,14 @@ const seatRouter=require('./features/seats/seat.router');
 const showRouter=require('./features/shows/show.router');
 const locationRouter=require('./features/location/location.router');
 const showSeatRouter=require('./features/showSeat/showSeat.router');
+const bookingRouter=require('./features/booking/booking.router');
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:5173", // 🔥 exact frontend URL
+  origin: [
+    "http://localhost:5173",
+    "http://127.0.0.1:5500"
+  ],
   credentials: true
 }));
 app.use(express.json());
@@ -36,5 +40,6 @@ app.use('/api/v1/seats',seatRouter);
 app.use('/api/v1/shows',showRouter);
 app.use('/api/v1/location',locationRouter);
 app.use('/api/v1/showSeat',showSeatRouter);
+app.use('/api/v1/booking',bookingRouter);
 
 module.exports = app;

@@ -12,6 +12,7 @@ import ScreenDetailPage from './pages/ScreenDetailPage'
 import MovieDetailPage from './pages/MovieDetailPage'
 import ActiveLockBanner from './components/ActiveLockBanner'
 import LockPaymentPage from './pages/LockPaymentPage'
+import MyBookingsPage from './pages/MyBookingsPage'
 import './App.css'
 
 export default function App() {
@@ -37,6 +38,7 @@ export default function App() {
   if (page === 'my-theatre')        return <MyTheatrePage />
   if (page === 'theatre-dashboard') return <TheatreDashboard />
   if (page === 'screen-detail')     return <ScreenDetailPage />
+  if (page === 'my-bookings')       return <MyBookingsPage />
   if (page === 'movie-detail')      return (
     <>
       <MovieDetailPage />

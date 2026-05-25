@@ -99,7 +99,7 @@ export default function Navbar() {
         </button>
 
         <div className="nav-right">
-          <button className="nav-link">My Bookings</button>
+          <button className="nav-link" onClick={() => setPage('my-bookings')}>My Bookings</button>
 
           {/* city button */}
           <div className="nav-city-wrap" ref={cityRef}>
@@ -167,7 +167,7 @@ export default function Navbar() {
           <button className="side-nav-item" onClick={() => setMenuOpen(false)}>
             <span className="side-icon">🎬</span><span>Movies</span>
           </button>
-          <button className="side-nav-item" onClick={() => setMenuOpen(false)}>
+          <button className="side-nav-item" onClick={() => { setPage('my-bookings'); setMenuOpen(false) }}>
             <span className="side-icon">🎟️</span><span>Your Bookings</span>
           </button>
           {user && hasTheatre && (

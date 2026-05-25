@@ -76,7 +76,7 @@ model Movie {
 
   tmdb_id           Int      @unique
   title             String
-  search_title      String  // ✅ ADD THIS
+  search_title      String? // ✅ ADD THIS
   original_title    String?
   overview          String?
 

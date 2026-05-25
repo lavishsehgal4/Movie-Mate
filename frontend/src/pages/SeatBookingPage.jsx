@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import BookingSuccessPage from './BookingSuccessPage'
 import './SeatBookingPage.css'
 
 const BASE = 'http://localhost:5000/api/v1'
@@ -14,15 +15,16 @@ function fmtDate(iso) {
 }
 
 export default function SeatBookingPage({ show, theatre, movie, onBack }) {
-  const [layoutData, setLayoutData] = useState(null)
-  const [loading,    setLoading]    = useState(true)
-  const [error,      setError]      = useState('')
-  // selected: Map of "rowLabel-seatNum" → { id, price }
-  const [selected,   setSelected]   = useState(new Map())
-  const [locking,    setLocking]    = useState(false)
-  const [msg,        setMsg]        = useState('')
-  const [showPayment, setShowPayment] = useState(false)
-  const [lockedData,  setLockedData]  = useState(null)
+  const [layoutData,     setLayoutData]     = useState(null)
+  const [loading,        setLoading]        = useState(true)
+  const [error,          setError]          = useState('')
+  const [selected,       setSelected]       = useState(new Map()) // key → { id, price }
+  const [locking,        setLocking]        = useState(false)
+  const [booking,        setBooking]        = useState(false)
+  const [msg,            setMsg]            = useState('')
+  const [showConfirm,    setShowConfirm]    = useState(false)
+  const [lockedData,     setLockedData]     = useState(null)
+  const [bookingSuccess, setBookingSuccess] = useState(null)
 
   useEffect(() => {
     fetch(`${BASE}/shows/show-seat-layout?show_id=${show.id}`, { credentials: 'include' })
@@ -36,21 +38,18 @@ export default function SeatBookingPage({ show, theatre, movie, onBack }) {
   if (error)   return <div className="sbp-error">⚠️ {error}</div>
   if (!layoutData) return null
 
-  const seatLayout      = layoutData.seat_layout
-  const basePrice       = layoutData.base_price || show.base_price || 0
-  const allSeats        = layoutData.all_seats || []
+  const seatLayout       = layoutData.seat_layout
+  const basePrice        = layoutData.base_price || show.base_price || 0
+  const allSeats         = layoutData.all_seats || []
   const unavailableSeats = layoutData.unavailable_seats || []
 
-  // Build lookup maps
-  // key: "rowLabel-seatNumber"
-  const seatMap = {}        // key → seat object from all_seats
+  const seatMap = {}
   allSeats.forEach(s => { seatMap[`${s.row_label}-${s.seat_number}`] = s })
 
   const unavailableSet = new Set(
     unavailableSeats.map(s => `${s.seat.row_label}-${s.seat.seat_number}`)
   )
 
-  // trim empty edge columns
   const activeCols = (() => {
     if (!seatLayout?.rows) return { start: 0, end: 19 }
     const seatRows = seatLayout.rows.filter(r => r.hasSeats)
@@ -73,9 +72,10 @@ export default function SeatBookingPage({ show, theatre, movie, onBack }) {
     setMsg('')
   }
 
-  const totalPrice = [...selected.values()].reduce((sum, s) => sum + s.price, 0)
-  const selectedIds = [...selected.values()].map(s => s.id)
+  const totalPrice  = [...selected.values()].reduce((sum, s) => sum + s.price, 0)
+  const selectedIds = [...selected.values()].map(s => s.id).filter(Boolean)
 
+  // Step 1: Lock seats → show confirmation
   const handleProceed = async () => {
     if (selected.size === 0) return
     setLocking(true); setMsg('')
@@ -87,9 +87,8 @@ export default function SeatBookingPage({ show, theatre, movie, onBack }) {
       })
       const d = await r.json()
       if (!d.success) throw new Error(d.message)
-      // success — open payment page
       setLockedData({ seats: [...selected.entries()].map(([k, v]) => ({ key: k, ...v })), total: totalPrice })
-      setShowPayment(true)
+      setShowConfirm(true)
     } catch (e) {
       setMsg(`⚠️ ${e.message}`)
     } finally {
@@ -97,12 +96,45 @@ export default function SeatBookingPage({ show, theatre, movie, onBack }) {
     }
   }
 
-  // show payment page after lock
-  if (showPayment && lockedData) {
+  // Step 2: Confirm booking directly
+  const handleConfirmBooking = async () => {
+    setBooking(true); setMsg('')
+    try {
+      const r = await fetch(`${BASE}/booking/confirm-booking`, {
+        method: 'POST', credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ show_id: show.id, seat_ids: selectedIds }),
+      })
+      const d = await r.json()
+      if (!d.success) throw new Error(d.message)
+      setBookingSuccess({ bookingId: d.data.booking_id, totalAmount: d.data.total_amount })
+    } catch (e) {
+      setMsg(`⚠️ ${e.message}`)
+    } finally {
+      setBooking(false)
+    }
+  }
+
+  // Success page
+  if (bookingSuccess) {
+    return (
+      <BookingSuccessPage
+        bookingId={bookingSuccess.bookingId}
+        totalAmount={bookingSuccess.totalAmount}
+        movie={movie}
+        theatre={theatre}
+        show={show}
+        seats={lockedData?.seats?.map(s => s.key) || []}
+      />
+    )
+  }
+
+  // Confirmation page (after lock)
+  if (showConfirm && lockedData) {
     return (
       <div className="sbp-root">
         <div className="sbp-topnav">
-          <button className="sbp-back" onClick={() => setShowPayment(false)}>← Back to Seats</button>
+          <button className="sbp-back" onClick={() => setShowConfirm(false)}>← Back to Seats</button>
           <span className="sbp-brand">Movie<span>Mate</span></span>
           <div style={{ width: 60 }} />
         </div>
@@ -121,25 +153,29 @@ export default function SeatBookingPage({ show, theatre, movie, onBack }) {
               <span>Total Amount</span>
               <span className="sbp-payment-amount">₹{lockedData.total}</span>
             </div>
-            <p className="sbp-payment-note">⏳ Seats locked for 10 minutes. Complete payment to confirm.</p>
-            <button className="sbp-pay-now-btn">Pay ₹{lockedData.total}</button>
+            <p className="sbp-payment-note">⏳ Seats locked for 10 minutes. Click below to confirm your booking.</p>
+            {msg && <p style={{ fontSize: 12, color: '#ff6b7a', marginBottom: 12 }}>{msg}</p>}
+            <button className="sbp-pay-now-btn" onClick={handleConfirmBooking} disabled={booking}>
+              {booking
+                ? <span className="sbp-btn-loading">⏳ Confirming...</span>
+                : `🎟 Book Ticket · ₹${lockedData.total}`
+              }
+            </button>
           </div>
         </div>
       </div>
     )
   }
 
+  // Seat selection page
   return (
     <div className="sbp-root">
-
-      {/* top nav */}
       <div className="sbp-topnav">
         <button className="sbp-back" onClick={onBack}>← Back</button>
         <span className="sbp-brand">Movie<span>Mate</span></span>
         <button className="sbp-refresh" title="Refresh">↻</button>
       </div>
 
-      {/* movie + show info */}
       <div className="sbp-movie-info">
         <h1 className="sbp-movie-title">{movie?.title}</h1>
         <div className="sbp-show-meta">
@@ -162,7 +198,6 @@ export default function SeatBookingPage({ show, theatre, movie, onBack }) {
         </div>
       </div>
 
-      {/* legend */}
       <div className="sbp-legend">
         <span className="sbp-leg-item"><span className="sbp-leg-box avail" />Available</span>
         <span className="sbp-leg-item"><span className="sbp-leg-box sel" />Selected</span>
@@ -170,7 +205,6 @@ export default function SeatBookingPage({ show, theatre, movie, onBack }) {
         <span className="sbp-leg-item"><span className="sbp-leg-box damaged" />Damaged</span>
       </div>
 
-      {/* seat grid */}
       {seatLayout && (
         <div className="sbp-card-wrap">
           <div className="sbp-card">
@@ -186,30 +220,19 @@ export default function SeatBookingPage({ show, theatre, movie, onBack }) {
                       <div className="sbp-seats">
                         {vis.map((s, ci) => {
                           if (s.type === 0) return <div key={ci} className="sbp-gap" />
-
-                          const key = `${row.rowName}-${s.displayNumber}`
-                          const dbSeat = seatMap[key]
-
-                          // determine seat state
-                          const isDamaged    = dbSeat && !dbSeat.is_active
-                          const isUnavailable = unavailableSet.has(key)
-                          const isSel        = selected.has(key)
-
-                          const price = dbSeat
-                            ? Math.round(basePrice * (dbSeat.price_multiplier || 1))
-                            : basePrice
-
-                          const seatClass = isDamaged ? 'damaged'
-                            : isUnavailable ? 'booked'
-                            : isSel ? 'selected'
-                            : ''
-
+                          const key       = `${row.rowName}-${s.displayNumber}`
+                          const dbSeat    = seatMap[key]
+                          const isDamaged = dbSeat && !dbSeat.is_active
+                          const isBooked  = unavailableSet.has(key)
+                          const isSel     = selected.has(key)
+                          const price     = dbSeat ? Math.round(basePrice * (dbSeat.price_multiplier || 1)) : basePrice
+                          const cls       = isDamaged ? 'damaged' : isBooked ? 'booked' : isSel ? 'selected' : ''
                           return (
                             <button key={ci}
-                              className={`sbp-seat ${seatClass}`}
-                              disabled={isDamaged || isUnavailable}
-                              onClick={() => !isDamaged && !isUnavailable && toggle(key, { id: dbSeat?.id, price })}
-                              title={`${row.rowName}${s.displayNumber}${dbSeat ? ` · ${dbSeat.seat_type} · ₹${price}` : ''}${isDamaged ? ' · Damaged' : isUnavailable ? ' · Booked' : ''}`}
+                              className={`sbp-seat ${cls}`}
+                              disabled={isDamaged || isBooked}
+                              onClick={() => !isDamaged && !isBooked && toggle(key, { id: dbSeat?.id, price })}
+                              title={`${row.rowName}${s.displayNumber}${dbSeat ? ` · ${dbSeat.seat_type} · ₹${price}` : ''}${isDamaged ? ' · Damaged' : isBooked ? ' · Booked' : ''}`}
                             >
                               {isDamaged ? '' : s.displayNumber}
                             </button>
@@ -228,11 +251,10 @@ export default function SeatBookingPage({ show, theatre, movie, onBack }) {
         </div>
       )}
 
-      {/* bottom bar */}
       <div className="sbp-bottom">
         <div className="sbp-bottom-left">
           <span className="sbp-sel-label">Selected: <strong>{selected.size} seat{selected.size !== 1 ? 's' : ''}</strong></span>
-          {msg && <span style={{ fontSize: 11, color: msg.startsWith('✓') ? '#4ade80' : '#ff6b7a' }}>{msg}</span>}
+          {msg && <span style={{ fontSize: 11, color: '#ff6b7a' }}>{msg}</span>}
           <span className="sbp-price">₹{totalPrice}</span>
         </div>
         <button
@@ -240,7 +262,7 @@ export default function SeatBookingPage({ show, theatre, movie, onBack }) {
           disabled={selected.size === 0 || locking}
           onClick={handleProceed}
         >
-          {locking ? 'Locking...' : '🎟 Proceed to Pay'}
+          {locking ? '⏳ Locking...' : '🎟 Proceed to Book'}
         </button>
       </div>
     </div>

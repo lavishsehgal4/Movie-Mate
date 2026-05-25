@@ -196,3 +196,6 @@
   cursor: pointer; font-family: inherit; transition: background 0.2s;
 }
 .sbp-pay-now-btn:hover { background: #d4784a; }
+
+.sbp-btn-loading { display: flex; align-items: center; gap: 6px; }
+.sbp-pay-now-btn:disabled { opacity: 0.7; cursor: not-allowed; }
